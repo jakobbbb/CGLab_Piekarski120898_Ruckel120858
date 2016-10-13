@@ -34,15 +34,13 @@ include_directories(external/tinyobjloader-aa07206)
 # just one file so it can be directly compiled into main exe
 file(GLOB TINYOBJLOADER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/external/tinyobjloader-aa07206/*.cc)
 
+# glfw
 # configure glfw building
 option(GLFW_BUILD_DOCS     OFF)
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS    OFF)
 option(GLFW_INSTALL        OFF)
    
-# glfw
-# set(BUILD_SHARED_LIBS ${DYNAMIC_LINKING} CACHE BOOL "Build shared libraries" FORCE)
-
 # add glfw build system
 add_subdirectory(external/glfw-3.1.1)
 # include glfw headers
@@ -50,7 +48,6 @@ include_directories(external/glfw-3.1.1/include)
 
 # add glbindings
 add_subdirectory(external/glbinding-2.1.1)
-include_directories(external/glbinding-2.1.1/source/glbinding/include)
 
 # create framework helper library 
 file(GLOB FRAMEWORK_SOURCES framework/source/*.cpp)
@@ -58,33 +55,36 @@ add_library(framework STATIC ${FRAMEWORK_SOURCES} ${TINYOBJLOADER_SOURCES})
 target_include_directories(framework PUBLIC framework/include)
 target_link_libraries(framework glbinding glfw ${GLFW_LIBRARIES})
 
-# output executables
+# include headers in all following applications
 include_directories(application/include)
 
 add_executable(solar_system application/source/application_solar.cpp)
 target_link_libraries(solar_system framework)
 
-# add setting whether examples are build
-option(BUILD_EXAMPLES     OFF)
+# MacOS doesnt support simple compat mode required for examples
+if(NOT APPLE)
+  # add setting whether examples are build
+  option(BUILD_EXAMPLES     OFF)
 
-if(BUILD_EXAMPLES) 
-  add_executable(1_fixed application/source/application_fixed.cpp)
-  target_link_libraries(1_fixed framework)
+  if(BUILD_EXAMPLES) 
+    add_executable(1_fixed application/source/application_fixed.cpp)
+    target_link_libraries(1_fixed framework)
 
-  add_executable(2_vbo application/source/application_vbo.cpp)
-  target_link_libraries(2_vbo framework)
+    add_executable(2_vbo application/source/application_vbo.cpp)
+    target_link_libraries(2_vbo framework)
 
-  add_executable(3_indexed application/source/application_indexed.cpp)
-  target_link_libraries(3_indexed framework)
+    add_executable(3_indexed application/source/application_indexed.cpp)
+    target_link_libraries(3_indexed framework)
 
-  add_executable(4_shader application/source/application_shader.cpp)
-  target_link_libraries(4_shader framework)
+    add_executable(4_shader application/source/application_shader.cpp)
+    target_link_libraries(4_shader framework)
 
-  add_executable(5_uniform application/source/application_uniform.cpp)
-  target_link_libraries(5_uniform framework)
+    add_executable(5_uniform application/source/application_uniform.cpp)
+    target_link_libraries(5_uniform framework)
 
-  add_executable(6_vao application/source/application_vao.cpp)
-  target_link_libraries(6_vao framework)
+    add_executable(6_vao application/source/application_vao.cpp)
+    target_link_libraries(6_vao framework)
+  endif()
 endif()
 
 # set build type dependent flags
@@ -98,9 +98,9 @@ endif()
 # activate C++ 11
 if(NOT MSVC)
     add_definitions(-std=c++11)
-    # show warnings but suppress those caused by glm
+    # show all warnings
     add_definitions(-Wall -Wconversion)
-    # force linking  with c++11 lib
+    # force linking with c++11 lib
     if(APPLE)
         set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
         add_definitions(-stdlib=libc++)
