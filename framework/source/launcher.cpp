@@ -147,7 +147,7 @@ void Launcher::update_projection(GLFWwindow* m_window, int width, int height) {
     fov_y = 2.0f * glm::atan(glm::tan(m_camera_fov * 0.5f) * (1.0f / aspect));
   }
   // projection is hor+ 
-  glm::fmat4 camera_projection = glm::perspective(fov_y, aspect, 0.1f, 10.0f);
+  glm::fmat4 camera_projection = glm::perspective(fov_y, aspect, 0.1f, 100.0f);
   // upload matrix to gpu
   m_application->setProjection(camera_projection);
 }
