@@ -198,6 +198,7 @@ void Launcher::key_callback(GLFWwindow* m_window, int key, int scancode, int act
   else if (key == GLFW_KEY_R && action == GLFW_PRESS) {
     update_shader_programs(false);
   }
+  m_application->keyCallback(key, scancode, action, mods);
 }
 
 // calculate fps and show in m_window title
