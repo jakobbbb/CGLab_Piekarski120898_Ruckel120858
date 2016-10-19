@@ -95,6 +95,11 @@ void Launcher::initialize() {
   glfwSetKeyCallback(m_window, key_func);
   // allow free mouse movement
   glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  auto mouse_func = [](GLFWwindow* w, double a, double b) {
+        static_cast<Launcher*>(glfwGetWindowUserPointer(w))->mouse_callback(w, a, b);
+  };
+  glfwSetCursorPosCallback(m_window, mouse_func);
+  // allow free mouse movement
   // register resizing function
   auto resize_func = [](GLFWwindow* w, int a, int b) {
         static_cast<Launcher*>(glfwGetWindowUserPointer(w))->update_projection(w, a, b);
@@ -199,6 +204,13 @@ void Launcher::key_callback(GLFWwindow* m_window, int key, int scancode, int act
     update_shader_programs(false);
   }
   m_application->keyCallback(key, scancode, action, mods);
+}
+
+//handle mouse movement input
+void Launcher::mouse_callback(GLFWwindow* window, double pos_x, double pos_y) {
+  m_application->mouseCallback(pos_x, pos_y);
+  // reset cursor pos to receive position delta next frame
+  glfwSetCursorPos(m_window, 0.0, 0.0);
 }
 
 // calculate fps and show in m_window title

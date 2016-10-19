@@ -85,6 +85,11 @@ void ApplicationSolar::keyCallback(int key, int scancode, int action, int mods) 
   }
 }
 
+//handle delta mouse movement input
+void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
+  // mouse handling
+}
+
 // load shader programs
 void ApplicationSolar::initializeShaderPrograms() {
   // store shader program objects in container

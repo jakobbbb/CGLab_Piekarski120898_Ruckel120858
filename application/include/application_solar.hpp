@@ -19,6 +19,9 @@ class ApplicationSolar : public Application {
   void updateProjection();
   // react to key input
   void keyCallback(int key, int scancode, int action, int mods);
+  //handle delta mouse movement input
+  void mouseCallback(double pos_x, double pos_y);
+
   // draw all objects
   void render() const;
 

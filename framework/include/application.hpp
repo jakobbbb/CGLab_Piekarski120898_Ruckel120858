@@ -22,7 +22,10 @@ class Application {
   virtual void updateProjection() = 0;
   // react to key input
   inline virtual void keyCallback(int key, int scancode, int action, int mods) {};
-  // 
+  //handle delta mouse movement input
+  inline virtual void mouseCallback(double pos_x, double pos_y) {};
+
+  // give shader programs to launcher
   virtual std::map<std::string, shader_program>& getShaderPrograms();
   // draw all objects
   virtual void render() const = 0;
