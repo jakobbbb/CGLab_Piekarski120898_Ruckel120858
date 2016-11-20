@@ -17,6 +17,9 @@
 
 namespace texture_loader {
 pixel_data file(std::string const& file_name) {
+  // match to opengl representation
+  stbi_set_flip_vertically_on_load(true);
+
   uint8_t* data_ptr;
   int width = 0;
   int height = 0;
