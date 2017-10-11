@@ -102,21 +102,24 @@ void output_log(GLchar const* log_buffer, std::string const& prefix) {
 }
 
 std::string read_file(std::string const& name) {
-  std::ifstream file_in{name};
-  if(file_in) {
-    std::string contents;
-    file_in.seekg(0, std::ios::end);
-    contents.resize(file_in.tellg());
-    file_in.seekg(0, std::ios::beg);
-    file_in.read(&contents[0], contents.size());
-    file_in.close();
-    return(contents);
+  std::ifstream ifile(name);
+
+  if(ifile) {
+    std::string filetext;
+    
+    while(ifile.good()) {
+      std::string line;
+      std::getline(ifile, line);
+      filetext.append(line + "\n");
+    }
+    
+    return filetext; 
   }
   else {
     std::cerr << "File \'" << name << "\' not found" << std::endl;
     
     throw std::invalid_argument(name);
-  } 
+  }
 }
 
 };
