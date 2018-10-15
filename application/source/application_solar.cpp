@@ -1,5 +1,5 @@
 #include "application_solar.hpp"
-#include "launcher.hpp"
+#include "window_handler.hpp"
 
 #include "utils.hpp"
 #include "shader_loader.hpp"

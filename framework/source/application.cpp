@@ -1,7 +1,7 @@
 #include "application.hpp"
 
 #include "utils.hpp"
-#include "launcher.hpp"
+#include "window_handler.hpp"
 #include "shader_loader.hpp"
 
 #include <glbinding/gl/gl.h>
@@ -17,7 +17,6 @@ using namespace gl;
 
 static glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height);
 static void update_shader_programs(std::map<std::string, shader_program>& shaders, bool throwing);
-
 
 Application::Application(std::string const& resource_path)
  :m_resource_path{resource_path}
@@ -78,7 +77,6 @@ void Application::updateUniformLocations() {
     }
   }
 }
-
 
 static glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height) {
   float aspect = float(width) / float(height);

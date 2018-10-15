@@ -1,5 +1,5 @@
 #include "application_fixed.hpp"
-#include "launcher.hpp"
+#include "window_handler.hpp"
 
 #include <glbinding/gl/gl.h>
 // use gl definitions from glbinding 

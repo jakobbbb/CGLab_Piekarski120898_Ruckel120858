@@ -1,4 +1,4 @@
-#include "launcher.hpp"
+#include "window_handler.hpp"
 
 #include <glbinding/gl/gl.h>
 // load glbinding extensions
