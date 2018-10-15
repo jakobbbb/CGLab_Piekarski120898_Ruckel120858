@@ -153,18 +153,12 @@ ApplicationSolar::~ApplicationSolar() {
 // Launcher* launcher = nullptr; 
 // exe entry point
 int main(int argc, char* argv[]) {
-  // initial window dimensions
-    unsigned m_window_width = 640u;
-    unsigned m_window_height = 480u;
-
-
-    // launcher = new Launcher{argc, argv}; 
 
     std::string resource_path = read_resource_path(argc, argv);
-    GLFWwindow* window = initialize(m_window_width, m_window_height);
+    GLFWwindow* window = window_handler::initialize(640u, 480u);
     auto m_application = new ApplicationSolar{resource_path};
 
-    set_callback_object(m_application, window);
+    window_handler::set_callback_object(m_application, window);
 
     // do before framebuffer_resize call as it requires the projection uniform location
     // throw exception if shader compilation was unsuccessfull
@@ -186,10 +180,10 @@ int main(int argc, char* argv[]) {
       // swap draw buffer to front
       glfwSwapBuffers(window);
       // display fps
-      show_fps(window);
+      window_handler::show_fps(window);
     }
 
-    close_and_quit(window, EXIT_SUCCESS);
+    window_handler::close_and_quit(window, EXIT_SUCCESS);
 
 
     // launcher.mainLoop();

@@ -17,8 +17,10 @@ using namespace gl;
 
 Application::Application(std::string const& resource_path)
  :m_resource_path{resource_path}
+ ,m_window_width{640u}
+ ,m_window_height{480u}
  ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})}
- ,m_view_projection{1.0}
+ ,m_view_projection{calculate_projection_matrix(m_window_width, m_window_height)}
  ,m_shaders{}
 {}
 
@@ -29,25 +31,20 @@ Application::~Application() {
   }
 }
 
-
 void Application::reloadShaders(GLFWwindow* window, bool throwing) {
   update_shader_programs(m_shaders, throwing);
   // after shader programs are recompiled, uniform locations may change
   uploadUniforms();
-  // upload projection matrix to new shaders
-  int width, height;
-  glfwGetFramebufferSize(window, &width, &height);
-  resize_callback(window, width, height);
 }
 
-
 void Application::resize_callback(GLFWwindow* m_window, int width, int height) {
+  m_window_width = width;
+  m_window_height = height;
   // resize framebuffer
   glViewport(0, 0, width, height);
 
-  auto mat = calculate_projection_matrix(width, height);
-  // upload matrix to gpu
-  setProjection(mat);
+  m_view_projection = calculate_projection_matrix(width, height);
+  updateProjection();
 }
 
 // handle key input
@@ -66,11 +63,6 @@ void Application::mouse_callback(GLFWwindow* window, double pos_x, double pos_y)
   mouseCallback(pos_x, pos_y);
   // reset cursor pos to receive position delta next frame
   glfwSetCursorPos(window, 0.0, 0.0);
-}
-
-void Application::setProjection(glm::fmat4 const& projection_mat) {
-  m_view_projection = projection_mat;
-  updateProjection();
 }
 
 // update shader uniform locations

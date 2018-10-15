@@ -26,23 +26,10 @@
 using namespace gl;
 
 // helper functions
+static void glsl_error(int error, const char* description);
+static void watch_gl_errors(bool activate = true);
 
-std::string read_resource_path(int argc, char* argv[]) {
-  std::string resource_path{};
-  //first argument is resource path
-  if (argc > 1) {
-    resource_path = argv[1];
-  }
-  // no resource path specified, use default
-  else {
-    std::string exe_path{argv[0]};
-    resource_path = exe_path.substr(0, exe_path.find_last_of("/\\"));
-    resource_path += "/../../resources/";
-  }
-
-  return resource_path;
-}
-
+namespace window_handler { 
 GLFWwindow* initialize(unsigned width, unsigned height) {
 
   glfwSetErrorCallback(glsl_error);
@@ -103,7 +90,56 @@ void set_callback_object(Application* app, GLFWwindow* window) {
   glfwSetFramebufferSizeCallback(window, resize_func);  
 }
 
+///////////////////////////// misc functions ////////////////////////////////
+
+// calculate fps and show in m_window title
+void show_fps(GLFWwindow* window) {
+    // variables for fps computation
+  static double m_last_second_time;
+  static unsigned m_frames_per_second;
+
+  ++m_frames_per_second;
+  double current_time = glfwGetTime();
+  if (current_time - m_last_second_time >= 1.0) {
+    std::string title{"OpenGL Framework - "};
+    title += std::to_string(m_frames_per_second) + " fps";
+
+    glfwSetWindowTitle(window, title.c_str());
+    m_frames_per_second = 0;
+    m_last_second_time = current_time;
+  }
+}
+
+void close_and_quit(GLFWwindow* window, int status) {
+  // free opengl resources
+  // delete m_application;
+  // free glfw resources
+  glfwDestroyWindow(window);
+  glfwTerminate();
+
+  std::exit(status);
+}
+
+}
+
 ///////////////////////////// update functions ////////////////////////////////
+
+std::string read_resource_path(int argc, char* argv[]) {
+  std::string resource_path{};
+  //first argument is resource path
+  if (argc > 1) {
+    resource_path = argv[1];
+  }
+  // no resource path specified, use default
+  else {
+    std::string exe_path{argv[0]};
+    resource_path = exe_path.substr(0, exe_path.find_last_of("/\\"));
+    resource_path += "/../../resources/";
+  }
+
+  return resource_path;
+}
+
 // update viewport and field of view
 glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height) {
   float aspect = float(width) / float(height);
@@ -147,42 +183,11 @@ void update_shader_programs(std::map<std::string, shader_program>& shaders, bool
   }
 }
 
-///////////////////////////// misc functions ////////////////////////////////
-
-// calculate fps and show in m_window title
-void show_fps(GLFWwindow* window) {
-    // variables for fps computation
-  static double m_last_second_time;
-  static unsigned m_frames_per_second;
-
-  ++m_frames_per_second;
-  double current_time = glfwGetTime();
-  if (current_time - m_last_second_time >= 1.0) {
-    std::string title{"OpenGL Framework - "};
-    title += std::to_string(m_frames_per_second) + " fps";
-
-    glfwSetWindowTitle(window, title.c_str());
-    m_frames_per_second = 0;
-    m_last_second_time = current_time;
-  }
-}
-
-void close_and_quit(GLFWwindow* window, int status) {
-  // free opengl resources
-  // delete m_application;
-  // free glfw resources
-  glfwDestroyWindow(window);
-  glfwTerminate();
-
-  std::exit(status);
-}
-
-
-void glsl_error(int error, const char* description) {
+static void glsl_error(int error, const char* description) {
   std::cerr << "GLSL Error " << error << " : "<< description << std::endl;
 }
 
-void watch_gl_errors(bool activate) {
+static void watch_gl_errors(bool activate) {
   if(activate) {
     // add callback after each function call
     glbinding::setCallbackMaskExcept(glbinding::CallbackMask::After | glbinding::CallbackMask::ParametersAndReturnValue, {"glGetError", "glBegin", "glVertex3f", "glColor3f"});
