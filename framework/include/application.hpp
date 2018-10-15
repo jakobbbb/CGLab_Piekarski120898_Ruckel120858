@@ -7,6 +7,7 @@
 
 #include <map>
 
+class GLFWwindow;
 // gpu representation of model
 class Application {
  public:
@@ -25,12 +26,21 @@ class Application {
   //handle delta mouse movement input
   inline virtual void mouseCallback(double pos_x, double pos_y) {};
 
+  // update viewport and field of view
+  void resize_callback(GLFWwindow* window, int width, int height);
+  // handle key input
+  void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+  //handle mouse movement input
+  void mouse_callback(GLFWwindow* window, double pos_x, double pos_y);
+
   // give shader programs to launcher
   virtual std::map<std::string, shader_program>& getShaderPrograms();
   // draw all objects
   virtual void render() const = 0;
 
- protected:
+  void reloadShaders(GLFWwindow* window, bool throwing);
+
+ // protected:
   void updateUniformLocations();
 
   std::string m_resource_path; 

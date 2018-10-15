@@ -75,11 +75,11 @@ void ApplicationSolar::uploadUniforms() {
 
 // handle key input
 void ApplicationSolar::keyCallback(int key, int scancode, int action, int mods) {
-  if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+  if (key == GLFW_KEY_W  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
     m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, -0.1f});
     updateView();
   }
-  else if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+  else if (key == GLFW_KEY_S  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
     m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, 0.1f});
     updateView();
   }
@@ -146,7 +146,51 @@ ApplicationSolar::~ApplicationSolar() {
   glDeleteVertexArrays(1, &planet_object.vertex_AO);
 }
 
+//dont load gl bindings from glfw
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
+// Launcher* launcher = nullptr; 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Launcher::run<ApplicationSolar>(argc, argv);
+  // initial window dimensions
+    unsigned m_window_width = 640u;
+    unsigned m_window_height = 480u;
+
+
+    // launcher = new Launcher{argc, argv}; 
+
+    std::string resource_path = read_resource_path(argc, argv);
+    GLFWwindow* window = initialize(m_window_width, m_window_height);
+    auto m_application = new ApplicationSolar{resource_path};
+
+    set_callback_object(m_application, window);
+
+    // do before framebuffer_resize call as it requires the projection uniform location
+    // throw exception if shader compilation was unsuccessfull
+    // launcher->update_shader_programs(true);
+    m_application->reloadShaders(window, false);
+
+    // enable depth testing
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    
+    // rendering loop
+    while (!glfwWindowShouldClose(window)) {
+      // query input
+      glfwPollEvents();
+      // clear buffer
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      // draw geometry
+      m_application->render();
+      // swap draw buffer to front
+      glfwSwapBuffers(window);
+      // display fps
+      show_fps(window);
+    }
+
+    close_and_quit(window, EXIT_SUCCESS);
+
+
+    // launcher.mainLoop();
 }
