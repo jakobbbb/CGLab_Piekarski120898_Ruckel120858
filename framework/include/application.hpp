@@ -18,7 +18,7 @@ class Application {
 
   // update uniform locations and values
   inline virtual void uploadUniforms() {};
-  virtual void updateProjection() = 0;
+  virtual void uploadProjection() = 0;
   // react to key input
   inline virtual void keyCallback(int key, int scancode, int action, int mods) {};
   //handle delta mouse movement input
@@ -30,15 +30,12 @@ class Application {
   void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
   //handle mouse movement input
   void mouse_callback(GLFWwindow* window, double pos_x, double pos_y);
-
-  // give shader programs to launcher
-  virtual std::map<std::string, shader_program>& getShaderPrograms();
   // draw all objects
   virtual void render() const = 0;
 
-  void reloadShaders(GLFWwindow* window, bool throwing);
+  void reloadShaders(bool throwing);
 
- // protected:
+ protected:
   void updateUniformLocations();
 
   std::string m_resource_path; 

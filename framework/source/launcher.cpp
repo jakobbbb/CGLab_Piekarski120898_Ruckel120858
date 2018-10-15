@@ -29,7 +29,8 @@ using namespace gl;
 static void glsl_error(int error, const char* description);
 static void watch_gl_errors(bool activate = true);
 
-namespace window_handler { 
+namespace window_handler {
+
 GLFWwindow* initialize(unsigned width, unsigned height) {
 
   glfwSetErrorCallback(glsl_error);
@@ -68,7 +69,7 @@ GLFWwindow* initialize(unsigned width, unsigned height) {
   return window;
 }
  
-void set_callback_object(Application* app, GLFWwindow* window) {
+void set_callback_object(GLFWwindow* window, Application* app) {
   // set user pointer to access this instance statically
   glfwSetWindowUserPointer(window, app);
   // register key input function
@@ -111,8 +112,6 @@ void show_fps(GLFWwindow* window) {
 }
 
 void close_and_quit(GLFWwindow* window, int status) {
-  // free opengl resources
-  // delete m_application;
   // free glfw resources
   glfwDestroyWindow(window);
   glfwTerminate();
@@ -120,67 +119,6 @@ void close_and_quit(GLFWwindow* window, int status) {
   std::exit(status);
 }
 
-}
-
-///////////////////////////// update functions ////////////////////////////////
-
-std::string read_resource_path(int argc, char* argv[]) {
-  std::string resource_path{};
-  //first argument is resource path
-  if (argc > 1) {
-    resource_path = argv[1];
-  }
-  // no resource path specified, use default
-  else {
-    std::string exe_path{argv[0]};
-    resource_path = exe_path.substr(0, exe_path.find_last_of("/\\"));
-    resource_path += "/../../resources/";
-  }
-
-  return resource_path;
-}
-
-// update viewport and field of view
-glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height) {
-  float aspect = float(width) / float(height);
-  // base fov does not change
-  static const float fov_y_base = glm::radians(60.0f);
-  float fov_y = fov_y_base;
-  // if width is smaller, extend vertical fov 
-  if (width < height) {
-    fov_y = 2.0f * glm::atan(glm::tan(fov_y * 0.5f) * (1.0f / aspect));
-  }
-  // projection is hor+ 
-  return glm::perspective(fov_y, aspect, 0.1f, 100.0f);
-}
-
-// load shader programs and update uniform locations
-void update_shader_programs(std::map<std::string, shader_program>& shaders, bool throwing) {
-  // actual functionality in lambda to allow update with and without throwing
-  auto update_lambda = [&](){
-    // reload all shader programs
-    for (auto& pair : shaders) {
-      // throws exception when compiling was unsuccessfull
-      GLuint new_program = shader_loader::program(pair.second.vertex_path,
-                                                  pair.second.fragment_path);
-      // free old shader program
-      glDeleteProgram(pair.second.handle);
-      // save new shader program
-      pair.second.handle = new_program;
-    }
-  };
-
-  if (throwing) {
-    update_lambda();
-  }
-  else {
-    try {
-     update_lambda();
-    }
-    catch(std::exception&) {
-      // dont crash, allow another try
-    }
-  }
 }
 
 static void glsl_error(int error, const char* description) {

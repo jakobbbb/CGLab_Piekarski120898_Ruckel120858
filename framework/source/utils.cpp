@@ -1,10 +1,13 @@
 #include "utils.hpp"
+
 #include "pixel_data.hpp"
 #include "structs.hpp"
 
 #include <glbinding/gl/functions.h>
 // use gl definitions from glbinding 
 using namespace gl;
+
+#include <glm/gtc/type_precision.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -120,6 +123,24 @@ std::string read_file(std::string const& name) {
     
     throw std::invalid_argument(name);
   }
+}
+
+///////////////////////////// update functions ////////////////////////////////
+
+std::string read_resource_path(int argc, char* argv[]) {
+  std::string resource_path{};
+  //first argument is resource path
+  if (argc > 1) {
+    resource_path = argv[1];
+  }
+  // no resource path specified, use default
+  else {
+    std::string exe_path{argv[0]};
+    resource_path = exe_path.substr(0, exe_path.find_last_of("/\\"));
+    resource_path += "/../../resources/";
+  }
+
+  return resource_path;
 }
 
 };

@@ -56,7 +56,7 @@ void ApplicationSolar::updateView() {
                      1, GL_FALSE, glm::value_ptr(view_matrix));
 }
 
-void ApplicationSolar::updateProjection() {
+void ApplicationSolar::uploadProjection() {
   // upload matrix to gpu
   glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ProjectionMatrix"),
                      1, GL_FALSE, glm::value_ptr(m_view_projection));
@@ -70,7 +70,7 @@ void ApplicationSolar::uploadUniforms() {
   glUseProgram(m_shaders.at("planet").handle);
   
   updateView();
-  updateProjection();
+  uploadProjection();
 }
 
 // handle key input
@@ -150,20 +150,17 @@ ApplicationSolar::~ApplicationSolar() {
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-// Launcher* launcher = nullptr; 
 // exe entry point
 int main(int argc, char* argv[]) {
 
-    std::string resource_path = read_resource_path(argc, argv);
+    std::string resource_path = utils::read_resource_path(argc, argv);
+
     GLFWwindow* window = window_handler::initialize(640u, 480u);
-    auto m_application = new ApplicationSolar{resource_path};
+    auto application = new ApplicationSolar{resource_path};
 
-    window_handler::set_callback_object(m_application, window);
+    window_handler::set_callback_object(window, application);
 
-    // do before framebuffer_resize call as it requires the projection uniform location
-    // throw exception if shader compilation was unsuccessfull
-    // launcher->update_shader_programs(true);
-    m_application->reloadShaders(window, false);
+    application->reloadShaders(false);
 
     // enable depth testing
     glEnable(GL_DEPTH_TEST);
@@ -176,15 +173,13 @@ int main(int argc, char* argv[]) {
       // clear buffer
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       // draw geometry
-      m_application->render();
+      application->render();
       // swap draw buffer to front
       glfwSwapBuffers(window);
       // display fps
       window_handler::show_fps(window);
     }
 
+    delete application;
     window_handler::close_and_quit(window, EXIT_SUCCESS);
-
-
-    // launcher.mainLoop();
 }

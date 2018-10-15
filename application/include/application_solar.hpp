@@ -16,7 +16,7 @@ class ApplicationSolar : public Application {
   // update uniform locations and values
   void uploadUniforms();
   // update projection matrix
-  void updateProjection();
+  void uploadProjection();
   // react to key input
   void keyCallback(int key, int scancode, int action, int mods);
   //handle delta mouse movement input
