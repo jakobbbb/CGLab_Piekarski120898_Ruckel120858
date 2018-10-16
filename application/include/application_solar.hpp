@@ -21,6 +21,8 @@ class ApplicationSolar : public Application {
   void keyCallback(int key, int scancode, int action, int mods);
   //handle delta mouse movement input
   void mouseCallback(double pos_x, double pos_y);
+//handle resizing
+  void resizeCallback(unsigned width, unsigned height);
 
   // draw all objects
   void render() const;
@@ -32,6 +34,15 @@ class ApplicationSolar : public Application {
 
   // cpu representation of model
   model_object planet_object;
+  
+  // camera transform matrix
+  glm::fmat4 m_view_transform;
+  // camera projection matrix
+  glm::fmat4 m_view_projection;
+
+  // window dimensions
+  unsigned m_window_width;
+  unsigned m_window_height;
 };
 
 #endif

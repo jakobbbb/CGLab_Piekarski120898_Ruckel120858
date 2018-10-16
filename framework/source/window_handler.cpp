@@ -86,12 +86,11 @@ void set_callback_object(GLFWwindow* window, Application* app) {
   // allow free mouse movement
   // register resizing function
   auto resize_func = [](GLFWwindow* w, int a, int b) {
-        static_cast<Application*>(glfwGetWindowUserPointer(w))->resize_callback(w, a, b);
+        static_cast<Application*>(glfwGetWindowUserPointer(w))->resize_callback(a, b);
   };
   glfwSetFramebufferSizeCallback(window, resize_func);  
 }
 
-///////////////////////////// misc functions ////////////////////////////////
 
 // calculate fps and show in m_window title
 void show_fps(GLFWwindow* window) {
@@ -119,8 +118,9 @@ void close_and_quit(GLFWwindow* window, int status) {
   std::exit(status);
 }
 
-}
+};
 
+///////////////////////////// local helper functions //////////////////////////
 static void glsl_error(int error, const char* description) {
   std::cerr << "GLSL Error " << error << " : "<< description << std::endl;
 }

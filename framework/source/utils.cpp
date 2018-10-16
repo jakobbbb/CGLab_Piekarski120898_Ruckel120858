@@ -8,6 +8,7 @@
 using namespace gl;
 
 #include <glm/gtc/type_precision.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -125,8 +126,6 @@ std::string read_file(std::string const& name) {
   }
 }
 
-///////////////////////////// update functions ////////////////////////////////
-
 std::string read_resource_path(int argc, char* argv[]) {
   std::string resource_path{};
   //first argument is resource path
@@ -141,6 +140,19 @@ std::string read_resource_path(int argc, char* argv[]) {
   }
 
   return resource_path;
+}
+
+glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height) {
+  float aspect = float(width) / float(height);
+  // base fov does not change
+  static const float fov_y_base = glm::radians(60.0f);
+  float fov_y = fov_y_base;
+  // if width is smaller, extend vertical fov 
+  if (width < height) {
+    fov_y = 2.0f * glm::atan(glm::tan(fov_y * 0.5f) * (1.0f / aspect));
+  }
+  // projection is hor+ 
+  return glm::perspective(fov_y, aspect, 0.1f, 100.0f);
 }
 
 };

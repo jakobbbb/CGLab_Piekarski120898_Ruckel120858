@@ -111,9 +111,10 @@ void ApplicationVao::render() const {
 }
 
 void ApplicationVao::uploadProjection() {
+  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
   // upload matrix to gpu
   glUniformMatrix4fv(m_shaders.at("vao").u_locs.at("ProjectionMatrix"),
-                     1, GL_FALSE, glm::value_ptr(m_view_projection));
+                     1, GL_FALSE, glm::value_ptr(projection_matrix));
 }
 
 // callback after shader reloading

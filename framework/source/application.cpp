@@ -8,22 +8,14 @@
 // use gl definitions from glbinding 
 using namespace gl;
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-
 //dont load gl bindings from glfw
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-static glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height);
 static void update_shader_programs(std::map<std::string, shader_program>& shaders, bool throwing);
 
 Application::Application(std::string const& resource_path)
  :m_resource_path{resource_path}
- ,m_window_width{640u}
- ,m_window_height{480u}
- ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})}
- ,m_view_projection{calculate_projection_matrix(m_window_width, m_window_height)}
  ,m_shaders{}
 {}
 
@@ -40,13 +32,23 @@ void Application::reloadShaders(bool throwing) {
   uploadUniforms();
 }
 
-void Application::resize_callback(GLFWwindow* m_window, int width, int height) {
-  m_window_width = width;
-  m_window_height = height;
+// update shader uniform locations
+void Application::updateUniformLocations() {
+  for (auto& pair : m_shaders) {
+    for (auto& uniform : pair.second.u_locs) {
+      // store uniform location in map
+      uniform.second = utils::glGetUniformLocation(pair.second.handle, uniform.first.c_str());
+    }
+  }
+}
+
+///////////////////////////// callback functions for window events ////////////
+void Application::resize_callback(unsigned width, unsigned height) {
   // resize framebuffer
   glViewport(0, 0, width, height);
+  // resize fbo attachments
+  resizeCallback(width, height);
 
-  m_view_projection = calculate_projection_matrix(width, height);
   uploadProjection();
 }
 
@@ -58,7 +60,9 @@ void Application::key_callback(GLFWwindow* m_window, int key, int scancode, int 
   else if (key == GLFW_KEY_R && action == GLFW_PRESS) {
     reloadShaders(false);
   }
-  keyCallback(key, scancode, action, mods);
+  else {
+    keyCallback(key, scancode, action, mods);
+  }
 }
 
 //handle mouse movement input
@@ -68,29 +72,7 @@ void Application::mouse_callback(GLFWwindow* window, double pos_x, double pos_y)
   glfwSetCursorPos(window, 0.0, 0.0);
 }
 
-// update shader uniform locations
-void Application::updateUniformLocations() {
-  for (auto& pair : m_shaders) {
-    for (auto& uniform : pair.second.u_locs) {
-      // store uniform location in map
-      uniform.second = utils::glGetUniformLocation(pair.second.handle, uniform.first.c_str());
-    }
-  }
-}
-
-static glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height) {
-  float aspect = float(width) / float(height);
-  // base fov does not change
-  static const float fov_y_base = glm::radians(60.0f);
-  float fov_y = fov_y_base;
-  // if width is smaller, extend vertical fov 
-  if (width < height) {
-    fov_y = 2.0f * glm::atan(glm::tan(fov_y * 0.5f) * (1.0f / aspect));
-  }
-  // projection is hor+ 
-  return glm::perspective(fov_y, aspect, 0.1f, 100.0f);
-}
-
+///////////////////////////// local helper functions //////////////////////////
 // update uniform locations
 static void update_shader_programs(std::map<std::string, shader_program>& shaders, bool throwing) {
   // actual functionality in lambda to allow update with and without throwing

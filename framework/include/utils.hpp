@@ -5,6 +5,8 @@
 // use gl definitions from glbinding 
 using namespace gl;
 
+#include <glm/gtc/type_precision.hpp>
+
 #include <map>
 
 struct pixel_data;
@@ -36,6 +38,9 @@ namespace utils {
 
   // return path to resources depending on cmdline args
   std::string read_resource_path(int argc, char* argv[]);
+
+  // calculate Vert+ FOV projection matrix
+  glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height);
 }
 
 #endif

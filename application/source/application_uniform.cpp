@@ -51,8 +51,9 @@ void ApplicationUniform::render() const {
 }
 
 void ApplicationUniform::uploadProjection() {
+  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
   // upload matrix to gpu
-  glUniformMatrix4fv(m_ul_projection, 1, GL_FALSE, glm::value_ptr(m_view_projection));
+  glUniformMatrix4fv(m_ul_projection, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 }
 
 // callback after shader reloading

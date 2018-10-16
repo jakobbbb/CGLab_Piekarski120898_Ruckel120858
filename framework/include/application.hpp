@@ -19,39 +19,40 @@ class Application {
   // free
   virtual ~Application();
 
-  // update uniform locations and values
-  inline virtual void uploadUniforms() {};
-  virtual void uploadProjection() = 0;
-  // react to key input
-  inline virtual void keyCallback(int key, int scancode, int action, int mods) {};
-  //handle delta mouse movement input
-  inline virtual void mouseCallback(double pos_x, double pos_y) {};
-
   // update viewport and field of view
-  void resize_callback(GLFWwindow* window, int width, int height);
+  void resize_callback(unsigned width, unsigned height);
   // handle key input
   void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
   //handle mouse movement input
   void mouse_callback(GLFWwindow* window, double pos_x, double pos_y);
+  // recompile shaders form source files
+  void reloadShaders(bool throwing);
+
+// functiosn which are implemented in derived classes
+  // upload projection matrix to all shaders that use it
+  virtual void uploadProjection() = 0;
+  // update uniform locations and values
+  inline virtual void uploadUniforms() {};
+  // react to key input
+  inline virtual void keyCallback(int key, int scancode, int action, int mods) {};
+  //handle delta mouse movement input
+  inline virtual void mouseCallback(double pos_x, double pos_y) {};
+  // update framebuffer textures
+  inline virtual void resizeCallback(unsigned width, unsigned height) {};
   // draw all objects
   virtual void render() const = 0;
-
-  void reloadShaders(bool throwing);
 
  protected:
   void updateUniformLocations();
 
   std::string m_resource_path; 
 
-  // initial window dimensions
-  unsigned m_window_width;
-  unsigned m_window_height;
-
-  glm::fmat4 m_view_transform;
-  glm::fmat4 m_view_projection;
-
   // container for the shader programs
   std::map<std::string, shader_program> m_shaders{};
+
+  // resolution when 
+  static const unsigned C_INITIAL_WINDOW_WIDTH = 640u;
+  static const unsigned C_INITIAL_WINDOW_HEIGHT = 480u;
 };
 
 #include "utils.hpp"
@@ -63,10 +64,11 @@ class Application {
 
 template<typename T>
 void Application::run(int argc, char* argv[]) {  
-    std::string resource_path = utils::read_resource_path(argc, argv);
 
-    GLFWwindow* window = window_handler::initialize(640u, 480u);
-    auto application = new T{resource_path};
+    GLFWwindow* window = window_handler::initialize(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
+    
+    std::string resource_path = utils::read_resource_path(argc, argv);
+    T* application = new T{resource_path};
 
     window_handler::set_callback_object(window, application);
 

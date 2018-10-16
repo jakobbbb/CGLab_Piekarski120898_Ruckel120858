@@ -92,9 +92,10 @@ void ApplicationShader::render() const {
 }
 
 void ApplicationShader::uploadProjection() {
+  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
   // upload projection matrix
   glMatrixMode(GL_PROJECTION);
-  glLoadMatrixf(glm::value_ptr(m_view_projection));
+  glLoadMatrixf(glm::value_ptr(projection_matrix));
 }
 
 // exe entry point
