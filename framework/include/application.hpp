@@ -71,6 +71,7 @@ void Application::run(int argc, char* argv[]) {
 
     window_handler::set_callback_object(window, application);
 
+    // do intial shader load an uniform upload
     application->reloadShaders(true);
 
     // enable depth testing

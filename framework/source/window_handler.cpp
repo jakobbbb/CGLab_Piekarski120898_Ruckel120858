@@ -28,6 +28,15 @@ using namespace gl;
 // helper functions
 static void glsl_error(int error, const char* description);
 static void watch_gl_errors(bool activate = true);
+static void APIENTRY openglCallbackFunction(
+  GLenum source,
+  GLenum type,
+  GLuint id,
+  GLenum severity,
+  GLsizei length,
+  const GLchar* message,
+  const void* userParam
+);
 
 namespace window_handler {
 
@@ -43,6 +52,8 @@ GLFWwindow* initialize(unsigned width, unsigned height) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
+  glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+
   //MacOS requires core profile
   #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -65,6 +76,14 @@ GLFWwindow* initialize(unsigned width, unsigned height) {
 
   // activate error checking after each gl function call
   watch_gl_errors();
+
+  // Enable the debug callback
+  glEnable(GL_DEBUG_OUTPUT);
+  glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+  glDebugMessageCallback(openglCallbackFunction, nullptr);
+  glDebugMessageControl(
+    GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true
+  );
 
   return window;
 }
@@ -125,6 +144,27 @@ static void glsl_error(int error, const char* description) {
   std::cerr << "GLSL Error " << error << " : "<< description << std::endl;
 }
 
+static void APIENTRY openglCallbackFunction(
+  GLenum source,
+  GLenum type,
+  GLuint id,
+  GLenum severity,
+  GLsizei length,
+  const GLchar* message,
+  const void* userParam
+){
+  (void)source; (void)type; (void)id; 
+  (void)severity; (void)length; (void)userParam;
+  if (severity == GL_DEBUG_SEVERITY_NOTIFICATION || type == GL_DEBUG_TYPE_PERFORMANCE) {
+    return;
+  }
+  std::cerr << glbinding::Meta::getString(severity) << " - " << glbinding::Meta::getString(type) << ": ";
+  std::cerr << message << std::endl;
+  // if (severity != GL_DEBUG_SEVERITY_NOTIFICATION && type != GL_DEBUG_TYPE_PERFORMANCE) {
+  //   throw std::runtime_error{"OpenGL error"};
+  // }
+}
+
 static void watch_gl_errors(bool activate) {
   if(activate) {
     // add callback after each function call
@@ -150,7 +190,7 @@ static void watch_gl_errors(bool activate) {
           // error
           std::cerr  << " - " << glbinding::Meta::getString(error) << std::endl;
           // throw exception to allow for backtrace
-          throw std::runtime_error("Execution of " + std::string(call.function->name()));
+          throw std::runtime_error("OpenGl error: " + std::string(call.function->name()));
           exit(EXIT_FAILURE);
         }
       }
