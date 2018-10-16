@@ -155,4 +155,4 @@ glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height) {
   return glm::perspective(fov_y, aspect, 0.1f, 100.0f);
 }
 
-};
+}

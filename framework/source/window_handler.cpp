@@ -118,7 +118,7 @@ void close_and_quit(GLFWwindow* window, int status) {
   std::exit(status);
 }
 
-};
+}
 
 ///////////////////////////// local helper functions //////////////////////////
 static void glsl_error(int error, const char* description) {

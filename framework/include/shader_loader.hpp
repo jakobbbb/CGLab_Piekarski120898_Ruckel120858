@@ -13,6 +13,6 @@ namespace shader_loader {
   unsigned program(std::string const& vertex_name, std::string const& fragment_name);
   // create program from vertex, geometry and fragment shader
   unsigned program(std::string const& vertex_path, std::string const& geometry_path, std::string const& fragment_path);
-};
+}
 
 #endif

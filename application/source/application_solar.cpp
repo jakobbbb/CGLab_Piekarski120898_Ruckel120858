@@ -29,6 +29,12 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
   initializeShaderPrograms();
 }
 
+ApplicationSolar::~ApplicationSolar() {
+  glDeleteBuffers(1, &planet_object.vertex_BO);
+  glDeleteBuffers(1, &planet_object.element_BO);
+  glDeleteVertexArrays(1, &planet_object.vertex_AO);
+}
+
 void ApplicationSolar::render() const {
   // bind shader to upload uniforms
   glUseProgram(m_shaders.at("planet").handle);
@@ -68,37 +74,13 @@ void ApplicationSolar::uploadProjection() {
 void ApplicationSolar::uploadUniforms() { 
   // bind shader to which to upload unforms
   glUseProgram(m_shaders.at("planet").handle);
-  
+  // upload uniform values to new locations
   uploadView();
   uploadProjection();
 }
 
-// handle key input
-void ApplicationSolar::keyCallback(int key, int action, int mods) {
-  if (key == GLFW_KEY_W  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, -0.1f});
-    uploadView();
-  }
-  else if (key == GLFW_KEY_S  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, 0.1f});
-    uploadView();
-  }
-}
-
-//handle delta mouse movement input
-void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
-  // mouse handling
-}
-
-//handle resizing
-void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
-  // recalculate projection matrix for new aspect ration
-  m_view_projection = utils::calculate_projection_matrix(width, height);
-
-  uploadProjection();
-}
-
-// load shader programs
+///////////////////////////// intialisation functions /////////////////////////
+// load shader sources
 void ApplicationSolar::initializeShaderPrograms() {
   // store shader program objects in container
   m_shaders.emplace("planet", shader_program{m_resource_path + "shaders/simple.vert",
@@ -148,11 +130,32 @@ void ApplicationSolar::initializeGeometry() {
   planet_object.num_elements = GLsizei(planet_model.indices.size());
 }
 
-ApplicationSolar::~ApplicationSolar() {
-  glDeleteBuffers(1, &planet_object.vertex_BO);
-  glDeleteBuffers(1, &planet_object.element_BO);
-  glDeleteVertexArrays(1, &planet_object.vertex_AO);
+///////////////////////////// callback functions for window events ////////////
+// handle key input
+void ApplicationSolar::keyCallback(int key, int action, int mods) {
+  if (key == GLFW_KEY_W  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, -0.1f});
+    uploadView();
+  }
+  else if (key == GLFW_KEY_S  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, 0.1f});
+    uploadView();
+  }
 }
+
+//handle delta mouse movement input
+void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
+  // mouse handling
+}
+
+//handle resizing
+void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
+  // recalculate projection matrix for new aspect ration
+  m_view_projection = utils::calculate_projection_matrix(width, height);
+  // upload new projection matrix
+  uploadProjection();
+}
+
 
 // exe entry point
 int main(int argc, char* argv[]) {

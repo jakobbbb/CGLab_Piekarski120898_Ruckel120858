@@ -99,7 +99,7 @@ endif()
 if(NOT MSVC)
     add_definitions(-std=c++11)
     # show all warnings
-    add_definitions(-Wall -Wconversion)
+    add_definitions(-Wall -Wconversion -Wextra -Wpedantic -Wno-unused-parameter)
     # force linking with c++11 lib
     if(APPLE)
         set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")

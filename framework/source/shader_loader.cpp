@@ -126,4 +126,4 @@ GLuint program(std::string const& vertex_path, std::string const& geometry_path,
   return program;
 }
 
-};
+}

@@ -61,4 +61,4 @@ pixel_data file(std::string const& file_name) {
   return pixel_data{texture_data, pixel_format, GL_UNSIGNED_BYTE, std::size_t(width), std::size_t(height)};
 }
 
-};
+}

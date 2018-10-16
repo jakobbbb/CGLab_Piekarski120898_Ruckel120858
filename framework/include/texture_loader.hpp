@@ -7,6 +7,6 @@
 
 namespace texture_loader {
   pixel_data file(std::string const& file_name);
-};
+}
 
 #endif

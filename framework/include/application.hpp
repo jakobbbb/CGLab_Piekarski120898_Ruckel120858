@@ -16,7 +16,7 @@ class Application {
 
   // allocate and initialize objects
   Application(std::string const& resource_path);
-  // free
+  // free shader resources
   virtual ~Application();
 
   // update viewport and field of view

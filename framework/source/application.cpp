@@ -27,6 +27,7 @@ Application::~Application() {
 }
 
 void Application::reloadShaders(bool throwing) {
+  // recompile shaders from source files
   update_shader_programs(m_shaders, throwing);
   // after shader programs are recompiled, uniform locations may change
   updateUniformLocations();
@@ -47,6 +48,7 @@ void Application::updateUniformLocations() {
 ///////////////////////////// callback functions for window events ////////////
 // handle key input
 void Application::key_callback(GLFWwindow* m_window, int key, int action, int mods) {
+  // handle special keys
   if ((key == GLFW_KEY_ESCAPE || key == GLFW_KEY_Q) && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(m_window, 1);
   }

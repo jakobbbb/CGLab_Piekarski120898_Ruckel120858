@@ -150,9 +150,9 @@ std::vector<glm::fvec3> generate_tangents(tinyobj::mesh_t const& model) {
   // calculate tangent for triangles
   for (unsigned i = 0; i < model.indices.size() / 3; i++) {
     // indices of vertices of this triangle
-    unsigned indices[3] = {model.indices[i * 3],
-                           model.indices[i * 3 + 1],
-                           model.indices[i * 3 + 2]};
+    // unsigned indices[3] = {model.indices[i * 3],
+    //                        model.indices[i * 3 + 1],
+    //                        model.indices[i * 3 + 2]};
     // access an attribute of xth vert with vector access "attribute[indices[x]]"
     
     // calculate tangent for the triangle and add it to the accumulation tangents of the adjacent vertices
@@ -168,4 +168,4 @@ std::vector<glm::fvec3> generate_tangents(tinyobj::mesh_t const& model) {
   return tangents;
 }
 
-};
+}
