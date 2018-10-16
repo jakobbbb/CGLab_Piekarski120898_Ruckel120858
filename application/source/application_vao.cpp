@@ -22,7 +22,7 @@ ApplicationVao::ApplicationVao(std::string const& resource_path)
  ,m_vertex_ao{0}
  ,m_vertex_bo{0}
  ,m_index_bo{0}
- ,m_view_projection{utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT)}
+ ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
   initializeShaderPrograms();
   initializeGeometry();

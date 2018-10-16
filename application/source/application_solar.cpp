@@ -23,7 +23,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
  ,planet_object{}
  ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})}
- ,m_view_projection{utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT)}
+ ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
   initializeGeometry();
   initializeShaderPrograms();
@@ -151,7 +151,7 @@ void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
 //handle resizing
 void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
   // recalculate projection matrix for new aspect ration
-  m_view_projection = utils::calculate_projection_matrix(width, height);
+  m_view_projection = utils::calculate_projection_matrix(float(width) / float(height));
   // upload new projection matrix
   uploadProjection();
 }

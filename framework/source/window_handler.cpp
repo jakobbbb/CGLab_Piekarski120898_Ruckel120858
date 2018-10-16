@@ -40,7 +40,7 @@ static void APIENTRY openglCallbackFunction(
 
 namespace window_handler {
 
-GLFWwindow* initialize(unsigned width, unsigned height) {
+GLFWwindow* initialize(glm::uvec2 const& resolution) {
 
   glfwSetErrorCallback(glsl_error);
 
@@ -61,7 +61,7 @@ GLFWwindow* initialize(unsigned width, unsigned height) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
   #endif
   // create m_window, if unsuccessfull, quit
-  GLFWwindow* window = glfwCreateWindow(width, height, "OpenGL Framework", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(resolution.x, resolution.y, "OpenGL Framework", NULL, NULL);
   if (!window) {
     glfwTerminate();
     std::exit(EXIT_FAILURE);

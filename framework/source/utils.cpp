@@ -133,13 +133,13 @@ std::string read_resource_path(int argc, char* argv[]) {
   return resource_path;
 }
 
-glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height) {
-  float aspect = float(width) / float(height);
+glm::fmat4 calculate_projection_matrix(float aspect) {
+  // float aspect = float(width) / float(height);
   // base fov does not change
   static const float fov_y_base = glm::radians(60.0f);
   float fov_y = fov_y_base;
   // if width is smaller, extend vertical fov 
-  if (width < height) {
+  if (aspect < 1.0f) {
     fov_y = 2.0f * glm::atan(glm::tan(fov_y * 0.5f) * (1.0f / aspect));
   }
   // projection is hor+ 

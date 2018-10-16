@@ -49,8 +49,8 @@ class Application {
   std::map<std::string, shader_program> m_shaders{};
 
   // resolution when 
-  static const unsigned C_INITIAL_WINDOW_WIDTH = 640u;
-  static const unsigned C_INITIAL_WINDOW_HEIGHT = 480u;
+  static const glm::uvec2 initial_resolution; 
+  static const float initial_aspect_ratio; 
 };
 
 
@@ -64,7 +64,7 @@ class Application {
 template<typename T>
 void Application::run(int argc, char* argv[]) {  
 
-    GLFWwindow* window = window_handler::initialize(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
+    GLFWwindow* window = window_handler::initialize(initial_resolution);
     
     std::string resource_path = utils::read_resource_path(argc, argv);
     T* application = new T{resource_path};

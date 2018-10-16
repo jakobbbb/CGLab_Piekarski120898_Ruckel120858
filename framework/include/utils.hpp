@@ -35,7 +35,7 @@ namespace utils {
   std::string read_resource_path(int argc, char* argv[]);
 
   // calculate Vert+ FOV projection matrix
-  glm::fmat4 calculate_projection_matrix(unsigned width, unsigned height);
+  glm::fmat4 calculate_projection_matrix(float aspect);
 }
 
 #endif

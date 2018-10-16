@@ -21,7 +21,7 @@ ApplicationVbo::ApplicationVbo(std::string const& resource_path)
 {
   initializeGeometry();
 
-  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
+  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(initial_aspect_ratio);
   // upload projection matrix
   glMatrixMode(GL_PROJECTION);
   glLoadMatrixf(glm::value_ptr(projection_matrix));

@@ -19,7 +19,7 @@ ApplicationUniform::ApplicationUniform(std::string const& resource_path)
  :Application{resource_path}
  ,m_ul_model_view{-1}
  ,m_ul_projection{-1}
- ,m_view_projection{utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT)}
+ ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
   initializeShaderPrograms();
 }
