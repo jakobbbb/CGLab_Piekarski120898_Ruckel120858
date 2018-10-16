@@ -13,8 +13,7 @@ class ApplicationUniform : public Application {
 
   // update uniform locations and values
   void uploadUniforms();
-  // update projection matrix
-  void uploadProjection();
+
   // draw all objects
   void render() const;
 
@@ -23,6 +22,9 @@ class ApplicationUniform : public Application {
   // uniform locations
   GLint m_ul_model_view;
   GLint m_ul_projection;
+
+    // camera projection matrix
+  glm::fmat4 m_view_projection;
 };
 
 #endif

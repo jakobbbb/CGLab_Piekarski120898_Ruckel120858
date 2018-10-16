@@ -74,7 +74,7 @@ void set_callback_object(GLFWwindow* window, Application* app) {
   glfwSetWindowUserPointer(window, app);
   // register key input function
   auto key_func = [](GLFWwindow* w, int a, int b, int c, int d) {
-        static_cast<Application*>(glfwGetWindowUserPointer(w))->key_callback(w, a, b, c, d);
+        static_cast<Application*>(glfwGetWindowUserPointer(w))->key_callback(w, a, c, d);
   };
   glfwSetKeyCallback(window, key_func);
   // allow free mouse movement

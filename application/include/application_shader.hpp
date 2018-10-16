@@ -10,8 +10,7 @@ class ApplicationShader : public Application {
   ApplicationShader(std::string const& resource_path);
   ~ApplicationShader();
 
-  // update projection matrix
-  void uploadProjection();
+
   // draw all objects
   void render() const;
 

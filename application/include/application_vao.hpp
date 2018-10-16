@@ -12,8 +12,7 @@ class ApplicationVao : public Application {
 
   // update uniform locations and values
   void uploadUniforms();
-  // update projection matrix
-  void uploadProjection();
+
   // draw all objects
   void render() const;
 
@@ -27,6 +26,9 @@ class ApplicationVao : public Application {
   GLuint m_vertex_bo;
   // index buffer object
   GLuint m_index_bo;
+
+    // camera projection matrix
+  glm::fmat4 m_view_projection;
 };
 
 #endif

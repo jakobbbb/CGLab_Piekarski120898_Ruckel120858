@@ -20,6 +20,11 @@ ApplicationVbo::ApplicationVbo(std::string const& resource_path)
  ,m_vertex_bo{0}
 {
   initializeGeometry();
+
+  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
+  // upload projection matrix
+  glMatrixMode(GL_PROJECTION);
+  glLoadMatrixf(glm::value_ptr(projection_matrix));
 }
 
 ApplicationVbo::~ApplicationVbo() {
@@ -73,13 +78,6 @@ void ApplicationVbo::render() const {
 
   // draw triangle
   glDrawArrays(GL_TRIANGLES, 0, 3);        
-}
-
-void ApplicationVbo::uploadProjection() {
-  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
-  // upload projection matrix
-  glMatrixMode(GL_PROJECTION);
-  glLoadMatrixf(glm::value_ptr(projection_matrix));
 }
 
 // exe entry point

@@ -22,6 +22,7 @@ ApplicationVao::ApplicationVao(std::string const& resource_path)
  ,m_vertex_ao{0}
  ,m_vertex_bo{0}
  ,m_index_bo{0}
+ ,m_view_projection{utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT)}
 {
   initializeShaderPrograms();
   initializeGeometry();
@@ -110,20 +111,13 @@ void ApplicationVao::render() const {
   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, NULL);
 }
 
-void ApplicationVao::uploadProjection() {
-  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
-  // upload matrix to gpu
-  glUniformMatrix4fv(m_shaders.at("vao").u_locs.at("ProjectionMatrix"),
-                     1, GL_FALSE, glm::value_ptr(projection_matrix));
-}
-
 // callback after shader reloading
 void ApplicationVao::uploadUniforms() {
-  updateUniformLocations();
   // bind new shader
   glUseProgram(m_shaders.at("vao").handle);
-  // reupload projection
-  uploadProjection();
+  // upload matrix to gpu
+  glUniformMatrix4fv(m_shaders.at("vao").u_locs.at("ProjectionMatrix"),
+                     1, GL_FALSE, glm::value_ptr(m_view_projection));
 }
 
 // exe entry point

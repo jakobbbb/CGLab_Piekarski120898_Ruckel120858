@@ -29,6 +29,8 @@ Application::~Application() {
 void Application::reloadShaders(bool throwing) {
   update_shader_programs(m_shaders, throwing);
   // after shader programs are recompiled, uniform locations may change
+  updateUniformLocations();
+  // upload values to new locations
   uploadUniforms();
 }
 
@@ -43,35 +45,35 @@ void Application::updateUniformLocations() {
 }
 
 ///////////////////////////// callback functions for window events ////////////
-void Application::resize_callback(unsigned width, unsigned height) {
-  // resize framebuffer
-  glViewport(0, 0, width, height);
-  // resize fbo attachments
-  resizeCallback(width, height);
-
-  uploadProjection();
-}
-
 // handle key input
-void Application::key_callback(GLFWwindow* m_window, int key, int scancode, int action, int mods) {
+void Application::key_callback(GLFWwindow* m_window, int key, int action, int mods) {
   if ((key == GLFW_KEY_ESCAPE || key == GLFW_KEY_Q) && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(m_window, 1);
   }
   else if (key == GLFW_KEY_R && action == GLFW_PRESS) {
     reloadShaders(false);
   }
+  // else pass input to derived class
   else {
-    keyCallback(key, scancode, action, mods);
+    keyCallback(key, action, mods);
   }
 }
 
 //handle mouse movement input
 void Application::mouse_callback(GLFWwindow* window, double pos_x, double pos_y) {
+  // pass input to derived class
   mouseCallback(pos_x, pos_y);
   // reset cursor pos to receive position delta next frame
   glfwSetCursorPos(window, 0.0, 0.0);
 }
 
+// handle window resizing
+void Application::resize_callback(unsigned width, unsigned height) {
+  // resize framebuffer
+  glViewport(0, 0, width, height);
+  // resize fbo attachments
+  resizeCallback(width, height);
+}
 ///////////////////////////// local helper functions //////////////////////////
 // update uniform locations
 static void update_shader_programs(std::map<std::string, shader_program>& shaders, bool throwing) {

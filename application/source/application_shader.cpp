@@ -22,6 +22,11 @@ ApplicationShader::ApplicationShader(std::string const& resource_path)
  ,m_program{0}
 {
   initializeShaderPrograms();
+
+  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
+  // upload projection matrix
+  glMatrixMode(GL_PROJECTION);
+  glLoadMatrixf(glm::value_ptr(projection_matrix));
 }
 
 GLuint createShader(std::string const& file_path, GLenum shader_type) {
@@ -89,13 +94,6 @@ void ApplicationShader::render() const {
     glVertex3f(0.0, 0.5, 0.0);
     glColor3f(0.0, 0.0, 1.0);
   glEnd();
-}
-
-void ApplicationShader::uploadProjection() {
-  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
-  // upload projection matrix
-  glMatrixMode(GL_PROJECTION);
-  glLoadMatrixf(glm::value_ptr(projection_matrix));
 }
 
 // exe entry point

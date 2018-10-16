@@ -13,15 +13,11 @@ class ApplicationSolar : public Application {
   // free allocated objects
   ~ApplicationSolar();
 
-  // update uniform locations and values
-  void uploadUniforms();
-  // update projection matrix
-  void uploadProjection();
   // react to key input
-  void keyCallback(int key, int scancode, int action, int mods);
+  void keyCallback(int key, int action, int mods);
   //handle delta mouse movement input
   void mouseCallback(double pos_x, double pos_y);
-//handle resizing
+  //handle resizing
   void resizeCallback(unsigned width, unsigned height);
 
   // draw all objects
@@ -30,7 +26,12 @@ class ApplicationSolar : public Application {
  protected:
   void initializeShaderPrograms();
   void initializeGeometry();
-  void updateView();
+  // update uniform values
+  void uploadUniforms();
+  // upload projection matrix
+  void uploadProjection();
+  // upload view matrix
+  void uploadView();
 
   // cpu representation of model
   model_object planet_object;
@@ -40,9 +41,6 @@ class ApplicationSolar : public Application {
   // camera projection matrix
   glm::fmat4 m_view_projection;
 
-  // window dimensions
-  unsigned m_window_width;
-  unsigned m_window_height;
 };
 
 #endif

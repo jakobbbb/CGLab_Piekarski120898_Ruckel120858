@@ -15,7 +15,13 @@ using namespace gl;
 
 ApplicationFixed::ApplicationFixed(std::string const& resource_path)
  :Application{resource_path}
-{}
+{
+
+  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
+  // upload projection matrix
+  glMatrixMode(GL_PROJECTION);
+  glLoadMatrixf(glm::value_ptr(projection_matrix));
+}
 
 void ApplicationFixed::render() const {
   glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{0.0f, 1.0f, 0.0f});
@@ -35,13 +41,6 @@ void ApplicationFixed::render() const {
     glVertex3f(0.0, 0.5, 0.0);
     glColor3f(0.0, 0.0, 1.0);
   glEnd();
-}
-
-void ApplicationFixed::uploadProjection() {
-  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
-  // upload projection matrix
-  glMatrixMode(GL_PROJECTION);
-  glLoadMatrixf(glm::value_ptr(projection_matrix));
 }
 
 // exe entry point

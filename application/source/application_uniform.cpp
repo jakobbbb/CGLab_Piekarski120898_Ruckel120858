@@ -19,6 +19,7 @@ ApplicationUniform::ApplicationUniform(std::string const& resource_path)
  :Application{resource_path}
  ,m_ul_model_view{-1}
  ,m_ul_projection{-1}
+ ,m_view_projection{utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT)}
 {
   initializeShaderPrograms();
 }
@@ -50,12 +51,6 @@ void ApplicationUniform::render() const {
   glEnd();
 }
 
-void ApplicationUniform::uploadProjection() {
-  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
-  // upload matrix to gpu
-  glUniformMatrix4fv(m_ul_projection, 1, GL_FALSE, glm::value_ptr(projection_matrix));
-}
-
 // callback after shader reloading
 void ApplicationUniform::uploadUniforms() {
   // bind new shader
@@ -63,8 +58,8 @@ void ApplicationUniform::uploadUniforms() {
    // load matrix uniform locations
   m_ul_model_view = glGetUniformLocation(m_shaders.at("uniform").handle, "ModelViewMatrix");
   m_ul_projection = glGetUniformLocation(m_shaders.at("uniform").handle, "ProjectionMatrix");
-  // reupload projection
-  uploadProjection();
+  // upload matrix to gpu
+  glUniformMatrix4fv(m_ul_projection, 1, GL_FALSE, glm::value_ptr(m_view_projection));
 }
 
 // exe entry point

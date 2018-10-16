@@ -21,6 +21,12 @@ ApplicationIndexed::ApplicationIndexed(std::string const& resource_path)
  ,m_index_bo{0}
 {
   initializeGeometry();
+
+  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
+  // upload projection matrix
+  glMatrixMode(GL_PROJECTION);
+  glLoadMatrixf(glm::value_ptr(projection_matrix));
+
 }
 
 ApplicationIndexed::~ApplicationIndexed() {
@@ -90,13 +96,6 @@ void ApplicationIndexed::render() const {
 
   // draw triangle from indices
   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, 0);        
-}
-
-void ApplicationIndexed::uploadProjection() {
-  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT);
-  // upload projection matrix
-  glMatrixMode(GL_PROJECTION);
-  glLoadMatrixf(glm::value_ptr(projection_matrix));
 }
 
 // exe entry point

@@ -24,8 +24,6 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  ,planet_object{}
  ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})}
  ,m_view_projection{utils::calculate_projection_matrix(C_INITIAL_WINDOW_WIDTH, C_INITIAL_WINDOW_HEIGHT)}
- ,m_window_width{C_INITIAL_WINDOW_WIDTH}
- ,m_window_height{C_INITIAL_WINDOW_HEIGHT}
 {
   initializeGeometry();
   initializeShaderPrograms();
@@ -52,7 +50,7 @@ void ApplicationSolar::render() const {
   glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
 }
 
-void ApplicationSolar::updateView() {
+void ApplicationSolar::uploadView() {
   // vertices are transformed in camera space, so camera transform must be inverted
   glm::fmat4 view_matrix = glm::inverse(m_view_transform);
   // upload matrix to gpu
@@ -67,25 +65,23 @@ void ApplicationSolar::uploadProjection() {
 }
 
 // update uniform locations
-void ApplicationSolar::uploadUniforms() {
-  updateUniformLocations();
-  
-  // bind new shader
+void ApplicationSolar::uploadUniforms() { 
+  // bind shader to which to upload unforms
   glUseProgram(m_shaders.at("planet").handle);
   
-  updateView();
+  uploadView();
   uploadProjection();
 }
 
 // handle key input
-void ApplicationSolar::keyCallback(int key, int scancode, int action, int mods) {
+void ApplicationSolar::keyCallback(int key, int action, int mods) {
   if (key == GLFW_KEY_W  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
     m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, -0.1f});
-    updateView();
+    uploadView();
   }
   else if (key == GLFW_KEY_S  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
     m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, 0.1f});
-    updateView();
+    uploadView();
   }
 }
 
@@ -98,6 +94,8 @@ void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
 void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
   // recalculate projection matrix for new aspect ration
   m_view_projection = utils::calculate_projection_matrix(width, height);
+
+  uploadProjection();
 }
 
 // load shader programs

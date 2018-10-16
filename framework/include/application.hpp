@@ -22,19 +22,17 @@ class Application {
   // update viewport and field of view
   void resize_callback(unsigned width, unsigned height);
   // handle key input
-  void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+  void key_callback(GLFWwindow* window, int key, int action, int mods);
   //handle mouse movement input
   void mouse_callback(GLFWwindow* window, double pos_x, double pos_y);
   // recompile shaders form source files
   void reloadShaders(bool throwing);
 
 // functiosn which are implemented in derived classes
-  // upload projection matrix to all shaders that use it
-  virtual void uploadProjection() = 0;
   // update uniform locations and values
   inline virtual void uploadUniforms() {};
   // react to key input
-  inline virtual void keyCallback(int key, int scancode, int action, int mods) {};
+  inline virtual void keyCallback(int key, int action, int mods) {};
   //handle delta mouse movement input
   inline virtual void mouseCallback(double pos_x, double pos_y) {};
   // update framebuffer textures
@@ -54,6 +52,7 @@ class Application {
   static const unsigned C_INITIAL_WINDOW_WIDTH = 640u;
   static const unsigned C_INITIAL_WINDOW_HEIGHT = 480u;
 };
+
 
 #include "utils.hpp"
 #include "window_handler.hpp"

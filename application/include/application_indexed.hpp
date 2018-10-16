@@ -10,8 +10,7 @@ class ApplicationIndexed : public Application {
   ApplicationIndexed(std::string const& resource_path);
   ~ApplicationIndexed();
 
-  // update projection matrix
-  void uploadProjection();
+
   // draw all objects
   void render() const;
  
