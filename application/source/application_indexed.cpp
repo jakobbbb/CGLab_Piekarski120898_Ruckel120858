@@ -26,7 +26,6 @@ ApplicationIndexed::ApplicationIndexed(std::string const& resource_path)
   // upload projection matrix
   glMatrixMode(GL_PROJECTION);
   glLoadMatrixf(glm::value_ptr(projection_matrix));
-
 }
 
 ApplicationIndexed::~ApplicationIndexed() {
@@ -100,5 +99,5 @@ void ApplicationIndexed::render() const {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Application::run<ApplicationIndexed>(argc, argv);
+  Application::run<ApplicationIndexed>(argc, argv, 1, 5);
 }

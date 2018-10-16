@@ -12,7 +12,7 @@ class GLFWwindow;
 class Application {
  public:
   template<typename T>
-  static void run(int argc, char* argv[]);  
+  static void run(int argc, char* argv[], unsigned ver_major, unsigned ver_minor);
 
   // allocate and initialize objects
   Application(std::string const& resource_path);
@@ -57,14 +57,10 @@ class Application {
 #include "utils.hpp"
 #include "window_handler.hpp"
 
-//dont load gl bindings from glfw
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
 template<typename T>
-void Application::run(int argc, char* argv[]) {  
+void Application::run(int argc, char* argv[], unsigned ver_major, unsigned ver_minor) {  
 
-    GLFWwindow* window = window_handler::initialize(initial_resolution);
+    GLFWwindow* window = window_handler::initialize(initial_resolution, ver_major, ver_minor);
     
     std::string resource_path = utils::read_resource_path(argc, argv);
     T* application = new T{resource_path};

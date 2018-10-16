@@ -22,6 +22,7 @@
 #include <functional>
 #include <iostream>
 
+#include <glbinding/Version.h>
 // use gl definitions from glbinding 
 using namespace gl;
 
@@ -40,7 +41,21 @@ static void APIENTRY openglCallbackFunction(
 
 namespace window_handler {
 
-GLFWwindow* initialize(glm::uvec2 const& resolution) {
+bool isCore()
+{
+    // if (version<glbinding::Version(3,2))
+    // {
+    //     return false;
+    // }
+
+    GLint value = 0;
+
+    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &value);
+
+    return (value & static_cast<unsigned int>(GL_CONTEXT_CORE_PROFILE_BIT)) > 0;
+}
+
+GLFWwindow* initialize(glm::uvec2 const& resolution, unsigned ver_major, unsigned ver_minor) {
 
   glfwSetErrorCallback(glsl_error);
 
@@ -49,17 +64,23 @@ GLFWwindow* initialize(glm::uvec2 const& resolution) {
   }
 
   // set OGL version explicitly 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, ver_major);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, ver_minor);
+  // enable deug support
   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
-  //MacOS requires core profile
+  //MacOS requires forward compat core profile
   #ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  #else
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+  if (ver_major > 2) {
+      // required to prdouce core context on MacOS
+      glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
+      // disable deprecated functionality
+      if (ver_minor > 1) {
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+      }
+  }
   #endif
+
   // create m_window, if unsuccessfull, quit
   GLFWwindow* window = glfwCreateWindow(resolution.x, resolution.y, "OpenGL Framework", NULL, NULL);
   if (!window) {
@@ -74,6 +95,13 @@ GLFWwindow* initialize(glm::uvec2 const& resolution) {
   // initialize glindings in this context
   glbinding::Binding::initialize();
 
+  std::cout << "Created OpenGL profile with version " << glGetString(GL_VERSION) << std::endl;
+  if (isCore()) {
+    std::cout << " core" << std::endl;
+  }
+  else {
+    std::cout << " compat" << std::endl;
+  }
   // activate error checking after each gl function call
   watch_gl_errors();
 

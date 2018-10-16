@@ -82,5 +82,5 @@ void ApplicationVbo::render() const {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Application::run<ApplicationVbo>(argc, argv);
+  Application::run<ApplicationVbo>(argc, argv, 1, 5);
 }

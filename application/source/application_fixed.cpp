@@ -16,7 +16,6 @@ using namespace gl;
 ApplicationFixed::ApplicationFixed(std::string const& resource_path)
  :Application{resource_path}
 {
-
   glm::fmat4 projection_matrix = utils::calculate_projection_matrix(initial_aspect_ratio);
   // upload projection matrix
   glMatrixMode(GL_PROJECTION);
@@ -45,5 +44,5 @@ void ApplicationFixed::render() const {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Application::run<ApplicationFixed>(argc, argv);
+  Application::run<ApplicationFixed>(argc, argv, 1, 0);
 }

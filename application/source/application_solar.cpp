@@ -159,5 +159,5 @@ void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Application::run<ApplicationSolar>(argc, argv);
+  Application::run<ApplicationSolar>(argc, argv, 3, 2);
 }

@@ -98,5 +98,5 @@ void ApplicationShader::render() const {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Application::run<ApplicationShader>(argc, argv);
+  Application::run<ApplicationShader>(argc, argv, 2, 0);
 }

@@ -64,5 +64,5 @@ void ApplicationUniform::uploadUniforms() {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Application::run<ApplicationUniform>(argc, argv);
+  Application::run<ApplicationUniform>(argc, argv, 2, 0);
 }

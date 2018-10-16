@@ -27,6 +27,7 @@ ApplicationVao::ApplicationVao(std::string const& resource_path)
   initializeShaderPrograms();
   initializeGeometry();
 }
+
 ApplicationVao::~ApplicationVao() {
   glDeleteBuffers(1, &m_vertex_bo);
   glDeleteBuffers(1, &m_index_bo);
@@ -122,5 +123,5 @@ void ApplicationVao::uploadUniforms() {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Application::run<ApplicationVao>(argc, argv);
+  Application::run<ApplicationVao>(argc, argv, 2, 0);
 }
