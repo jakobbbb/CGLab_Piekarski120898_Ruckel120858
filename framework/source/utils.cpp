@@ -74,13 +74,12 @@ void validate_program(GLuint program) {
     GLint log_size = 0;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &log_size);
     // get log
-    GLchar* log_buffer = (GLchar*)malloc(sizeof(GLchar) * log_size);
-    glGetProgramInfoLog(program, log_size, &log_size, log_buffer);
+    std::vector<GLchar> log_buffer(log_size);
+    glGetProgramInfoLog(program, log_size, &log_size, log_buffer.data());
     // output errors
-    output_log(log_buffer, "program nr. " + std::to_string(program));
+    std::cerr << std::string{log_buffer.begin(), log_buffer.end()};
     // free broken program
     glDeleteProgram(program);
-    free(log_buffer);
 
     throw std::logic_error("Validation of program nr. " + std::to_string(program));
   }
@@ -95,14 +94,6 @@ GLint get_bound_VAO() {
 
 std::string file_name(std::string const& file_path) {
   return file_path.substr(file_path.find_last_of("/\\") + 1);
-}
-
-void output_log(GLchar const* log_buffer, std::string const& prefix) {
-  std::string error{};
-  std::istringstream error_stream{log_buffer};
-  while(std::getline(error_stream, error)) {
-    std::cerr << prefix << " - " << error << std::endl;
-  }
 }
 
 std::string read_file(std::string const& name) {

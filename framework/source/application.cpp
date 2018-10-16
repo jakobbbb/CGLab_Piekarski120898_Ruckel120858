@@ -80,28 +80,27 @@ void Application::resize_callback(unsigned width, unsigned height) {
 // update uniform locations
 static void update_shader_programs(std::map<std::string, shader_program>& shaders, bool throwing) {
   // actual functionality in lambda to allow update with and without throwing
-  auto update_lambda = [&](){
-    // reload all shader programs
-    for (auto& pair : shaders) {
-      // throws exception when compiling was unsuccessfull
-      GLuint new_program = shader_loader::program(pair.second.vertex_path,
-                                                  pair.second.fragment_path);
-      // free old shader program
-      glDeleteProgram(pair.second.handle);
-      // save new shader program
-      pair.second.handle = new_program;
-    }
+  auto update_lambda = [](shader_program& program){
+    // throws exception when compiling was unsuccessfull
+    GLuint new_program = shader_loader::program(program.shader_paths);
+    // free old shader program
+    glDeleteProgram(program.handle);
+    // save new shader program
+    program.handle = new_program;
   };
 
-  if (throwing) {
-    update_lambda();
-  }
-  else {
-    try {
-     update_lambda();
+  // reload all shader programs
+  for (auto& pair : shaders) {
+    if (throwing) {
+      update_lambda(pair.second);
     }
-    catch(std::exception&) {
-      // dont crash, allow another try
+    else {
+      try {
+       update_lambda(pair.second);
+      }
+      catch(std::exception&) {
+        // dont crash, allow another try
+      }
     }
   }
 }

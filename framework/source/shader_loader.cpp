@@ -1,9 +1,24 @@
 #include "shader_loader.hpp"
+
 #include "utils.hpp"
 
+
 #include <glbinding/gl/functions.h>
+// load meta info extension
+#include <glbinding/Meta.h>
 // use gl definitions from glbinding 
 using namespace gl;
+
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <string.h>
+
+
+static std::string file_name(std::string const& file_path) {
+  return file_path.substr(file_path.find_last_of("/\\") + 1);
+}
 
 namespace shader_loader {
 
@@ -26,30 +41,32 @@ GLuint shader(std::string const& file_path, GLenum shader_type) {
     GLint log_size = 0;
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_size);
     // get log
-    GLchar* log_buffer = (GLchar*)malloc(sizeof(GLchar) * log_size);
-    glGetShaderInfoLog(shader, log_size, &log_size, log_buffer);
+    std::vector<GLchar> log_buffer(log_size);
+    glGetShaderInfoLog(shader, log_size, &log_size, log_buffer.data());
     // output errors
-    utils::output_log(log_buffer, utils::file_name(file_path));
+    std::cerr << "OpenGl error: Compilation of " << glbinding::Meta::getString(shader_type).c_str() << " " << file_name(file_path) << ":\n";
+    std::cerr << std::string{log_buffer.begin(), log_buffer.end()};
     // free broken shader
     glDeleteShader(shader);
-    free(log_buffer);
 
-    throw std::logic_error("Compilation of " + file_path);
+    throw std::logic_error("OpenGL error: compilation of " + file_name(file_path));
   }
 
   return shader;
 }
 
-GLuint program(std::string const& vertex_path, std::string const& fragment_path) {
-  GLuint program = glCreateProgram();
+unsigned program(std::map<GLenum, std::string> const& stages) {
+  unsigned program = glCreateProgram();
 
+  std::vector<GLuint> shaders{};
   // load and compile vert and frag shader
-  GLuint vertex_shader = shader(vertex_path, GL_VERTEX_SHADER);
-  GLuint fragment_shader = shader(fragment_path, GL_FRAGMENT_SHADER);
+  for (auto const& stage : stages) {
+    GLuint shader_handle = shader(stage.second, stage.first);
+    shaders.push_back(shader_handle);
+    // attach the shader to program
+    glAttachShader(program, shader_handle);
+  }
 
-  // attach the shaders to the program
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
   // link shaders
   glLinkProgram(program);
 
@@ -61,67 +78,31 @@ GLuint program(std::string const& vertex_path, std::string const& fragment_path)
     GLint log_size = 0;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &log_size);
     // get log
-    GLchar* log_buffer = (GLchar*)malloc(sizeof(GLchar) * log_size);
-    glGetProgramInfoLog(program, log_size, &log_size, log_buffer);
+    std::vector<GLchar> log_buffer(log_size);
+    glGetProgramInfoLog(program, log_size, &log_size, log_buffer.data());
+    
     // output errors
-    utils::output_log(log_buffer, utils::file_name(vertex_path) + " & " + utils::file_name(fragment_path));
+    std::string names{};
+    for(auto const& stage : stages) {
+      names += file_name(stage.second) + " & ";
+    }
+    names.resize(names.size() - 3);
+        // output errors
+    std::cerr << "OpenGl error: Linking of " << names << ":\n";
+    std::cerr << std::string{log_buffer.begin(), log_buffer.end()};
+
     // free broken program
     glDeleteProgram(program);
-    free(log_buffer);
 
-    throw std::logic_error("Linking of " + vertex_path + " & " + fragment_path);
+    throw std::logic_error("OpenGL error: linking of " + names);
   }
-  // detach shaders
-  glDetachShader(program, vertex_shader);
-  glDetachShader(program, fragment_shader);
-  // and free them
-  glDeleteShader(vertex_shader);
-  glDeleteShader(fragment_shader);
 
-  return program;
-}
-
-GLuint program(std::string const& vertex_path, std::string const& geometry_path, std::string const& fragment_path) {
-  GLuint program = glCreateProgram();
-
-  // load and compile vert and frag shader
-  GLuint vertex_shader = shader(vertex_path, GL_VERTEX_SHADER);
-  GLuint geometry_shader = shader(geometry_path, GL_GEOMETRY_SHADER);
-  GLuint fragment_shader = shader(fragment_path, GL_FRAGMENT_SHADER);
-
-  // attach the shaders to the program
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, geometry_shader);
-  glAttachShader(program, fragment_shader);
-  // link shaders
-  glLinkProgram(program);
-
-  // check if linking was successfull
-  GLint success = 0;
-  glGetProgramiv(program, GL_LINK_STATUS, &success);
-  if(success == 0) {
-    // get log length
-    GLint log_size = 0;
-    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &log_size);
-    // get log
-    GLchar* log_buffer = (GLchar*)malloc(sizeof(GLchar) * log_size);
-    glGetProgramInfoLog(program, log_size, &log_size, log_buffer);
-    // output errors
-    utils::output_log(log_buffer, utils::file_name(vertex_path) + " & " + utils::file_name(geometry_path) + " & " + utils::file_name(fragment_path));
-    // free broken program
-    glDeleteProgram(program);
-    free(log_buffer);
-
-    throw std::logic_error("Linking of " + vertex_path + " & " + geometry_path + " & " + fragment_path);
+  for (auto shader_handle : shaders) {
+    // detach shader
+    glDetachShader(program, shader_handle);
+    // and free it
+    glDeleteShader(shader_handle);
   }
-  // detach shaders
-  glDetachShader(program, vertex_shader);
-  glDetachShader(program, geometry_shader);
-  glDetachShader(program, fragment_shader);
-  // and free them
-  glDeleteShader(vertex_shader);
-  glDeleteShader(geometry_shader);
-  glDeleteShader(fragment_shader);
 
   return program;
 }

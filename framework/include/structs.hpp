@@ -30,15 +30,13 @@ struct texture_object {
 
 // shader handle and uniform storage
 struct shader_program {
-  shader_program(std::string const& vertex, std::string const& fragment)
-   :vertex_path{vertex}
-   ,fragment_path{fragment}
+  shader_program(std::map<GLenum, std::string> paths)
+   :shader_paths{paths}
    ,handle{0}
    {}
 
-  // path to shader source
-  std::string vertex_path; 
-  std::string fragment_path; 
+  // paths to shader sources
+  std::map<GLenum, std::string> shader_paths;
   // object handle
   GLuint handle;
   // uniform locations mapped to name

@@ -71,7 +71,7 @@ void Application::run(int argc, char* argv[]) {
 
     window_handler::set_callback_object(window, application);
 
-    application->reloadShaders(false);
+    application->reloadShaders(true);
 
     // enable depth testing
     glEnable(GL_DEPTH_TEST);

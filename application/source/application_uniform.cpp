@@ -27,8 +27,8 @@ ApplicationUniform::ApplicationUniform(std::string const& resource_path)
 // load shader programs
 void ApplicationUniform::initializeShaderPrograms() {
   // store shader program objects in container
-  m_shaders.emplace("uniform", shader_program{m_resource_path + "shaders/uniform.vert",
-                                              m_resource_path + "shaders/emulation.frag"});
+  m_shaders.emplace("uniform", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/uniform.vert"},
+                                           {GL_FRAGMENT_SHADER, m_resource_path + "shaders/emulation.frag"}}});
 }
 
 void ApplicationUniform::render() const {

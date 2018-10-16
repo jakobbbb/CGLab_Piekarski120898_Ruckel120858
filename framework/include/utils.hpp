@@ -8,6 +8,7 @@ using namespace gl;
 #include <glm/gtc/type_precision.hpp>
 
 #include <map>
+#include <vector>
 
 struct pixel_data;
 struct texture_object;
@@ -26,12 +27,6 @@ namespace utils {
 
   // return handle of bound vertex array object
   GLint get_bound_VAO();
-
-  // extract filename from path
-  std::string file_name(std::string const& file_path);
-
-  // output a gl error log in cerr
-  void output_log(GLchar const* log_buffer, std::string const& prefix);
 
   // read file and write content to string
   std::string read_file(std::string const& name);

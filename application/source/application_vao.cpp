@@ -36,8 +36,8 @@ ApplicationVao::~ApplicationVao() {
 // load shader programs
 void ApplicationVao::initializeShaderPrograms() {
   // store shader program objects in container
-  m_shaders.emplace("vao", shader_program{m_resource_path + "shaders/vao.vert",
-                                          m_resource_path + "shaders/emulation.frag"});
+  m_shaders.emplace("vao", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/vao.vert"},
+                                          {GL_FRAGMENT_SHADER, m_resource_path + "shaders/emulation.frag"}}});
 
   // request uniform locations for shader program
   m_shaders.at("vao").u_locs["ModelViewMatrix"] = -1;
