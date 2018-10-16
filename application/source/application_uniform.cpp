@@ -50,7 +50,7 @@ void ApplicationUniform::render() const {
   glEnd();
 }
 
-void ApplicationUniform::updateProjection() {
+void ApplicationUniform::uploadProjection() {
   // upload matrix to gpu
   glUniformMatrix4fv(m_ul_projection, 1, GL_FALSE, glm::value_ptr(m_view_projection));
 }
@@ -63,10 +63,10 @@ void ApplicationUniform::uploadUniforms() {
   m_ul_model_view = glGetUniformLocation(m_shaders.at("uniform").handle, "ModelViewMatrix");
   m_ul_projection = glGetUniformLocation(m_shaders.at("uniform").handle, "ProjectionMatrix");
   // reupload projection
-  updateProjection();
+  uploadProjection();
 }
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Launcher::run<ApplicationUniform>(argc, argv);
+  Application::run<ApplicationUniform>(argc, argv);
 }

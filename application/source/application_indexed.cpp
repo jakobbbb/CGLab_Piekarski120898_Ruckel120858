@@ -92,7 +92,7 @@ void ApplicationIndexed::render() const {
   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, 0);        
 }
 
-void ApplicationIndexed::updateProjection() {
+void ApplicationIndexed::uploadProjection() {
   // upload projection matrix
   glMatrixMode(GL_PROJECTION);
   glLoadMatrixf(glm::value_ptr(m_view_projection));
@@ -100,5 +100,5 @@ void ApplicationIndexed::updateProjection() {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Launcher::run<ApplicationIndexed>(argc, argv);
+  Application::run<ApplicationIndexed>(argc, argv);
 }

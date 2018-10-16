@@ -91,7 +91,7 @@ void ApplicationShader::render() const {
   glEnd();
 }
 
-void ApplicationShader::updateProjection() {
+void ApplicationShader::uploadProjection() {
   // upload projection matrix
   glMatrixMode(GL_PROJECTION);
   glLoadMatrixf(glm::value_ptr(m_view_projection));
@@ -99,5 +99,5 @@ void ApplicationShader::updateProjection() {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Launcher::run<ApplicationShader>(argc, argv);
+  Application::run<ApplicationShader>(argc, argv);
 }

@@ -37,7 +37,7 @@ void ApplicationFixed::render() const {
   glEnd();
 }
 
-void ApplicationFixed::updateProjection() {
+void ApplicationFixed::uploadProjection() {
   // upload projection matrix
   glMatrixMode(GL_PROJECTION);
   glLoadMatrixf(glm::value_ptr(m_view_projection));
@@ -45,5 +45,5 @@ void ApplicationFixed::updateProjection() {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Launcher::run<ApplicationFixed>(argc, argv);
+  Application::run<ApplicationFixed>(argc, argv);
 }

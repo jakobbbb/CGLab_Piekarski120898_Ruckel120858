@@ -110,7 +110,7 @@ void ApplicationVao::render() const {
   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, NULL);
 }
 
-void ApplicationVao::updateProjection() {
+void ApplicationVao::uploadProjection() {
   // upload matrix to gpu
   glUniformMatrix4fv(m_shaders.at("vao").u_locs.at("ProjectionMatrix"),
                      1, GL_FALSE, glm::value_ptr(m_view_projection));
@@ -122,10 +122,10 @@ void ApplicationVao::uploadUniforms() {
   // bind new shader
   glUseProgram(m_shaders.at("vao").handle);
   // reupload projection
-  updateProjection();
+  uploadProjection();
 }
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Launcher::run<ApplicationVao>(argc, argv);
+  Application::run<ApplicationVao>(argc, argv);
 }

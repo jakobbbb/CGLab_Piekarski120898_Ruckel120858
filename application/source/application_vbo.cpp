@@ -75,7 +75,7 @@ void ApplicationVbo::render() const {
   glDrawArrays(GL_TRIANGLES, 0, 3);        
 }
 
-void ApplicationVbo::updateProjection() {
+void ApplicationVbo::uploadProjection() {
   // upload projection matrix
   glMatrixMode(GL_PROJECTION);
   glLoadMatrixf(glm::value_ptr(m_view_projection));
@@ -83,5 +83,5 @@ void ApplicationVbo::updateProjection() {
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Launcher::run<ApplicationVbo>(argc, argv);
+  Application::run<ApplicationVbo>(argc, argv);
 }

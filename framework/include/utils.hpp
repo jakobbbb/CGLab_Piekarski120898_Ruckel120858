@@ -27,11 +27,14 @@ namespace utils {
 
   // extract filename from path
   std::string file_name(std::string const& file_path);
+
   // output a gl error log in cerr
   void output_log(GLchar const* log_buffer, std::string const& prefix);
+
   // read file and write content to string
   std::string read_file(std::string const& name);
 
+  // return path to resources depending on cmdline args
   std::string read_resource_path(int argc, char* argv[]);
 }
 

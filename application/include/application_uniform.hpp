@@ -14,7 +14,7 @@ class ApplicationUniform : public Application {
   // update uniform locations and values
   void uploadUniforms();
   // update projection matrix
-  void updateProjection();
+  void uploadProjection();
   // draw all objects
   void render() const;
 

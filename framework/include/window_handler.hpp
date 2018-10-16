@@ -1,10 +1,6 @@
 #ifndef LAUNCHER_HPP
 #define LAUNCHER_HPP
 
-#include "application.hpp"
-
-#include <string>
-
 // forward declarations
 class Application;
 class GLFWwindow;

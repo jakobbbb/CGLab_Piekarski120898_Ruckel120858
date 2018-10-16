@@ -10,7 +10,7 @@ class ApplicationFixed : public Application {
   ApplicationFixed(std::string const& resource_path);
 
   // update projection matrix
-  void updateProjection();
+  void uploadProjection();
   // draw all objects
   void render() const;
 };
