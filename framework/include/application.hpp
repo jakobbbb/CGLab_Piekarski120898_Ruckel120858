@@ -7,7 +7,7 @@
 
 #include <map>
 
-class GLFWwindow;
+struct GLFWwindow;
 // gpu representation of model
 class Application {
  public:
