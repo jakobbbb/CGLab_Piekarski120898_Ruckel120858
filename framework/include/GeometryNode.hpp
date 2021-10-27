@@ -12,6 +12,7 @@
 class GeometryNode : public Node {
 
   public:
+    GeometryNode();
 
   private:
 

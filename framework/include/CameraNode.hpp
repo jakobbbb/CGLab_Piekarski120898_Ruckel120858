@@ -17,6 +17,7 @@
 class CameraNode : public Node {
 
   public:
+    CameraNode();
 
   private:
 
