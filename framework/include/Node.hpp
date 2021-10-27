@@ -2,6 +2,7 @@
 #define NODE_HPP
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <structs.hpp>
 #include <string>
 #include <memory>
 #include <list>

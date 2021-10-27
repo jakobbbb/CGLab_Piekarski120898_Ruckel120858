@@ -4,23 +4,30 @@
 #include <Node.hpp>
 
 /**
- * TODO:  -bool: isPerspective
-          -bool: isEnabled
-          -mat4: projectionMatrix
-          +getPerspective(): bool
-          +getEnabled(): bool
-          +setEnabled(bool): void
-          +getProjectionMatrix(): mat4
-          +setProjectionMatrix(mat4):
+ * TODO:  -bool: isPerspective ✓
+          -bool: isEnabled ✓
+          -mat4: projectionMatrix ✓
+          +getPerspective(): bool ✓
+          +getEnabled(): bool ✓
+          +setEnabled(bool): void ✓
+          +getProjectionMatrix(): mat4 ✓
+          +setProjectionMatrix(mat4): void ✓
 */
 
 class CameraNode : public Node {
 
   public:
     CameraNode();
+    bool getPerspective() const;
+    bool getEnabled() const;
+    glm::mat4 getProjectionMatrix() const;
+    void setEnabled(bool isEnabled);   
+    void setProjectionMatrix(glm::mat4 const& projectionMatrix);
 
   private:
-
+    bool isPerspective_;
+    bool isEnabled_;
+    glm::mat4 projectionMatrix_;
 
 };
 
