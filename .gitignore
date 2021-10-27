@@ -4,3 +4,4 @@ install
 *.sublime-workspace
 *~
 .DS_Store 
+compile_commands.json
