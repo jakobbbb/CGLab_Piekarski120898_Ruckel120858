@@ -49,6 +49,9 @@ include_directories(external/glfw-3.1.1/include)
 # add glbindings
 add_subdirectory(external/glbinding-2.1.1)
 
+# add catch2
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/catch2)
+
 # create framework helper library 
 file(GLOB FRAMEWORK_SOURCES framework/source/*.cpp)
 add_library(framework STATIC ${FRAMEWORK_SOURCES} ${TINYOBJLOADER_SOURCES})
@@ -60,6 +63,9 @@ include_directories(application/include)
 
 add_executable(solar_system application/source/application_solar.cpp)
 target_link_libraries(solar_system framework)
+
+add_executable(tests tests/tests.cpp)
+target_link_libraries(tests framework)
 
 # MacOS doesnt support simple compat mode required for examples
 if(NOT APPLE)
