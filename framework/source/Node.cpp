@@ -28,11 +28,11 @@ std::shared_ptr<Node> Node::getParent() const {
 }
 
 std::shared_ptr<Node> Node::getChildren(std::string const& name) const {
-  return children_; // TODO
+  return 0; // TODO
 }
 
-std::shared_ptr<Node> Node::removeChildren() const {
-  return children_; // TODO
+std::shared_ptr<Node> Node::removeChildren(std::string const& name) const {
+  return 0; // TODO
 }
 
 std::list<std::shared_ptr<Node>> Node::getChildrenList() const {
