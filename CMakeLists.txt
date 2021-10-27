@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 # allows access to environment variables with the name 
 project (OpenGL_Framework)
 
+set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
+
 #set the build type if its not set
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE )
@@ -125,5 +127,3 @@ mark_as_advanced(GLFW_BUILD_DOCS GLFW_BUILD_TESTS GLFW_INSTALL GLFW_BUILD_EXAMPL
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # installation rules, copy over binaries to bin
 # install(TARGETS OpenGLFramework DESTINATION bin)
-
-set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
