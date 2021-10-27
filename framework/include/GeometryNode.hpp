@@ -13,7 +13,7 @@
 class GeometryNode : public Node {
 
   public:
-    GeometryNode();
+    GeometryNode(std::shared_ptr<Node> parent, std::string const& name);
     model getGeometry() const;
     void setGeometry(model const& geometry);
 

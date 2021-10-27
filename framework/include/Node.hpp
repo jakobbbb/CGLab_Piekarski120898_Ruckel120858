@@ -30,10 +30,10 @@
           +removeChildren(String): Node
 */
 
-class Node {
+class Node : std::enable_shared_from_this<Node> {
 
   public:
-    Node();
+    Node(std::shared_ptr<Node> parent, std::string const& name);
     std::string getName() const;
     std::string getPath() const;
     int getDepth() const;
@@ -46,7 +46,7 @@ class Node {
     void setParent(std::shared_ptr<Node> const& node);
     void setLocalTransform(glm::mat4 const& localTransform);
     void setWorldTransform(glm::mat4 const& worldTransform);
-    void addChildren(std::shared_ptr<Node> const& node);    
+    void addChildren(std::shared_ptr<Node> const& node);
     ~Node();
 
   private:

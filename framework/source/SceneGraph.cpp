@@ -1,7 +1,8 @@
 #include <SceneGraph.hpp>
 
 
-SceneGraph::SceneGraph() {}
+SceneGraph::SceneGraph() :
+    root_{std::make_shared<Node>(Node{nullptr, "root"})} {}
 
 
 std::string SceneGraph::getName() const {

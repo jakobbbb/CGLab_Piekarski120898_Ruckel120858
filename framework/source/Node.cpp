@@ -1,7 +1,10 @@
 #include <Node.hpp>
 
 
-Node::Node() {}
+Node::Node(std::shared_ptr<Node> parent, std::string const& name) :
+    parent_{parent},
+    name_{name},
+    depth_{0} {}
 
 std::string Node::getName() const {
   return name_;
@@ -52,6 +55,7 @@ void Node::setWorldTransform(glm::mat4 const& worldTransform) {
 }
 
 void Node::addChildren(std::shared_ptr<Node> const& node) {
+  node->depth_ = getDepth() + 1;
   children_.push_back(node);
 }
 

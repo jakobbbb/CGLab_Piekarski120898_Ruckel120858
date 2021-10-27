@@ -1,6 +1,8 @@
 #include <GeometryNode.hpp>
 
-GeometryNode::GeometryNode() {}
+GeometryNode::GeometryNode(std::shared_ptr<Node> parent,
+                           std::string const& name) :
+    Node{parent, name} {}
 
 model GeometryNode::getGeometry() const {
   return geometry_;

@@ -17,11 +17,11 @@
 class CameraNode : public Node {
 
   public:
-    CameraNode();
+    CameraNode(std::shared_ptr<Node> parent, std::string const& name);
     bool getPerspective() const;
     bool getEnabled() const;
     glm::mat4 getProjectionMatrix() const;
-    void setEnabled(bool isEnabled);   
+    void setEnabled(bool isEnabled);
     void setProjectionMatrix(glm::mat4 const& projectionMatrix);
 
   private:

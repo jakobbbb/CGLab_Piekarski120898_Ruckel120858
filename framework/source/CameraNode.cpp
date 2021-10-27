@@ -1,6 +1,7 @@
 #include <CameraNode.hpp>
 
-CameraNode::CameraNode() {}
+CameraNode::CameraNode(std::shared_ptr<Node> parent, std::string const& name) :
+    Node{parent, name} {}
 
 bool CameraNode::getPerspective() const { 
   return isPerspective_;
