@@ -1,13 +1,14 @@
 #ifndef SCENE_GRAPH_HPP
 #define SCENE_GRAPH_HPP
+#include <Node.hpp>
 
 /**
- * TODO:  -String: name
-          -Node: root
-          +getName(): String
-          -setName(String): void
-          +getRoot(): Node
-          -setRoot(Node): void
+ * TODO:  -String: name ✓
+          -Node: root ✓
+          +getName(): String ✓
+          -setName(String): void ✓
+          +getRoot(): Node ✓
+          -setRoot(Node): void ✓
           (+printGraph(): String)
           [singleton]
 */
