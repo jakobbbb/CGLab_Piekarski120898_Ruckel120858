@@ -7,3 +7,5 @@
 #include <catch.hpp>
 
 #include "Sample.test.cpp"
+#include "Node.test.cpp"
+#include "SceneGraph.test.cpp"
