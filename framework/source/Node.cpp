@@ -31,11 +31,25 @@ std::shared_ptr<Node> Node::getParent() const {
 }
 
 std::shared_ptr<Node> Node::getChildren(std::string const& name) const {
-  return 0; // TODO
+  for (auto const& child : children_) {
+    if (child->getName() == name) {
+      return child;
+    } else {
+      if (child->getChildren(name) != nullptr) {
+        return child->getChildren(name);
+      }
+    }
+  } return nullptr;
 }
 
 std::shared_ptr<Node> Node::removeChildren(std::string const& name) const {
-  return 0; // TODO
+  // for (std::shared_ptr<Node> child : children_) {
+  //   if (child->getName().compare(name) == 0) {
+  //     children_.remove(child);
+  //   } return child;
+  // }
+  return 0;
+  // TODO, not working yet
 }
 
 std::list<std::shared_ptr<Node>> Node::getChildrenList() const {
