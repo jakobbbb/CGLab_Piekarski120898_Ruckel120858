@@ -48,8 +48,8 @@ std::shared_ptr<Node> Node::removeChildren(std::string const& name) {
       children_.remove(child);
       return child;
     } else {
-      if (child->getChildren(name) != nullptr) {
-        return child->removeChildren(name);
+      if (child->removeChildren(name) != nullptr) {
+        throw "there is no child with that name";
       }
     }
   } return nullptr;

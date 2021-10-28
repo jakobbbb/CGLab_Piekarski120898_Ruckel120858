@@ -10,7 +10,12 @@ std::string SceneGraph::getName() const {
 }
 
 std::string SceneGraph::printGraph() const {
-  return 0; // TODO
+  std::string graph = "Graph: ";
+  // for (auto const& node : root_->getChildren(name_)) {
+  //   graph.append(node->getName());
+  //   graph.append(", ");
+  // }
+  return graph; // TODO, not working yet
 }
 
 std::shared_ptr<Node> SceneGraph::getRoot() const {
