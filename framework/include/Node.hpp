@@ -41,7 +41,7 @@ class Node : std::enable_shared_from_this<Node> {
     glm::mat4 getWorldTransform() const;
     std::shared_ptr<Node> getParent() const;
     std::shared_ptr<Node> getChildren(std::string const& name) const;
-    std::shared_ptr<Node> removeChildren(std::string const& name) const;
+    std::shared_ptr<Node> removeChildren(std::string const& name);
     std::list<std::shared_ptr<Node>> getChildrenList() const;
     void setParent(std::shared_ptr<Node> const& node);
     void setLocalTransform(glm::mat4 const& localTransform);

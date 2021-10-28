@@ -42,14 +42,17 @@ std::shared_ptr<Node> Node::getChildren(std::string const& name) const {
   } return nullptr;
 }
 
-std::shared_ptr<Node> Node::removeChildren(std::string const& name) const {
-  // for (std::shared_ptr<Node> child : children_) {
-  //   if (child->getName().compare(name) == 0) {
-  //     children_.remove(child);
-  //   } return child;
-  // }
-  return 0;
-  // TODO, not working yet
+std::shared_ptr<Node> Node::removeChildren(std::string const& name) {
+  for (auto const& child : children_) {
+    if (child->getName().compare(name) == 0) {
+      children_.remove(child);
+      return child;
+    } else {
+      if (child->getChildren(name) != nullptr) {
+        return child->removeChildren(name);
+      }
+    }
+  } return nullptr;
 }
 
 std::list<std::shared_ptr<Node>> Node::getChildrenList() const {
