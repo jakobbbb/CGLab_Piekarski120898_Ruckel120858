@@ -30,7 +30,7 @@
           +removeChildren(String): Node
 */
 
-class Node : std::enable_shared_from_this<Node> {
+class Node {
 
   public:
     Node(std::shared_ptr<Node> parent, std::string const& name);
