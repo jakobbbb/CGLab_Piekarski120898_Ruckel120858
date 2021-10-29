@@ -30,4 +30,13 @@ void SceneGraph::setName(std::string const& name) {
   name_ = name;
 }
 
+std::ostream& SceneGraph::print(std::ostream& os) const {
+    root_->print(os);
+    return os;
+}
+
 SceneGraph::~SceneGraph() {}
+
+std::ostream& operator<<(std::ostream& os, SceneGraph const& s) {
+    return s.print(os);
+}

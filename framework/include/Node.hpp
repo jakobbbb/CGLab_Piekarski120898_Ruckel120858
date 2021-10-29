@@ -43,10 +43,11 @@ class Node {
     std::shared_ptr<Node> getChildren(std::string const& name) const;
     std::shared_ptr<Node> removeChildren(std::string const& name);
     std::list<std::shared_ptr<Node>> getChildrenList() const;
-    void setParent(std::shared_ptr<Node> const& node);
+    void setParent(std::shared_ptr<Node> node);
     void setLocalTransform(glm::mat4 const& localTransform);
     void setWorldTransform(glm::mat4 const& worldTransform);
-    void addChildren(std::shared_ptr<Node> const& node);
+    void addChild(std::shared_ptr<Node> node);
+    void print(std::ostream& os) const;
     ~Node();
 
   private:

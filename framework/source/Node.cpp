@@ -1,4 +1,5 @@
 #include <Node.hpp>
+#include <iostream>
 
 
 Node::Node(std::shared_ptr<Node> parent, std::string const& name) :
@@ -59,7 +60,7 @@ std::list<std::shared_ptr<Node>> Node::getChildrenList() const {
   return children_;
 }
 
-void Node::setParent(std::shared_ptr<Node> const& node) {
+void Node::setParent(std::shared_ptr<Node> node) {
   parent_ = node;
 }
 
@@ -71,9 +72,20 @@ void Node::setWorldTransform(glm::mat4 const& worldTransform) {
   worldTransform_ = worldTransform;
 }
 
-void Node::addChildren(std::shared_ptr<Node> const& node) {
+void Node::addChild(std::shared_ptr<Node> node) {
   node->depth_ = getDepth() + 1;
   children_.push_back(node);
+}
+
+void Node::print(std::ostream& os) const {
+    for (int i = 0; i < depth_; ++i) {
+        os << "    ";
+    }
+    os << name_ << "\n";
+
+    for (auto const& c : children_) {
+        c->print(os);
+    }
 }
 
 Node::~Node() {}

@@ -20,6 +20,7 @@ class SceneGraph {
     std::string getName() const;
     std::string printGraph() const;
     std::shared_ptr<Node> getRoot() const;
+    std::ostream& print(std::ostream& os) const;
     ~SceneGraph();
 
   private:
@@ -30,5 +31,6 @@ class SceneGraph {
 
 };
 
+std::ostream& operator<<(std::ostream& os, SceneGraph const& s);
 
 #endif // SCENE_GRAPH_HPP

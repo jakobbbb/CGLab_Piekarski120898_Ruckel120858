@@ -9,7 +9,7 @@ TEST_CASE("node initialization") {
 
     SECTION("add one child") {
         auto child = std::make_shared<Node>(root, "child");
-        root->addChildren(child);
+        root->addChild(child);
 
         REQUIRE(child->getDepth() == 1);
         REQUIRE(child->getParent() == root);
@@ -19,7 +19,7 @@ TEST_CASE("node initialization") {
         auto child = std::make_shared<Node>(root, "child");
         auto nochild = std::make_shared<Node>(nullptr, "nochild");
         REQUIRE(root->getDepth() == 0);
-        root->addChildren(child);
+        root->addChild(child);
         REQUIRE(root->getDepth() == 1);
         root->removeChildren(child->getName());
         REQUIRE(root->getDepth() == 0);
