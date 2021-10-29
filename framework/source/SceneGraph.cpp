@@ -35,6 +35,11 @@ std::ostream& SceneGraph::print(std::ostream& os) const {
     return os;
 }
 
+void SceneGraph::traverse(node_traverse_func func) {
+  func(root_);
+  root_->traverse(func);
+}
+
 SceneGraph::~SceneGraph() {}
 
 std::ostream& operator<<(std::ostream& os, SceneGraph const& s) {

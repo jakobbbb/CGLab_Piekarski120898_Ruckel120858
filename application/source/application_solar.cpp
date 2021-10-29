@@ -5,6 +5,11 @@
 #include "shader_loader.hpp"
 #include "model_loader.hpp"
 
+#include <SceneGraph.hpp>
+#include <Node.hpp>
+#include <GeometryNode.hpp>
+#include <scenegraph_solar.hpp>
+
 #include <glbinding/gl/gl.h>
 // use gl definitions from glbinding 
 using namespace gl;
@@ -24,6 +29,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  ,planet_object{}
  ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})}
  ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
+ ,scene_graph_{make_solar_scene()}
 {
   initializeGeometry();
   initializeShaderPrograms();
@@ -95,6 +101,14 @@ void ApplicationSolar::initializeShaderPrograms() {
 // load models
 void ApplicationSolar::initializeGeometry() {
   model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
+
+  node_traverse_func loadGeometry = [&](std::shared_ptr<Node> node) {
+    auto g = std::dynamic_pointer_cast<GeometryNode>(node);
+    if (!g) return;
+    model m = model_loader::obj(m_resource_path + g->getGeometryPath(),
+      model::NORMAL);
+  };
+  scene_graph_.traverse(loadGeometry);
 
   // generate vertex array object
   glGenVertexArrays(1, &planet_object.vertex_AO);

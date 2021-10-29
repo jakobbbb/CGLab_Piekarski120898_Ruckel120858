@@ -21,6 +21,7 @@ class SceneGraph {
     std::string printGraph() const;
     std::shared_ptr<Node> getRoot() const;
     std::ostream& print(std::ostream& os) const;
+    void traverse(node_traverse_func);
     ~SceneGraph();
 
   private:

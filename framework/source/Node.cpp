@@ -88,4 +88,9 @@ void Node::print(std::ostream& os) const {
     }
 }
 
+void Node::traverse(node_traverse_func func) {
+    for (auto const& c : children_) {
+      func(c);
+    }
+}
 Node::~Node() {}

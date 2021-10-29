@@ -30,6 +30,10 @@
           +removeChildren(String): Node
 */
 
+
+class Node;
+typedef std::function<void(std::shared_ptr<Node>)> node_traverse_func;
+
 class Node {
 
   public:
@@ -48,7 +52,8 @@ class Node {
     void setWorldTransform(glm::mat4 const& worldTransform);
     void addChild(std::shared_ptr<Node> node);
     void print(std::ostream& os) const;
-    ~Node();
+    void traverse(node_traverse_func);
+    virtual ~Node();
 
   private:
     std::shared_ptr<Node> parent_;
