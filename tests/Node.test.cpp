@@ -13,21 +13,21 @@ TEST_CASE("node initialization") {
 
         REQUIRE(child->getDepth() == 1);
         REQUIRE(child->getParent() == root);
+        REQUIRE(root->getChildrenList().size() == 1);
     }
 
-    /*
     SECTION("remove one child") {
         auto child = std::make_shared<Node>(root, "child");
         auto nochild = std::make_shared<Node>(nullptr, "nochild");
-        REQUIRE(root->getDepth() == 0);
         root->addChild(child);
-        REQUIRE(root->getDepth() == 1);
         root->removeChildren(child->getName());
-        REQUIRE(root->getDepth() == 0);
-        root->removeChildren(nochild->getName());
-        REQUIRE(root->getDepth() == 0);
+
+        REQUIRE(child->getDepth() == 0);
+        REQUIRE(nochild->getDepth() == 0);
+        REQUIRE(root->getChildrenList().size() == 0);   
+        REQUIRE_FALSE(root->getChildren(child->getName()));
         REQUIRE_FALSE(root->getChildren(nochild->getName()));
+        REQUIRE_THROWS(root->removeChildren(child->getName()));
         REQUIRE_THROWS(root->removeChildren(nochild->getName()));
-    }
-    */
+    }   
 }

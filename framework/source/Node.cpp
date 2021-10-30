@@ -33,27 +33,24 @@ std::shared_ptr<Node> Node::getParent() const {
 
 std::shared_ptr<Node> Node::getChildren(std::string const& name) const {
   for (auto const& child : children_) {
-    if (child->getName() == name) {
+    if (child->name_ == name) {
       return child;
-    } else {
-      if (child->getChildren(name) != nullptr) {
-        return child->getChildren(name);
-      }
-    }
+    } 
   } return nullptr;
 }
 
 std::shared_ptr<Node> Node::removeChildren(std::string const& name) {
   for (auto const& child : children_) {
-    if (child->getName().compare(name) == 0) {
-      children_.remove(child);
-      return child;
-    } else {
-      if (child->removeChildren(name) != nullptr) {
-        throw "there is no child with that name";
+    if (child->name_.compare(name) == 0) {
+      auto parent = child->getParent();
+      if (parent != nullptr) {
+        child->depth_ = 0;
+        parent->children_.remove(child);
       }
-    }
-  } return nullptr;
+    } return child;
+  } 
+  throw std::invalid_argument("Node " + name + " does not exist"); 
+  return nullptr;
 }
 
 std::list<std::shared_ptr<Node>> Node::getChildrenList() const {
