@@ -17,7 +17,7 @@
           -mat4: worldTransform ✓
           +getParent(): Node ✓
           +setParent(Node): void ✓
-          +getChildren(String): Node
+          +getChildren(String): Node ✓
           +getChildrenList(): List<Node> ✓
           +getName(): String ✓
           +getPath(): String ✓
@@ -27,7 +27,7 @@
           +getWorldTransform(): mat4 ✓
           +setWorldTransform(mat4): void ✓
           +addChildren(Node): void ✓
-          +removeChildren(String): Node
+          +removeChildren(String): Node ✓
 */
 
 
@@ -45,7 +45,7 @@ class Node {
     glm::mat4 getWorldTransform() const;
     std::shared_ptr<Node> getParent() const;
     std::shared_ptr<Node> getChildren(std::string const& name) const;
-    std::shared_ptr<Node> removeChildren(std::string const& name);
+    std::shared_ptr<Node> removeChildren(std::string const& name) const;
     std::list<std::shared_ptr<Node>> getChildrenList() const;
     void setParent(std::shared_ptr<Node> node);
     void setLocalTransform(glm::mat4 const& localTransform);
