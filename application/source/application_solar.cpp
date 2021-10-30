@@ -159,7 +159,14 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
 
 //handle delta mouse movement input
 void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
-  // mouse handling
+  // mouse handling, x position movement
+  m_view_transform = glm::rotate(m_view_transform,                // 4x4 matrix
+                                 glm::radians(float(pos_x / 50)), // angle
+                                 glm::vec3{0.0f, 1.0f, 0.0f});    // axis
+  // mouse handling, y position movement
+  m_view_transform = glm::rotate(m_view_transform,                // 4x4 matrix
+                                 glm::radians(float(pos_y / 50)), // angle
+                                 glm::vec3{1.0f, 0.0f, 0.0f});    // axis
 }
 
 //handle resizing
