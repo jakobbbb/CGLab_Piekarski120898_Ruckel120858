@@ -7,30 +7,6 @@
 #include <memory>
 #include <list>
 
-/**
- * TODO:  -Node: parent ✓
-          -List<Node>: children ✓
-          -String: name ✓
-          -String: path ✓
-          -int: depth ✓
-          -mat4: localTransform ✓
-          -mat4: worldTransform ✓
-          +getParent(): Node ✓
-          +setParent(Node): void ✓
-          +getChildren(String): Node ✓
-          +getChildrenList(): List<Node> ✓
-          +getName(): String ✓
-          +getPath(): String ✓
-          +getDepth(): int ✓
-          +getLocalTransform(): mat4 ✓
-          +setLocalTransform(mat4): void ✓
-          +getWorldTransform(): mat4 ✓
-          +setWorldTransform(mat4): void ✓
-          +addChildren(Node): void ✓
-          +removeChildren(String): Node ✓
-*/
-
-
 class Node;
 typedef std::function<void(std::shared_ptr<Node>)> node_traverse_func;
 
@@ -49,11 +25,14 @@ class Node {
     std::list<std::shared_ptr<Node>> getChildrenList() const;
     void setParent(std::shared_ptr<Node> node);
     void setLocalTransform(glm::mat4 const& localTransform);
-    void setWorldTransform(glm::mat4 const& worldTransform);
     void addChild(std::shared_ptr<Node> node);
     void print(std::ostream& os) const;
     void traverse(node_traverse_func);
     virtual ~Node();
+    // Transforms
+    void translate(glm::vec3 const& t);
+    void rotate(float angle, glm::vec3 const& axis);
+    void scale(float s);
 
   private:
     std::shared_ptr<Node> parent_;
@@ -61,8 +40,7 @@ class Node {
     std::string name_;
     std::string path_;
     int depth_;
-    glm::mat4 localTransform_;
-    glm::mat4 worldTransform_;
+    glm::mat4 localTransform_;  // initialized to identiry matrix
 
 };
 

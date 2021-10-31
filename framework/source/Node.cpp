@@ -29,7 +29,11 @@ glm::mat4 Node::getLocalTransform() const {
 
 /* return worldTransform_ of a node */
 glm::mat4 Node::getWorldTransform() const {
-  return worldTransform_;
+  if (depth_ == 0) {  // root
+    return localTransform_;
+  } else {
+    return localTransform_ * parent_->getWorldTransform();
+  }
 }
 
 /* return the parent node */
@@ -77,9 +81,16 @@ void Node::setLocalTransform(glm::mat4 const& localTransform) {
   localTransform_ = localTransform;
 }
 
-/* set worldTransform_ of a node */
-void Node::setWorldTransform(glm::mat4 const& worldTransform) {
-  worldTransform_ = worldTransform;
+void Node::translate(glm::vec3 const& t) {
+  localTransform_ = glm::translate(localTransform_, t);
+}
+
+void Node::rotate(float angle, glm::vec3 const& axis) {
+  localTransform_ = glm::rotate(localTransform_, angle, axis);
+}
+
+void Node::scale(float s) {
+  localTransform_ = glm::scale(localTransform_, glm::vec3{s, s, s});
 }
 
 /* add a child node at the end of the list */
