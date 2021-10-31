@@ -102,13 +102,13 @@ void ApplicationSolar::initializeShaderPrograms() {
 void ApplicationSolar::initializeGeometry() {
   model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
 
-  node_traverse_func loadGeometry = [&](std::shared_ptr<Node> node) {
-    auto g = std::dynamic_pointer_cast<GeometryNode>(node);
-    if (!g) return;
-    model m = model_loader::obj(m_resource_path + g->getGeometryPath(),
-      model::NORMAL);
+  node_traverse_func set_geometry = [&](std::shared_ptr<Node> node) {
+    auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
+    if (geom_node) {
+      geom_node->setGeometry(planet_model);
+    }
   };
-  scene_graph_.traverse(loadGeometry);
+  scene_graph_.traverse(set_geometry);
 
   // generate vertex array object
   glGenVertexArrays(1, &planet_object.vertex_AO);
