@@ -27,16 +27,22 @@ SceneGraph make_solar_scene() {
 
     auto pointlight = std::make_shared<PointLightNode>(root, "PointLight");
     root->addChild(pointlight);
+    auto sun_geom = std::make_shared<GeometryNode>(pointlight, "Sun Geometry");
+    pointlight->addChild(sun_geom);
 
     for (auto const& planet_name : PLANET_NAMES) {
-      auto node = std::make_shared<GeometryNode>(root, planet_name);
-      root->addChild(node);
+      auto holder = std::make_shared<Node>(root, planet_name + " Holder");
+      root->addChild(holder);
+      auto geom = std::make_shared<GeometryNode>(holder, planet_name + " Geometry");
+      holder->addChild(geom);
     }
-    auto earth = root->getChildren("Earth");
+    auto earth = root->getChildren("Earth Holder");
     assert(earth != nullptr);
 
-    auto moon = std::make_shared<GeometryNode>(earth, "Moon");
-    earth->addChild(moon);
+    auto moon_holder = std::make_shared<Node>(earth, "Moon Holder");
+    earth->addChild(moon_holder);
+    auto moon_geom = std::make_shared<GeometryNode>(moon_holder, "Moon Geometry");
+    moon_holder->addChild(moon_geom);
 
     return s;
 }
