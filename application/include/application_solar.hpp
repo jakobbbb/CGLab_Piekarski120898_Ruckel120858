@@ -5,6 +5,7 @@
 #include "model.hpp"
 #include "structs.hpp"
 #include <SceneGraph.hpp>
+#include <GeometryNode.hpp>
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -22,7 +23,7 @@ class ApplicationSolar : public Application {
   void resizeCallback(unsigned width, unsigned height);
 
   // draw all objects
-  void render() const;
+  void render();
 
  protected:
   void initializeShaderPrograms();
@@ -33,6 +34,8 @@ class ApplicationSolar : public Application {
   void uploadProjection();
   // upload view matrix
   void uploadView();
+  // draw a planet
+  void renderPlanet(std::shared_ptr<GeometryNode> geom, std::string const& shader_name = "planet");
 
   // cpu representation of model
   model_object planet_object;

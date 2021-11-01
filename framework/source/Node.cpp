@@ -32,7 +32,7 @@ glm::mat4 Node::getWorldTransform() const {
   if (depth_ == 0) {  // root
     return localTransform_;
   } else {
-    return localTransform_ * parent_->getWorldTransform();
+    return parent_->getWorldTransform() * localTransform_;
   }
 }
 
@@ -46,7 +46,12 @@ std::shared_ptr<Node> Node::getChildren(std::string const& name) const {
   for (auto const& child : children_) {
     if (child->name_ == name) {
       return child;
-    } 
+    } else {
+      auto found_in_child = child->getChildren(name);
+      if (found_in_child != nullptr) {
+        return found_in_child;
+      }
+    }
   } return nullptr;
 }
 
@@ -111,10 +116,11 @@ void Node::print(std::ostream& os) const {
     }
 }
 
-/* store traverse function for children nodes */
+/* traverse function for children nodes */
 void Node::traverse(node_traverse_func func) {
     for (auto const& c : children_) {
       func(c);
+      c->traverse(func);
     }
 }
 

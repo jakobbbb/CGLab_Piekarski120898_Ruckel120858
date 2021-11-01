@@ -38,7 +38,7 @@ class Application {
   // update framebuffer textures
   inline virtual void resizeCallback(unsigned width, unsigned height) {};
   // draw all objects
-  virtual void render() const = 0;
+  virtual void render() = 0;
 
  protected:
   void updateUniformLocations();
