@@ -28,6 +28,6 @@ const float ORBIT_PERIODS[] = {
 };
 const glm::vec3 SUN_AXIS{0, 1, 0};
 
-SceneGraph make_solar_scene();
+void make_solar_scene();
 
 #endif  // SCENEGRAPH_SOLAR_HPP

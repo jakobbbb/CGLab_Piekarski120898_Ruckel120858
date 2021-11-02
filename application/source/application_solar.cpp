@@ -30,8 +30,8 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  ,planet_object{}
  ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})}
  ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
- ,scene_graph_{make_solar_scene()}
 {
+  make_solar_scene();
   initializeGeometry();
   initializeShaderPrograms();
 }
@@ -58,7 +58,7 @@ void ApplicationSolar::render() {
       }
     }
   };
-  scene_graph_.traverse(render);
+  SceneGraph::getInstance().traverse(render);
 }
 
 void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> geom,
@@ -125,7 +125,7 @@ void ApplicationSolar::initializeShaderPrograms() {
 void ApplicationSolar::initializeGeometry() {
   model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
 
-  std::cout << scene_graph_;
+  std::cout << SceneGraph::getInstance();
 
   node_traverse_func set_geometry = [&](std::shared_ptr<Node> node) {
     auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
@@ -133,7 +133,7 @@ void ApplicationSolar::initializeGeometry() {
       geom_node->setGeometry(planet_model);
     }
   };
-  scene_graph_.traverse(set_geometry);
+  SceneGraph::getInstance().traverse(set_geometry);
 
   // generate vertex array object
   glGenVertexArrays(1, &planet_object.vertex_AO);

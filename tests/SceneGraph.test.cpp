@@ -6,7 +6,7 @@
 #include <scenegraph_solar.hpp>
 
 TEST_CASE("scenegraph initialization") {
-    SceneGraph scene_graph{};
+    SceneGraph scene_graph = SceneGraph::getInstance();
     auto root = scene_graph.getRoot();
 
     REQUIRE(nullptr != root);
@@ -39,9 +39,9 @@ TEST_CASE("solar scenegraph") {
         "    Neptune Holder\n"
         "        Neptune Geometry\n";
 
-    auto solar = make_solar_scene();
+    make_solar_scene();
     std::stringstream solar_print;
-    solar_print << solar;
+    solar_print << SceneGraph::getInstance();
 
     REQUIRE(SCENEGRAPH_EXPECTED == solar_print.str());
 }

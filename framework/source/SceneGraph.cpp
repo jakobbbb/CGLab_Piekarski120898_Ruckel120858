@@ -49,6 +49,11 @@ void SceneGraph::traverse(node_traverse_func func) {
 /* destructor for SceneGraph */
 SceneGraph::~SceneGraph() {}
 
+SceneGraph& SceneGraph::getInstance() {
+  static SceneGraph instance;
+  return instance;
+}
+
 /* output operator */
 std::ostream& operator<<(std::ostream& os, SceneGraph const& s) {
     return s.print(os);

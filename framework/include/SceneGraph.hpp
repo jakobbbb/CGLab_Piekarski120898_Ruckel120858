@@ -23,6 +23,7 @@ class SceneGraph {
     std::ostream& print(std::ostream& os) const;
     void traverse(node_traverse_func);
     ~SceneGraph();
+    static SceneGraph& getInstance();
 
   private:
     std::string name_;

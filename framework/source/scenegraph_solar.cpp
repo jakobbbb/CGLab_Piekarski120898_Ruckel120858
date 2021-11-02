@@ -9,8 +9,8 @@
 #include <PointLightNode.hpp>
 
 
-SceneGraph make_solar_scene() {
-    SceneGraph s{};
+void make_solar_scene() {
+    SceneGraph s = SceneGraph::getInstance();
 
     auto root = s.getRoot();
 
@@ -48,6 +48,4 @@ SceneGraph make_solar_scene() {
 
     moon_geom->scale(.5f);
     moon_geom->translate({10.f, 0, 0});
-
-    return s;
 }
