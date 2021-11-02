@@ -24,10 +24,10 @@ TEST_CASE("node initialization") {
 
         REQUIRE(child->getDepth() == 0);
         REQUIRE(nochild->getDepth() == 0);
-        REQUIRE(root->getChildrenList().size() == 0);   
+        REQUIRE(root->getChildrenList().size() == 0);
         REQUIRE_FALSE(root->getChildren(child->getName()));
         REQUIRE_FALSE(root->getChildren(nochild->getName()));
         REQUIRE_THROWS(root->removeChildren(child->getName()));
         REQUIRE_THROWS(root->removeChildren(nochild->getName()));
-    }   
+    }
 }

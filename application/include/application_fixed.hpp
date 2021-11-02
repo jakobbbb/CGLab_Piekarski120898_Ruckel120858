@@ -5,13 +5,12 @@
 
 // gpu representation of model
 class ApplicationFixed : public Application {
- public:
-  // allocate and initialize objects
-  ApplicationFixed(std::string const& resource_path);
+   public:
+    // allocate and initialize objects
+    ApplicationFixed(std::string const& resource_path);
 
-
-  // draw all objects
-  void render() const;
+    // draw all objects
+    void render() const;
 };
 
 #endif

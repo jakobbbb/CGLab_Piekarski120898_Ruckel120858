@@ -2,17 +2,16 @@
 #define NODE_HPP
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <structs.hpp>
-#include <string>
-#include <memory>
 #include <list>
+#include <memory>
+#include <string>
+#include <structs.hpp>
 
 class Node;
 typedef std::function<void(std::shared_ptr<Node>)> node_traverse_func;
 
 class Node {
-
-  public:
+   public:
     Node(std::shared_ptr<Node> parent, std::string const& name);
     std::string getName() const;
     std::string getPath() const;
@@ -34,15 +33,13 @@ class Node {
     void rotate(float angle, glm::vec3 const& axis);
     void scale(float s);
 
-  private:
+   private:
     std::shared_ptr<Node> parent_;
     std::list<std::shared_ptr<Node>> children_;
     std::string name_;
     std::string path_;
     int depth_;
     glm::mat4 localTransform_;  // initialized to identiry matrix
-
 };
 
-
-#endif // NODE_HPP
+#endif  // NODE_HPP

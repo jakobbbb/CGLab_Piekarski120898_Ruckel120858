@@ -5,30 +5,30 @@
 
 // gpu representation of model
 class ApplicationVao : public Application {
- public:
-  // allocate and initialize objects
-  ApplicationVao(std::string const& resource_path);
-  ~ApplicationVao();
+   public:
+    // allocate and initialize objects
+    ApplicationVao(std::string const& resource_path);
+    ~ApplicationVao();
 
-  // update uniform locations and values
-  void uploadUniforms();
+    // update uniform locations and values
+    void uploadUniforms();
 
-  // draw all objects
-  void render() const;
+    // draw all objects
+    void render() const;
 
- protected:
-  void initializeShaderPrograms();
-  void initializeGeometry();
+   protected:
+    void initializeShaderPrograms();
+    void initializeGeometry();
 
-  // vertex array object
-  GLuint m_vertex_ao;
-  // vertex buffer object
-  GLuint m_vertex_bo;
-  // index buffer object
-  GLuint m_index_bo;
+    // vertex array object
+    GLuint m_vertex_ao;
+    // vertex buffer object
+    GLuint m_vertex_bo;
+    // index buffer object
+    GLuint m_index_bo;
 
     // camera projection matrix
-  glm::fmat4 m_view_projection;
+    glm::fmat4 m_view_projection;
 };
 
 #endif

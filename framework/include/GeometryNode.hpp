@@ -11,17 +11,13 @@
 */
 
 class GeometryNode : public Node {
-
-  public:
-    GeometryNode(std::shared_ptr<Node> parent,
-        std::string const& name);
+   public:
+    GeometryNode(std::shared_ptr<Node> parent, std::string const& name);
     model getGeometry() const;
     void setGeometry(model const& geometry);
 
-  private:
+   private:
     model geometry_;
-
 };
 
-
-#endif // GEOMETRY_NODE_HPP
+#endif  // GEOMETRY_NODE_HPP

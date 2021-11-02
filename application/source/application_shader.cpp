@@ -1,89 +1,93 @@
 #include "application_shader.hpp"
 #include "window_handler.hpp"
 
-#include "utils.hpp"
-#include "shader_loader.hpp"
 #include "model_loader.hpp"
+#include "shader_loader.hpp"
+#include "utils.hpp"
 
 #include <glbinding/gl/gl.h>
-// use gl definitions from glbinding 
+// use gl definitions from glbinding
 using namespace gl;
 
-//dont load gl bindings from glfw
+// dont load gl bindings from glfw
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 ApplicationShader::ApplicationShader(std::string const& resource_path)
- :Application{resource_path}
- ,m_program{0}
-{
-  initializeShaderPrograms();
+    : Application{resource_path}, m_program{0} {
+    initializeShaderPrograms();
 
-  glm::fmat4 projection_matrix = utils::calculate_projection_matrix(initial_aspect_ratio);
-  // upload projection matrix
-  glMatrixMode(GL_PROJECTION);
-  glLoadMatrixf(glm::value_ptr(projection_matrix));
+    glm::fmat4 projection_matrix =
+        utils::calculate_projection_matrix(initial_aspect_ratio);
+    // upload projection matrix
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixf(glm::value_ptr(projection_matrix));
 }
 
 GLuint createShader(std::string const& file_path, GLenum shader_type) {
-  // allocate shader
-  GLuint shader = glCreateShader(shader_type);
+    // allocate shader
+    GLuint shader = glCreateShader(shader_type);
 
-  std::string shader_source{utils::read_file(file_path)};
-  // glshadersource expects array of c-strings
-  const char* shader_chars = shader_source.c_str();
-  // define source
-  glShaderSource(shader, 1, &shader_chars, 0);
-  // compile source
-  glCompileShader(shader);
+    std::string shader_source{utils::read_file(file_path)};
+    // glshadersource expects array of c-strings
+    const char* shader_chars = shader_source.c_str();
+    // define source
+    glShaderSource(shader, 1, &shader_chars, 0);
+    // compile source
+    glCompileShader(shader);
 
-  return shader;
+    return shader;
 }
 
 ApplicationShader::~ApplicationShader() {
-  // free program
-  glDeleteProgram(m_program);
+    // free program
+    glDeleteProgram(m_program);
 }
 
 // load shader programs
 void ApplicationShader::initializeShaderPrograms() {
-  // allocate program
-  m_program = glCreateProgram();
+    // allocate program
+    m_program = glCreateProgram();
 
-  // load and compile vert and frag shader
-  GLuint vertex_shader = createShader(m_resource_path + "/shaders/emulation.vert", GL_VERTEX_SHADER);
-  GLuint fragment_shader = createShader(m_resource_path + "/shaders/emulation.frag", GL_FRAGMENT_SHADER);
+    // load and compile vert and frag shader
+    GLuint vertex_shader = createShader(
+        m_resource_path + "/shaders/emulation.vert", GL_VERTEX_SHADER);
+    GLuint fragment_shader = createShader(
+        m_resource_path + "/shaders/emulation.frag", GL_FRAGMENT_SHADER);
 
-  // attach the shaders to the program
-  glAttachShader(m_program, vertex_shader);
-  glAttachShader(m_program, fragment_shader);
+    // attach the shaders to the program
+    glAttachShader(m_program, vertex_shader);
+    glAttachShader(m_program, fragment_shader);
 
-  // link shaders
-  glLinkProgram(m_program);
+    // link shaders
+    glLinkProgram(m_program);
 
-  // detach shaders
-  glDetachShader(m_program, vertex_shader);
-  glDetachShader(m_program, fragment_shader);
-  // and free them
-  glDeleteShader(vertex_shader);
-  glDeleteShader(fragment_shader);
+    // detach shaders
+    glDetachShader(m_program, vertex_shader);
+    glDetachShader(m_program, fragment_shader);
+    // and free them
+    glDeleteShader(vertex_shader);
+    glDeleteShader(fragment_shader);
 
-  // bind program
-  glUseProgram(m_program);
+    // bind program
+    glUseProgram(m_program);
 }
 
 void ApplicationShader::render() const {
-  glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{0.0f, 1.0f, 0.0f});
-  model_matrix = glm::translate(glm::fmat4{1.0f}, glm::fvec3{0.0f, 0.0f, -1.0f}) * model_matrix;
-  // upload modelview matrix
-  glMatrixMode(GL_MODELVIEW);
-  glLoadMatrixf(glm::value_ptr(model_matrix));
-  // draw triangle
-  glBegin(GL_TRIANGLES);
+    glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()),
+                                          glm::fvec3{0.0f, 1.0f, 0.0f});
+    model_matrix =
+        glm::translate(glm::fmat4{1.0f}, glm::fvec3{0.0f, 0.0f, -1.0f}) *
+        model_matrix;
+    // upload modelview matrix
+    glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf(glm::value_ptr(model_matrix));
+    // draw triangle
+    glBegin(GL_TRIANGLES);
     // first vertex
     glVertex3f(0.5, -0.5, 0.0);
     glColor3f(1.0, 0.0, 0.0);
@@ -93,10 +97,10 @@ void ApplicationShader::render() const {
     // third vertes
     glVertex3f(0.0, 0.5, 0.0);
     glColor3f(0.0, 0.0, 1.0);
-  glEnd();
+    glEnd();
 }
 
 // exe entry point
 int main(int argc, char* argv[]) {
-  Application::run<ApplicationShader>(argc, argv, 2, 0);
+    Application::run<ApplicationShader>(argc, argv, 2, 0);
 }

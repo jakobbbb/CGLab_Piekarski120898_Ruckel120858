@@ -15,8 +15,7 @@
 */
 
 class CameraNode : public Node {
-
-  public:
+   public:
     CameraNode(std::shared_ptr<Node> parent, std::string const& name);
     bool getPerspective() const;
     bool getEnabled() const;
@@ -24,12 +23,10 @@ class CameraNode : public Node {
     void setEnabled(bool isEnabled);
     void setProjectionMatrix(glm::mat4 const& projectionMatrix);
 
-  private:
+   private:
     bool isPerspective_;
     bool isEnabled_;
     glm::mat4 projectionMatrix_;
-
 };
 
-
-#endif // CAMERA_NODE_HPP
+#endif  // CAMERA_NODE_HPP

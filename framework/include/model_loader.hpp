@@ -7,7 +7,8 @@
 
 namespace model_loader {
 
-model obj(std::string const& path, model::attrib_flag_t import_attribs = model::POSITION);
+model obj(std::string const& path,
+          model::attrib_flag_t import_attribs = model::POSITION);
 
 }
 

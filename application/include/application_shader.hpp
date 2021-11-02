@@ -5,19 +5,18 @@
 
 // gpu representation of model
 class ApplicationShader : public Application {
- public:
-  // allocate and initialize objects
-  ApplicationShader(std::string const& resource_path);
-  ~ApplicationShader();
+   public:
+    // allocate and initialize objects
+    ApplicationShader(std::string const& resource_path);
+    ~ApplicationShader();
 
+    // draw all objects
+    void render() const;
 
-  // draw all objects
-  void render() const;
+   protected:
+    void initializeShaderPrograms();
 
- protected:
-  void initializeShaderPrograms();
-
-  GLuint m_program;
+    GLuint m_program;
 };
 
 #endif
