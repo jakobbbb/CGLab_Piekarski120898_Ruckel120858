@@ -10,6 +10,9 @@
 #include <GeometryNode.hpp>
 #include <scenegraph_solar.hpp>
 
+
+#include <cassert>
+
 #include <glbinding/gl/gl.h>
 // use gl definitions from glbinding 
 using namespace gl;
@@ -28,10 +31,20 @@ using namespace gl;
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
  ,planet_object{}
- ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})}
- ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
+  // Setup Scene
   make_solar_scene();
+
+  // Setup Camera
+  auto view_transform =
+      glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f});
+  auto view_projection =
+      utils::calculate_projection_matrix(initial_aspect_ratio);
+  auto cam = SceneGraph::getActiveCamera();
+  assert(cam != nullptr);
+  cam->setLocalTransform(view_transform);
+  cam->setProjectionMatrix(view_projection);
+
   initializeGeometry();
   initializeShaderPrograms();
 }
@@ -74,7 +87,7 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> geom,
                      1, GL_FALSE, glm::value_ptr(model_matrix));
 
   // extra matrix for normal transformation to keep them orthogonal to surface
-  glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
+  glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(SceneGraph::getActiveCamera()->getWorldTransform()) * model_matrix);
   glUniformMatrix4fv(m_shaders.at(shader_name).u_locs.at("NormalMatrix"),
                      1, GL_FALSE, glm::value_ptr(normal_matrix));
 
@@ -87,7 +100,7 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> geom,
 
 void ApplicationSolar::uploadView() {
   // vertices are transformed in camera space, so camera transform must be inverted
-  glm::fmat4 view_matrix = glm::inverse(m_view_transform);
+  glm::fmat4 view_matrix = glm::inverse(SceneGraph::getActiveCamera()->getWorldTransform());
   // upload matrix to gpu
   glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ViewMatrix"),
                      1, GL_FALSE, glm::value_ptr(view_matrix));
@@ -96,7 +109,7 @@ void ApplicationSolar::uploadView() {
 void ApplicationSolar::uploadProjection() {
   // upload matrix to gpu
   glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ProjectionMatrix"),
-                     1, GL_FALSE, glm::value_ptr(m_view_projection));
+                     1, GL_FALSE, glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
 }
 
 // update uniform locations
@@ -174,41 +187,47 @@ void ApplicationSolar::initializeGeometry() {
 // - press W / S == zoom in / out
 // - press A / D == move left / right
 void ApplicationSolar::keyCallback(int key, int action, int mods) {
+  auto cam = SceneGraph::getActiveCamera();
   if (key == GLFW_KEY_W  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, -0.1f});
+    cam->translate(glm::fvec3{0.0f, 0.0f, -0.1f});
     uploadView();
   }
   else if (key == GLFW_KEY_S  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, 0.1f});
+    cam->translate(glm::fvec3{0.0f, 0.0f, 0.1f});
     uploadView();
   }
   else if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.1f, 0.0f, 0.0f});
+    cam->translate(glm::fvec3{-0.1f, 0.0f, 0.0f});
     uploadView();
   }
   else if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{-0.1f, 0.0f, 0.0f});
+    cam->translate(glm::fvec3{0.1f, 0.0f, 0.0f});
     uploadView();
   }
 }
 
 //handle delta mouse movement input
 void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
+  auto cam = SceneGraph::getActiveCamera();
   // mouse handling, x position movement
-  m_view_transform = glm::rotate(m_view_transform,                // 4x4 matrix
-                                 glm::radians(float(pos_x / 50)), // angle
-                                 glm::vec3{0.0f, -1.0f, 0.0f});    // axis
+  cam->rotate(
+      glm::radians(float(pos_x / 50)), // angle
+      glm::vec3{0.0f, -1.0f, 0.0f}    // axis
+  );
   // mouse handling, y position movement
-  m_view_transform = glm::rotate(m_view_transform,                // 4x4 matrix
-                                 glm::radians(float(pos_y / 50)), // angle
-                                 glm::vec3{-1.0f, 0.0f, 0.0f});    // axis
+  cam->rotate(
+      glm::radians(float(pos_y / 50)), // angle
+      glm::vec3{-1.0f, 0.0f, 0.0f}    // axis
+  );
   uploadView();
 }
 
 //handle resizing
 void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
   // recalculate projection matrix for new aspect ration
-  m_view_projection = utils::calculate_projection_matrix(float(width) / float(height));
+  auto view_projection =
+      utils::calculate_projection_matrix(float(width) / float(height));
+  SceneGraph::getActiveCamera()->setProjectionMatrix(view_projection);
   // upload new projection matrix
   uploadProjection();
 }

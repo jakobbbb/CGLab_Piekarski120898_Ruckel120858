@@ -15,6 +15,7 @@ void make_solar_scene() {
     auto root = s.getRoot();
 
     auto camera = std::make_shared<CameraNode>(root, "Camera");
+    camera->setEnabled(true);
     root->addChild(camera);
 
     auto pointlight = std::make_shared<PointLightNode>(root, "PointLight");

@@ -1,6 +1,7 @@
 #ifndef SCENE_GRAPH_HPP
 #define SCENE_GRAPH_HPP
 #include <Node.hpp>
+#include <CameraNode.hpp>
 
 /**
  * TODO:  -String: name ✓
@@ -24,6 +25,7 @@ class SceneGraph {
     void traverse(node_traverse_func);
     ~SceneGraph();
     static SceneGraph& getInstance();
+    static std::shared_ptr<CameraNode> getActiveCamera();
 
   private:
     std::string name_;

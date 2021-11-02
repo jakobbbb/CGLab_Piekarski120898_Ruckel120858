@@ -46,6 +46,19 @@ void SceneGraph::traverse(node_traverse_func func) {
   root_->traverse(func);
 }
 
+/* return an active camera */
+std::shared_ptr<CameraNode> SceneGraph::getActiveCamera() {
+  std::shared_ptr<CameraNode> camera;
+  node_traverse_func find_camera = [&](std::shared_ptr<Node> node) {
+    auto cam_node = std::dynamic_pointer_cast<CameraNode>(node);
+    if (cam_node && cam_node->getEnabled()) {
+      camera = cam_node;
+    }
+  };
+  getInstance().traverse(find_camera);
+  return camera;
+}
+
 /* destructor for SceneGraph */
 SceneGraph::~SceneGraph() {}
 
