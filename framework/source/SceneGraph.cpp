@@ -9,14 +9,14 @@ std::string SceneGraph::getName() const {
   return name_;
 }
 
-/**/
+/* print the scene graph */
 std::string SceneGraph::printGraph() const {
   std::string graph = "Graph: ";
-  // for (auto const& node : root_->getChildren(name_)) {
-  //   graph.append(node->getName());
-  //   graph.append(", ");
-  // }
-  return graph; // TODO, not working yet
+  for (auto const& node : root_->getChildrenList()) {
+    graph.append(node->getName());
+    graph.append(", ");
+  }
+  return graph;
 }
 
 /* return pointer to the root node of the scene graph */
