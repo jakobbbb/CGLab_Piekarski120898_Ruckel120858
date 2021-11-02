@@ -13,11 +13,7 @@ jobs:
               run: sudo apt install xorg-dev
 
             - name: Build
-              run: |
-                mkdir build
-                cd build
-                cmake ..
-                make
+              run: make build
 
             - name: Test
-              run: build/Debug/tests
+              run: make run-tests
