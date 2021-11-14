@@ -18,6 +18,8 @@ struct model_object {
     GLenum draw_mode = GL_NONE;
     // indices number, if EBO exists
     GLsizei num_elements = 0;
+    //
+    bool using_indices = false;
 };
 
 // gpu representation of texture

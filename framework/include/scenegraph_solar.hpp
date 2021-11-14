@@ -3,6 +3,8 @@
 
 #include "SceneGraph.hpp"
 
+#define ORBIT_NODE_NAME_PREFIX "Orbit "
+
 #define RAND_FLOAT() ((float)std::rand() / (float)RAND_MAX)
 
 const std::string PLANET_NAMES[] = {

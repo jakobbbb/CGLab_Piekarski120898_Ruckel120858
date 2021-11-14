@@ -27,7 +27,7 @@ using namespace gl;
 
 #include <iostream>
 
-#define ORBIT_NUM_LINE_SEGMENTS 16
+#define ORBIT_NUM_LINE_SEGMENTS 64
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     : Application{resource_path}, planet_object{} {
@@ -94,8 +94,12 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node,
     glBindVertexArray(geometry_object.vertex_AO);
 
     // draw bound vertex array using bound shader
-    glDrawElements(geometry_object.draw_mode, geometry_object.num_elements,
-                   model::INDEX.type, NULL);
+    if (geometry_object.using_indices) {
+        glDrawElements(geometry_object.draw_mode, geometry_object.num_elements,
+                       model::INDEX.type, NULL);
+    } else {
+        glDrawArrays(geometry_object.draw_mode, 0, geometry_object.num_elements);
+    }
 }
 
 void ApplicationSolar::renderStars() {
@@ -146,12 +150,9 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
 }
 
-// load models
-void ApplicationSolar::initializeGeometry() {
+void ApplicationSolar::initializePlanetGeometry() {
     model planet_model =
         model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
-
-    std::cout << SceneGraph::getInstance();
 
     // generate vertex array object
     glGenVertexArrays(1, &planet_object.vertex_AO);
@@ -193,11 +194,76 @@ void ApplicationSolar::initializeGeometry() {
     // transfer number of indices to model object
     planet_object.num_elements = GLsizei(planet_model.indices.size());
 
+    planet_object.using_indices = true;
+}
+
+void ApplicationSolar::initializeOrbitGeometry() {
+    std::vector<float> points;
+    for (int i = 0; i < ORBIT_NUM_LINE_SEGMENTS; ++i) {
+        float theta = 2 * (float)M_PI * (float)i / ORBIT_NUM_LINE_SEGMENTS;
+        points.push_back((float)sin(theta));
+        points.push_back(0);
+        points.push_back((float)cos(theta));
+    }
+
+    for (auto const& i : points) {
+        std::cout << i << '\n';
+    }
+
+    // generate vertex array object
+    glGenVertexArrays(1, &orbit_object.vertex_AO);
+    // bind the array for attaching buffers
+    glBindVertexArray(orbit_object.vertex_AO);
+
+    // generate generic buffer
+    glGenBuffers(1, &orbit_object.vertex_BO);
+    // bind this as an vertex array buffer containing all attributes
+    glBindBuffer(GL_ARRAY_BUFFER, orbit_object.vertex_BO);
+    // configure currently bound array buffer
+    glBufferData(GL_ARRAY_BUFFER, GLsizei(points.size() * sizeof(float)),
+                 points.data(), GL_STATIC_DRAW);
+
+    // activate first attribute on gpu
+    glEnableVertexAttribArray(0);
+    // first attribute is 3 floats with no offset & stride
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+    // generate generic buffer
+    glGenBuffers(1, &orbit_object.element_BO);
+    // bind this as an vertex array buffer containing all attributes
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, orbit_object.element_BO);
+    // configure currently bound array buffer
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+            GLsizei(sizeof(float) * points.size()), points.data(),
+                 GL_STATIC_DRAW);
+
+    // store type of primitive to draw
+    orbit_object.draw_mode = GL_LINE_LOOP;
+    // transfer number of indices to model object
+    orbit_object.num_elements = GLsizei(points.size() / 3);
+}
+
+// load models
+void ApplicationSolar::initializeGeometry() {
+    initializePlanetGeometry();
+    initializeOrbitGeometry();
+
     node_traverse_func set_geometry = [&](std::shared_ptr<Node> node) {
         auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
-        if (geom_node) {
+        if (!geom_node) {
+            return;
+        }
+
+        if (geom_node->getName().rfind(ORBIT_NODE_NAME_PREFIX) == 0) {
+            // node is orbit
+            geom_node->setGeometry(orbit_object);
+        } else {
+            // node is planet
             geom_node->setGeometry(planet_object);
         }
+
+        // TODO remove this
+        // geom_node->setGeometry(orbit_object);
     };
     SceneGraph::getInstance().traverse(set_geometry);
 }
