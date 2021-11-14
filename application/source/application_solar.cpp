@@ -60,8 +60,8 @@ void ApplicationSolar::render() {
         auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
         if (geom_node) {
             renderObject(geom_node);
-            // node->rotate(RAND_FLOAT() / 10e2f, SUN_AXIS);
-            if (node->getName() != "Sun Geometry") {
+            if (geom_node->getShaderName() == "planet"
+                    && node->getName() != "Sun Geometry") {
                 node->getParent()->rotate(
                     (float)glfwGetTime() / ORBIT_PERIODS[planet_idx] / 10e4f,
                     SUN_AXIS);
@@ -72,8 +72,8 @@ void ApplicationSolar::render() {
     SceneGraph::getInstance().traverse(render);
 }
 
-void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node,
-                                    std::string const& shader_name) {
+void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
+    auto shader_name = node->getShaderName();
     auto model_matrix = node->getWorldTransform();
     auto geometry_object = node->getGeometry();
 
@@ -271,7 +271,7 @@ void ApplicationSolar::initializeGeometry() {
             return;
         }
 
-        if (geom_node->getName().rfind(ORBIT_NODE_NAME_PREFIX) == 0) {
+        if (geom_node->getShaderName() == "orbit") {
             // node is orbit
             geom_node->setGeometry(orbit_object);
         } else {

@@ -22,8 +22,14 @@ void make_solar_scene() {
 
     auto pointlight = std::make_shared<PointLightNode>(root, "PointLight");
     root->addChild(pointlight);
-    auto sun_geom = std::make_shared<GeometryNode>(pointlight, "Sun Geometry");
+    auto sun_geom = std::make_shared<GeometryNode>(pointlight, "Sun Geometry", "planet");
     pointlight->addChild(sun_geom);
+
+    auto test_orbit = std::make_shared<GeometryNode>(pointlight, "Test Orbit", "orbit");
+    test_orbit->translate({1, 0, 0});
+    test_orbit->scale(2);
+    test_orbit->rotate(30, {1, 1, 1});
+    pointlight->addChild(test_orbit);
 
     // sun_geom->scale(0.1);
 
@@ -32,7 +38,7 @@ void make_solar_scene() {
         auto holder = std::make_shared<Node>(root, planet_name + " Holder");
         root->addChild(holder);
         auto geom =
-            std::make_shared<GeometryNode>(holder, planet_name + " Geometry");
+            std::make_shared<GeometryNode>(holder, planet_name + " Geometry", "planet");
         holder->addChild(geom);
 
         holder->rotate(RAND_FLOAT(), SUN_AXIS);
@@ -47,7 +53,7 @@ void make_solar_scene() {
     auto moon_holder = std::make_shared<Node>(earth, "Moon Holder");
     earth->addChild(moon_holder);
     auto moon_geom =
-        std::make_shared<GeometryNode>(moon_holder, "Moon Geometry");
+        std::make_shared<GeometryNode>(moon_holder, "Moon Geometry", "planet");
     moon_holder->addChild(moon_geom);
 
     moon_geom->scale(.5f);

@@ -36,8 +36,7 @@ class ApplicationSolar : public Application {
     // upload view matrix
     void uploadView();
     // draw a planet
-    void renderObject(std::shared_ptr<GeometryNode> geom,
-                      std::string const& shader_name = "planet");
+    void renderObject(std::shared_ptr<GeometryNode> geom);
     void renderStars();
 
     // cpu representation of model

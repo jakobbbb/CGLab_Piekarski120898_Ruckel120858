@@ -21,6 +21,7 @@ TEST_CASE("solar scenegraph") {
         "    Stars\n"
         "    PointLight\n"
         "        Sun Geometry\n"
+        "        Test Orbit\n"
         "    Mercury Holder\n"
         "        Mercury Geometry\n"
         "    Venus Holder\n"
