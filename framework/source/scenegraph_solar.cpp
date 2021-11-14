@@ -25,16 +25,15 @@ void make_solar_scene() {
     auto sun_geom = std::make_shared<GeometryNode>(pointlight, "Sun Geometry", "planet");
     pointlight->addChild(sun_geom);
 
-    auto test_orbit = std::make_shared<GeometryNode>(pointlight, "Test Orbit", "orbit");
-    test_orbit->translate({1, 0, 0});
-    test_orbit->scale(2);
-    test_orbit->rotate(30, {1, 1, 1});
-    pointlight->addChild(test_orbit);
-
-    // sun_geom->scale(0.1);
-
     float distance_to_sun = 10.0f;
     for (auto const& planet_name : PLANET_NAMES) {
+        distance_to_sun += 4 + 6 * RAND_FLOAT();
+
+        auto orbit =
+            std::make_shared<GeometryNode>(root, planet_name + " Orbit", "orbit");
+        root->addChild(orbit);
+        orbit->scale(distance_to_sun);
+
         auto holder = std::make_shared<Node>(root, planet_name + " Holder");
         root->addChild(holder);
         auto geom =
@@ -42,7 +41,6 @@ void make_solar_scene() {
         holder->addChild(geom);
 
         holder->rotate(RAND_FLOAT(), SUN_AXIS);
-        distance_to_sun += 2 + 2 * RAND_FLOAT();
         geom->translate({distance_to_sun, 0, 0});
         geom->scale(0.5f);
     }
@@ -56,6 +54,12 @@ void make_solar_scene() {
         std::make_shared<GeometryNode>(moon_holder, "Moon Geometry", "planet");
     moon_holder->addChild(moon_geom);
 
+    float moon_earth_distance = 10.f;
     moon_geom->scale(.5f);
-    moon_geom->translate({10.f, 0, 0});
+    moon_geom->translate({moon_earth_distance, 0, 0});
+
+    auto moon_orbit =
+        std::make_shared<GeometryNode>(earth, "Moon Orbit", "orbit");
+    earth->addChild(moon_orbit);
+    moon_orbit->scale(moon_earth_distance * 0.5f);
 }
