@@ -223,10 +223,6 @@ void ApplicationSolar::initializeOrbitGeometry() {
         points.push_back((float)cos(theta));
     }
 
-    for (auto const& i : points) {
-        std::cout << i << '\n';
-    }
-
     // generate vertex array object
     glGenVertexArrays(1, &orbit_object.vertex_AO);
     // bind the array for attaching buffers
