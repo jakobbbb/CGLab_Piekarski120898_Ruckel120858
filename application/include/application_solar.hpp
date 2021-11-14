@@ -36,9 +36,11 @@ class ApplicationSolar : public Application {
     // draw a planet
     void renderPlanet(std::shared_ptr<GeometryNode> geom,
                       std::string const& shader_name = "planet");
+    void renderStars();
 
     // cpu representation of model
     model_object planet_object;
+    model_object star_object;
 };
 
 #endif

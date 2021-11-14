@@ -95,6 +95,12 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> geom,
                    model::INDEX.type, NULL);
 }
 
+void ApplicationSolar::renderStars() {
+    glUseProgram(m_shaders.at("stars").handle);
+    glBindVertexArray(star_object.vertex_AO);
+    glDrawArrays(star_object.draw_mode, 0, star_object.num_elements);
+}
+
 void ApplicationSolar::uploadView() {
     // vertices are transformed in camera space, so camera transform must be
     // inverted
