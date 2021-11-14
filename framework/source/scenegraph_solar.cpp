@@ -17,6 +17,9 @@ void make_solar_scene() {
     camera->setEnabled(true);
     root->addChild(camera);
 
+    auto stars = std::make_shared<Node>(root, "Stars");
+    root->addChild(stars);
+
     auto pointlight = std::make_shared<PointLightNode>(root, "PointLight");
     root->addChild(pointlight);
     auto sun_geom = std::make_shared<GeometryNode>(pointlight, "Sun Geometry");
