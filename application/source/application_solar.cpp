@@ -114,21 +114,28 @@ void ApplicationSolar::uploadView() {
     glm::fmat4 view_matrix =
         glm::inverse(SceneGraph::getActiveCamera()->getWorldTransform());
     // upload matrix to gpu
+    glUseProgram(m_shaders.at("planet").handle);
     glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ViewMatrix"), 1,
+                       GL_FALSE, glm::value_ptr(view_matrix));
+    glUseProgram(m_shaders.at("orbit").handle);
+    glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("ViewMatrix"), 1,
                        GL_FALSE, glm::value_ptr(view_matrix));
 }
 
 void ApplicationSolar::uploadProjection() {
     // upload matrix to gpu
+    glUseProgram(m_shaders.at("planet").handle);
     glUniformMatrix4fv(
         m_shaders.at("planet").u_locs.at("ProjectionMatrix"), 1, GL_FALSE,
+        glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
+    glUseProgram(m_shaders.at("orbit").handle);
+    glUniformMatrix4fv(
+        m_shaders.at("orbit").u_locs.at("ProjectionMatrix"), 1, GL_FALSE,
         glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
 }
 
 // update uniform locations
 void ApplicationSolar::uploadUniforms() {
-    // bind shader to which to upload unforms
-    glUseProgram(m_shaders.at("planet").handle);
     // upload uniform values to new locations
     uploadView();
     uploadProjection();
@@ -148,6 +155,16 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("planet").u_locs["ModelMatrix"] = -1;
     m_shaders.at("planet").u_locs["ViewMatrix"] = -1;
     m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
+
+    m_shaders.emplace(
+        "orbit",
+        shader_program{
+            {{GL_VERTEX_SHADER, m_resource_path + "shaders/orbit.vert"},
+             {GL_FRAGMENT_SHADER, m_resource_path + "shaders/orbit.frag"}}});
+    m_shaders.at("orbit").u_locs["NormalMatrix"] = -1;
+    m_shaders.at("orbit").u_locs["ModelMatrix"] = -1;
+    m_shaders.at("orbit").u_locs["ViewMatrix"] = -1;
+    m_shaders.at("orbit").u_locs["ProjectionMatrix"] = -1;
 }
 
 void ApplicationSolar::initializePlanetGeometry() {
@@ -261,9 +278,6 @@ void ApplicationSolar::initializeGeometry() {
             // node is planet
             geom_node->setGeometry(planet_object);
         }
-
-        // TODO remove this
-        // geom_node->setGeometry(orbit_object);
     };
     SceneGraph::getInstance().traverse(set_geometry);
 }
