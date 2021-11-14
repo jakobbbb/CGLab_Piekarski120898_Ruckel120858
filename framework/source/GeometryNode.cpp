@@ -6,11 +6,11 @@ GeometryNode::GeometryNode(std::shared_ptr<Node> parent,
     : Node{parent, name} {}
 
 /* return the model of a geometry node */
-model GeometryNode::getGeometry() const {
+model_object GeometryNode::getGeometry() const {
     return geometry_;
 }
 
 /* set the model of a geometry node */
-void GeometryNode::setGeometry(model const& geometry) {
+void GeometryNode::setGeometry(model_object const& geometry) {
     geometry_ = geometry;
 }

@@ -27,6 +27,8 @@ using namespace gl;
 
 #include <iostream>
 
+#define ORBIT_NUM_LINE_SEGMENTS 16
+
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     : Application{resource_path}, planet_object{} {
     // Setup Scene
@@ -57,7 +59,7 @@ void ApplicationSolar::render() {
     node_traverse_func render = [&](std::shared_ptr<Node> node) {
         auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
         if (geom_node) {
-            renderPlanet(geom_node);
+            renderObject(geom_node);
             // node->rotate(RAND_FLOAT() / 10e2f, SUN_AXIS);
             if (node->getName() != "Sun Geometry") {
                 node->getParent()->rotate(
@@ -70,9 +72,10 @@ void ApplicationSolar::render() {
     SceneGraph::getInstance().traverse(render);
 }
 
-void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> geom,
+void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node,
                                     std::string const& shader_name) {
-    auto model_matrix = geom->getWorldTransform();
+    auto model_matrix = node->getWorldTransform();
+    auto geometry_object = node->getGeometry();
 
     // bind shader to upload uniforms
     glUseProgram(m_shaders.at(shader_name).handle);
@@ -88,10 +91,10 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> geom,
                        GL_FALSE, glm::value_ptr(normal_matrix));
 
     // bind the VAO to draw
-    glBindVertexArray(planet_object.vertex_AO);
+    glBindVertexArray(geometry_object.vertex_AO);
 
     // draw bound vertex array using bound shader
-    glDrawElements(planet_object.draw_mode, planet_object.num_elements,
+    glDrawElements(geometry_object.draw_mode, geometry_object.num_elements,
                    model::INDEX.type, NULL);
 }
 
@@ -150,14 +153,6 @@ void ApplicationSolar::initializeGeometry() {
 
     std::cout << SceneGraph::getInstance();
 
-    node_traverse_func set_geometry = [&](std::shared_ptr<Node> node) {
-        auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
-        if (geom_node) {
-            geom_node->setGeometry(planet_model);
-        }
-    };
-    SceneGraph::getInstance().traverse(set_geometry);
-
     // generate vertex array object
     glGenVertexArrays(1, &planet_object.vertex_AO);
     // bind the array for attaching buffers
@@ -197,6 +192,14 @@ void ApplicationSolar::initializeGeometry() {
     planet_object.draw_mode = GL_TRIANGLES;
     // transfer number of indices to model object
     planet_object.num_elements = GLsizei(planet_model.indices.size());
+
+    node_traverse_func set_geometry = [&](std::shared_ptr<Node> node) {
+        auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
+        if (geom_node) {
+            geom_node->setGeometry(planet_object);
+        }
+    };
+    SceneGraph::getInstance().traverse(set_geometry);
 }
 
 ///////////////////////////// callback functions for window events ////////////

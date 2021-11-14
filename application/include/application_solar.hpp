@@ -34,13 +34,14 @@ class ApplicationSolar : public Application {
     // upload view matrix
     void uploadView();
     // draw a planet
-    void renderPlanet(std::shared_ptr<GeometryNode> geom,
+    void renderObject(std::shared_ptr<GeometryNode> geom,
                       std::string const& shader_name = "planet");
     void renderStars();
 
     // cpu representation of model
     model_object planet_object;
     model_object star_object;
+    model_object orbit_object;
 };
 
 #endif

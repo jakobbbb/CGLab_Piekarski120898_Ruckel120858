@@ -18,7 +18,7 @@ struct model {
             : flag{f}, size{s}, components{c}, type{t} {}
 
         // conversion to flag type for use as enum
-        operator attrib_flag_t const &() const { return flag; }
+        operator attrib_flag_t const&() const { return flag; }
 
         // ugly enum to use as flag, must be unique power of two
         attrib_flag_t flag;
