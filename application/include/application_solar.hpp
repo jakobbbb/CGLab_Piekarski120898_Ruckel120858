@@ -28,6 +28,7 @@ class ApplicationSolar : public Application {
     void initializeShaderPrograms();
     void initializePlanetGeometry();
     void initializeOrbitGeometry();
+    void initializeStarGeometry();
     void initializeGeometry();
     // update uniform values
     void uploadUniforms();
