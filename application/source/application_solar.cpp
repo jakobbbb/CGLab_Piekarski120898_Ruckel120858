@@ -177,10 +177,8 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.emplace(
         "stars", 
         shader_program{
-            {{GL_VERTEX_SHADER, m_resource_path + "shaders/simple.vert"},
-             {GL_FRAGMENT_SHADER, m_resource_path + "shaders/simple.frag"}}});
-    //m_shaders.at("stars").u_locs["NormalMatrix"] = -1;
-    //m_shaders.at("stars").u_locs["ModelMatrix"] = -1;
+            {{GL_VERTEX_SHADER, m_resource_path + "shaders/vao.vert"},
+             {GL_FRAGMENT_SHADER, m_resource_path + "shaders/vao.frag"}}});
     m_shaders.at("stars").u_locs["ModelViewMatrix"] = -1;
     m_shaders.at("stars").u_locs["ProjectionMatrix"] = -1;
 }
