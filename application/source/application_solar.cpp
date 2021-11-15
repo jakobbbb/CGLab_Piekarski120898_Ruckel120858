@@ -28,6 +28,7 @@ using namespace gl;
 #include <iostream>
 
 #define ORBIT_NUM_LINE_SEGMENTS 64
+#define STAR_NUM 5000
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     : Application{resource_path}, planet_object{} {
@@ -273,7 +274,42 @@ void ApplicationSolar::initializeOrbitGeometry() {
 }
 
 void ApplicationSolar::initializeStarGeometry() {
-    // Coming soon...
+    // instantiate empty container of floats
+    std::vector<float> stars;
+    // for each star push random position and color values
+    for (int i = 0; i < STAR_NUM; ++i) {
+		float x = float(std::rand() % 500) / 100.0f - 40;
+		float y = float(std::rand() % 500) / 100.0f - 40;
+		float z = float(std::rand() % 500) / 100.0f - 40;
+		float r = float(std::rand() % 255) / 255.0f;
+		float g = float(std::rand() % 255) / 255.0f;
+		float b = float(std::rand() % 255) / 255.0f;       
+        for(auto const n : {x, y, z, r, g, b}) {
+            stars.push_back(n);
+        }
+    }
+    
+    // generate vertex array object
+    glGenVertexArrays(1, &star_object.vertex_AO);
+    // bind the array for attaching buffers
+    glBindVertexArray(star_object.vertex_AO);
+    // generate generic buffer
+    glGenBuffers(1, &star_object.vertex_BO);
+    // bind this as an vertex array buffer containing all attributes
+    glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
+    // configure currently bound array buffer   
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * STAR_NUM * 6, stars.data(), GL_STATIC_DRAW);
+    // activate first attribute on gpu
+    glEnableVertexAttribArray(0);
+    // position is the first attribute with 3 floats (XYZ)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+    // activate second attribute on gpu
+    glEnableVertexAttribArray(1);
+    // color is the second attribute with 3 floats (RGB)
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)(sizeof(float)*3));
+    // set the draw_mode to GL_POINTS (each point represents a star)
+    star_object.draw_mode = GL_POINTS;
+    star_object.num_elements = GLsizei(STAR_NUM);
 }
 
 // load models
