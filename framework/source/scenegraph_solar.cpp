@@ -22,22 +22,23 @@ void make_solar_scene() {
 
     auto pointlight = std::make_shared<PointLightNode>(root, "PointLight");
     root->addChild(pointlight);
-    auto sun_geom = std::make_shared<GeometryNode>(pointlight, "Sun Geometry", "planet");
+    auto sun_geom =
+        std::make_shared<GeometryNode>(pointlight, "Sun Geometry", "planet");
     pointlight->addChild(sun_geom);
 
     float distance_to_sun = 10.0f;
     for (auto const& planet_name : PLANET_NAMES) {
         distance_to_sun += 4 + 6 * RAND_FLOAT();
 
-        auto orbit =
-            std::make_shared<GeometryNode>(root, planet_name + " Orbit", "orbit");
+        auto orbit = std::make_shared<GeometryNode>(
+            root, planet_name + " Orbit", "orbit");
         root->addChild(orbit);
         orbit->scale(distance_to_sun);
 
         auto holder = std::make_shared<Node>(root, planet_name + " Holder");
         root->addChild(holder);
-        auto geom =
-            std::make_shared<GeometryNode>(holder, planet_name + " Geometry", "planet");
+        auto geom = std::make_shared<GeometryNode>(
+            holder, planet_name + " Geometry", "planet");
         holder->addChild(geom);
 
         holder->rotate(RAND_FLOAT(), SUN_AXIS);

@@ -12,8 +12,9 @@
 
 class GeometryNode : public Node {
    public:
-    GeometryNode(std::shared_ptr<Node> parent, std::string const& name,
-            std::string const& shader_name);
+    GeometryNode(std::shared_ptr<Node> parent,
+                 std::string const& name,
+                 std::string const& shader_name);
     model_object getGeometry() const;
     void setGeometry(model_object const& geometry);
     std::string getShaderName() const;

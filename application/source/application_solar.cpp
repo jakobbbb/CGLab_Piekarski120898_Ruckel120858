@@ -60,8 +60,8 @@ void ApplicationSolar::render() {
         auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
         if (geom_node) {
             renderObject(geom_node);
-            if (geom_node->getShaderName() == "planet"
-                    && node->getName() != "Sun Geometry") {
+            if (geom_node->getShaderName() == "planet" &&
+                node->getName() != "Sun Geometry") {
                 node->getParent()->rotate(
                     (float)glfwGetTime() / ORBIT_PERIODS[planet_idx] / 10e4f,
                     SUN_AXIS);
@@ -98,7 +98,8 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
         glDrawElements(geometry_object.draw_mode, geometry_object.num_elements,
                        model::INDEX.type, NULL);
     } else {
-        glDrawArrays(geometry_object.draw_mode, 0, geometry_object.num_elements);
+        glDrawArrays(geometry_object.draw_mode, 0,
+                     geometry_object.num_elements);
     }
 }
 
@@ -247,7 +248,7 @@ void ApplicationSolar::initializeOrbitGeometry() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, orbit_object.element_BO);
     // configure currently bound array buffer
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-            GLsizei(sizeof(float) * points.size()), points.data(),
+                 GLsizei(sizeof(float) * points.size()), points.data(),
                  GL_STATIC_DRAW);
 
     // store type of primitive to draw
