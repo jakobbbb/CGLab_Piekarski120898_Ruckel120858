@@ -31,7 +31,7 @@ using namespace gl;
 #define STAR_NUM 5000
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
-    : Application{resource_path}, planet_object{} {
+    : Application{resource_path}, planet_object{}, star_object{} {
     // Setup Scene
     make_solar_scene();
 
@@ -67,6 +67,8 @@ void ApplicationSolar::render() {
                     (float)glfwGetTime() / ORBIT_PERIODS[planet_idx] / 10e4f,
                     SUN_AXIS);
                 planet_idx++;
+            } else if (geom_node->getShaderName() == "stars") {
+                renderStars(); // ??? :D
             }
         }
     };
@@ -283,8 +285,9 @@ void ApplicationSolar::initializeStarGeometry() {
 		float z = float(std::rand() % 500) / 100.0f - 40;
 		float r = float(std::rand() % 255) / 255.0f;
 		float g = float(std::rand() % 255) / 255.0f;
-		float b = float(std::rand() % 255) / 255.0f;       
-        for(auto const n : {x, y, z, r, g, b}) {
+		float b = float(std::rand() % 255) / 255.0f;
+        
+        for (auto const n : {x, y, z, r, g, b}) {
             stars.push_back(n);
         }
     }
@@ -316,6 +319,7 @@ void ApplicationSolar::initializeStarGeometry() {
 void ApplicationSolar::initializeGeometry() {
     initializePlanetGeometry();
     initializeOrbitGeometry();
+    initializeStarGeometry();
 
     node_traverse_func set_geometry = [&](std::shared_ptr<Node> node) {
         auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
@@ -326,6 +330,9 @@ void ApplicationSolar::initializeGeometry() {
         if (geom_node->getShaderName() == "orbit") {
             // node is orbit
             geom_node->setGeometry(orbit_object);
+        } else if (geom_node->getShaderName() == "stars") {
+            // node is star
+            geom_node->setGeometry(star_object);
         } else {
             // node is planet
             geom_node->setGeometry(planet_object);
