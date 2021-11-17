@@ -67,8 +67,6 @@ void ApplicationSolar::render() {
                     (float)glfwGetTime() / ORBIT_PERIODS[planet_idx] / 10e4f,
                     SUN_AXIS);
                 planet_idx++;
-            } else if (geom_node->getShaderName() == "stars") {
-                renderStars(); // ??? :D
             }
         }
     };
@@ -106,26 +104,23 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
     }
 }
 
-void ApplicationSolar::renderStars() {
-    glUseProgram(m_shaders.at("stars").handle);
-    glBindVertexArray(star_object.vertex_AO);
-    glDrawArrays(star_object.draw_mode, 0, star_object.num_elements);
-}
-
 void ApplicationSolar::uploadView() {
     // vertices are transformed in camera space, so camera transform must be
     // inverted
     glm::fmat4 view_matrix =
         glm::inverse(SceneGraph::getActiveCamera()->getWorldTransform());
+    //
     // upload matrix to gpu
     glUseProgram(m_shaders.at("planet").handle);
     glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ViewMatrix"), 1,
                        GL_FALSE, glm::value_ptr(view_matrix));
+
     glUseProgram(m_shaders.at("orbit").handle);
     glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("ViewMatrix"), 1,
                        GL_FALSE, glm::value_ptr(view_matrix));
+
     glUseProgram(m_shaders.at("stars").handle);
-    glUniformMatrix4fv(m_shaders.at("stars").u_locs.at("ModelViewMatrix"), 1,
+    glUniformMatrix4fv(m_shaders.at("stars").u_locs.at("ViewMatrix"), 1,
                        GL_FALSE, glm::value_ptr(view_matrix));
 }
 
@@ -178,11 +173,13 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("orbit").u_locs["ProjectionMatrix"] = -1;
 
     m_shaders.emplace(
-        "stars", 
+        "stars",
         shader_program{
             {{GL_VERTEX_SHADER, m_resource_path + "shaders/vao.vert"},
              {GL_FRAGMENT_SHADER, m_resource_path + "shaders/vao.frag"}}});
-    m_shaders.at("stars").u_locs["ModelViewMatrix"] = -1;
+    m_shaders.at("stars").u_locs["NormalMatrix"] = -1;
+    m_shaders.at("stars").u_locs["ModelMatrix"] = -1;
+    m_shaders.at("stars").u_locs["ViewMatrix"] = -1;
     m_shaders.at("stars").u_locs["ProjectionMatrix"] = -1;
 }
 
@@ -280,18 +277,18 @@ void ApplicationSolar::initializeStarGeometry() {
     std::vector<float> stars;
     // for each star push random position and color values
     for (int i = 0; i < STAR_NUM; ++i) {
-		float x = float(std::rand() % 500) / 100.0f - 40;
-		float y = float(std::rand() % 500) / 100.0f - 40;
-		float z = float(std::rand() % 500) / 100.0f - 40;
-		float r = float(std::rand() % 255) / 255.0f;
-		float g = float(std::rand() % 255) / 255.0f;
-		float b = float(std::rand() % 255) / 255.0f;
-        
+        float x = 2 * (RAND_FLOAT() - 0.5f);
+        float y = 2 * (RAND_FLOAT() - 0.5f);
+        float z = 2 * (RAND_FLOAT() - 0.5f);
+        float r = float(std::rand() % 255) / 255.0f;
+        float g = float(std::rand() % 255) / 255.0f;
+        float b = float(std::rand() % 255) / 255.0f;
+
         for (auto const n : {x, y, z, r, g, b}) {
             stars.push_back(n);
         }
     }
-    
+
     // generate vertex array object
     glGenVertexArrays(1, &star_object.vertex_AO);
     // bind the array for attaching buffers
@@ -300,8 +297,9 @@ void ApplicationSolar::initializeStarGeometry() {
     glGenBuffers(1, &star_object.vertex_BO);
     // bind this as an vertex array buffer containing all attributes
     glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
-    // configure currently bound array buffer   
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * STAR_NUM * 6, stars.data(), GL_STATIC_DRAW);
+    // configure currently bound array buffer
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * STAR_NUM * 6, stars.data(),
+                 GL_STATIC_DRAW);
     // activate first attribute on gpu
     glEnableVertexAttribArray(0);
     // position is the first attribute with 3 floats (XYZ)
@@ -309,7 +307,8 @@ void ApplicationSolar::initializeStarGeometry() {
     // activate second attribute on gpu
     glEnableVertexAttribArray(1);
     // color is the second attribute with 3 floats (RGB)
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)(sizeof(float)*3));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3,
+                          (void*)(sizeof(float) * 3));
     // set the draw_mode to GL_POINTS (each point represents a star)
     star_object.draw_mode = GL_POINTS;
     star_object.num_elements = GLsizei(STAR_NUM);
