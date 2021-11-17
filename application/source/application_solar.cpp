@@ -303,11 +303,11 @@ void ApplicationSolar::initializeStarGeometry() {
     // activate first attribute on gpu
     glEnableVertexAttribArray(0);
     // position is the first attribute with 3 floats (XYZ)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
     // activate second attribute on gpu
     glEnableVertexAttribArray(1);
     // color is the second attribute with 3 floats (RGB)
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3,
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6,
                           (void*)(sizeof(float) * 3));
     // set the draw_mode to GL_POINTS (each point represents a star)
     star_object.draw_mode = GL_POINTS;
