@@ -53,6 +53,9 @@ ApplicationSolar::~ApplicationSolar() {
     glDeleteBuffers(1, &planet_object.vertex_BO);
     glDeleteBuffers(1, &planet_object.element_BO);
     glDeleteVertexArrays(1, &planet_object.vertex_AO);
+    glDeleteBuffers(1, &star_object.vertex_BO);
+	glDeleteBuffers(1, &star_object.element_BO);
+	glDeleteVertexArrays(1, &star_object.vertex_AO);
 }
 
 void ApplicationSolar::render() {
@@ -275,17 +278,14 @@ void ApplicationSolar::initializeOrbitGeometry() {
 void ApplicationSolar::initializeStarGeometry() {
     // instantiate empty container of floats
     std::vector<float> stars;
+
     // for each star push random position and color values
     for (int i = 0; i < STAR_NUM; ++i) {
-        float x = 2 * (RAND_FLOAT() - 0.5f);
-        float y = 2 * (RAND_FLOAT() - 0.5f);
-        float z = 2 * (RAND_FLOAT() - 0.5f);
-        float r = float(std::rand() % 255) / 255.0f;
-        float g = float(std::rand() % 255) / 255.0f;
-        float b = float(std::rand() % 255) / 255.0f;
-
-        for (auto const n : {x, y, z, r, g, b}) {
-            stars.push_back(n);
+        for (int p = 0; p < 3; ++p) { // position
+            stars.push_back(2 * (RAND_FLOAT() - 0.5f));
+        }
+        for (int c = 0; c < 3; ++c) { // color
+            stars.push_back(float(std::rand() % 255) / 255.0f);
         }
     }
 
