@@ -67,7 +67,7 @@ void ApplicationSolar::render() {
             if (geom_node->getShaderName() == "planet" &&
                 node->getName() != "Sun Geometry") {
                 node->getParent()->rotate(
-                    (float)glfwGetTime() / ORBIT_PERIODS[planet_idx] / 10e4f,
+                    ORBIT_PERIODS[planet_idx] / 10e4f,
                     SUN_AXIS);
                 planet_idx++;
             }
