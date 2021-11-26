@@ -59,6 +59,18 @@ std::shared_ptr<CameraNode> SceneGraph::getActiveCamera() {
     return camera;
 }
 
+std::shared_ptr<PointLightNode> SceneGraph::getLight() {
+    std::shared_ptr<PointLightNode> light;
+    node_traverse_func find_light = [&](std::shared_ptr<Node> node) {
+        auto light_node = std::dynamic_pointer_cast<PointLightNode>(node);
+        if (light_node) {
+            light = light_node;
+            return;
+        }
+    };
+    return light;
+}
+
 /* destructor for SceneGraph */
 SceneGraph::~SceneGraph() {}
 

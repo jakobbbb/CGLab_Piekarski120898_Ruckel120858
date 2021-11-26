@@ -1,6 +1,7 @@
 #ifndef SCENE_GRAPH_HPP
 #define SCENE_GRAPH_HPP
 #include <CameraNode.hpp>
+#include <PointLightNode.hpp>
 #include <Node.hpp>
 
 /**
@@ -25,6 +26,7 @@ class SceneGraph {
     ~SceneGraph();
     static SceneGraph& getInstance();
     static std::shared_ptr<CameraNode> getActiveCamera();
+    static std::shared_ptr<PointLightNode> getLight();
 
    private:
     std::string name_;
