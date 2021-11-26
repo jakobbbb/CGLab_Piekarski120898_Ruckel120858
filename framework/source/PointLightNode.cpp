@@ -1,8 +1,5 @@
 #include <PointLightNode.hpp>
 
-PointLightNode::PointLightNode(std::shared_ptr<Node> parent, std::string name)
-    : Node{parent, name} {}
-
 PointLightNode::PointLightNode(std::shared_ptr<Node> parent, std::string name, 
                                Color const& lightColor, float lightIntensity)
     : Node{parent, name},

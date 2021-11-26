@@ -7,6 +7,7 @@
 #include <Node.hpp>
 #include <PointLightNode.hpp>
 #include <scenegraph_solar.hpp>
+#include <structs.hpp>
 
 void make_solar_scene() {
     SceneGraph s = SceneGraph::getInstance();
@@ -21,7 +22,14 @@ void make_solar_scene() {
     root->addChild(stars);
     stars->scale(60.0f);  // spread out
 
-    auto pointlight = std::make_shared<PointLightNode>(root, "PointLight");
+    auto sun_color = Color{};
+    sun_color.r = 1;
+    sun_color.g = 1;
+    sun_color.b = 0;
+    float sun_brightness = 10;
+    auto pointlight = std::make_shared<PointLightNode>(
+            root, "PointLight", sun_color, sun_brightness
+    );
     root->addChild(pointlight);
     auto sun_geom =
         std::make_shared<GeometryNode>(pointlight, "Sun Geometry", "planet");
