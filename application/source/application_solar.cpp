@@ -180,7 +180,7 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("planet").u_locs["ModelMatrix"] = -1;
     m_shaders.at("planet").u_locs["ViewMatrix"] = -1;
     m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
-    m_shaders.at("planet").u_locs["Color"] = 1;
+    m_shaders.at("planet").u_locs["Color"] = -1;
 
     m_shaders.emplace(
         "orbit",
