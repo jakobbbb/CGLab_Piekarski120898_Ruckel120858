@@ -20,6 +20,11 @@ int Node::getDepth() const {
     return depth_;
 }
 
+/* return the color of a node */
+Color Node::getColor() const {
+    return color_;
+}
+
 /* return localTransform_ of a node */
 glm::mat4 Node::getLocalTransform() const {
     return localTransform_;
@@ -78,6 +83,11 @@ std::list<std::shared_ptr<Node>> Node::getChildrenList() const {
 /* set a node as parent node */
 void Node::setParent(std::shared_ptr<Node> node) {
     parent_ = node;
+}
+
+/* set color for a node */
+void Node::setColor(Color const& color) {
+    color_ = color;
 }
 
 /* set localTransform_ of a node */

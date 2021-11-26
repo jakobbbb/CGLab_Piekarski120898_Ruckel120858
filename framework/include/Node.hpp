@@ -16,6 +16,7 @@ class Node {
     std::string getName() const;
     std::string getPath() const;
     int getDepth() const;
+    Color getColor() const;
     glm::mat4 getLocalTransform() const;
     glm::mat4 getWorldTransform() const;
     std::shared_ptr<Node> getParent() const;
@@ -24,6 +25,7 @@ class Node {
     std::list<std::shared_ptr<Node>> getChildrenList() const;
     void setParent(std::shared_ptr<Node> node);
     void setLocalTransform(glm::mat4 const& localTransform);
+    void setColor(Color const& color);
     void addChild(std::shared_ptr<Node> node);
     void print(std::ostream& os) const;
     void traverse(node_traverse_func);
@@ -40,6 +42,7 @@ class Node {
     std::string path_;
     int depth_;
     glm::mat4 localTransform_;  // initialized to identiry matrix
+    Color color_;
 };
 
 #endif  // NODE_HPP

@@ -29,6 +29,7 @@ using namespace gl;
 
 #define ORBIT_NUM_LINE_SEGMENTS 64
 #define STAR_NUM 5000
+#define COLORS 255.f
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     : Application{resource_path}, planet_object{}, star_object{} {
@@ -80,6 +81,7 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
     auto shader_name = node->getShaderName();
     auto model_matrix = node->getWorldTransform();
     auto geometry_object = node->getGeometry();
+    auto color = node->getColor();
 
     // bind shader to upload uniforms
     glUseProgram(m_shaders.at(shader_name).handle);
@@ -105,6 +107,10 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
         glDrawArrays(geometry_object.draw_mode, 0,
                      geometry_object.num_elements);
     }
+    
+    // assign a different color for each planet using glUniform3f
+    glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "planet_color"),
+                                     color.r/COLORS, color.g/COLORS, color.b/COLORS);
 }
 
 void ApplicationSolar::uploadView() {
@@ -285,7 +291,7 @@ void ApplicationSolar::initializeStarGeometry() {
             stars.push_back(2 * (RAND_FLOAT() - 0.5f));
         }
         for (int c = 0; c < 3; ++c) { // color
-            stars.push_back(float(std::rand() % 255) / 255.0f);
+            stars.push_back(float(std::rand() % 255) / COLORS);
         }
     }
 
