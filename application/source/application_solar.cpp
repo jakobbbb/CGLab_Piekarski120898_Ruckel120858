@@ -24,8 +24,10 @@ using namespace gl;
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/color_space.hpp>
 
 #include <iostream>
+#include <functional>
 
 #define ORBIT_NUM_LINE_SEGMENTS 64
 #define STAR_NUM 5000
@@ -85,6 +87,11 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
 
     // bind shader to upload uniforms
     glUseProgram(m_shaders.at(shader_name).handle);
+
+    if (shader_name == "orbit") {
+        glUniform3f(m_shaders.at(shader_name).u_locs.at("Color"),
+                color.r/COLORS, color.g/COLORS, color.b/COLORS);
+    }
 
     glUniformMatrix4fv(m_shaders.at(shader_name).u_locs.at("ModelMatrix"), 1,
                        GL_FALSE, glm::value_ptr(model_matrix));
@@ -180,6 +187,7 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("orbit").u_locs["ModelMatrix"] = -1;
     m_shaders.at("orbit").u_locs["ViewMatrix"] = -1;
     m_shaders.at("orbit").u_locs["ProjectionMatrix"] = -1;
+    m_shaders.at("orbit").u_locs["Color"] = -1;
 
     m_shaders.emplace(
         "stars",
