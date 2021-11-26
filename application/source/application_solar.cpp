@@ -116,8 +116,11 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
     }
     
     // assign a different color for each planet using glUniform3f
-    glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "planet_color"),
-                                     color.r/COLORS, color.g/COLORS, color.b/COLORS);
+    if (shader_name == "planet") {
+        glUniform3f(m_shaders.at(shader_name).u_locs.at("Color"),
+                color.r/COLORS, color.g/COLORS, color.b/COLORS);
+    }
+    
 }
 
 void ApplicationSolar::uploadView() {
@@ -177,6 +180,7 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("planet").u_locs["ModelMatrix"] = -1;
     m_shaders.at("planet").u_locs["ViewMatrix"] = -1;
     m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
+    m_shaders.at("planet").u_locs["Color"] = 1;
 
     m_shaders.emplace(
         "orbit",
