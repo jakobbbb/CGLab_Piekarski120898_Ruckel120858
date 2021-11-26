@@ -68,6 +68,7 @@ std::shared_ptr<PointLightNode> SceneGraph::getLight() {
             return;
         }
     };
+    getInstance().traverse(find_light);
     return light;
 }
 
