@@ -42,4 +42,11 @@ struct shader_program {
     // uniform locations mapped to name
     std::map<std::string, GLint> u_locs{};
 };
-#endif
+
+struct Color {
+    float r = 0.f;
+    float g = 0.f;
+    float b = 0.f;
+};
+
+#endif // STRUCTS_HPP
