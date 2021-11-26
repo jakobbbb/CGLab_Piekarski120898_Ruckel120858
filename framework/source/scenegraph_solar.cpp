@@ -26,7 +26,7 @@ void make_solar_scene() {
     sun_color.r = 1;
     sun_color.g = 1;
     sun_color.b = 0;
-    float sun_brightness = 10;
+    float sun_brightness = 20000;
     auto pointlight = std::make_shared<PointLightNode>(
             root, "PointLight", sun_color, sun_brightness
     );

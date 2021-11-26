@@ -10,7 +10,8 @@ class PointLightNode : public Node {
                     Color const& lightColor, float lightIntensity);    
      void setLightColor(Color const& lightColor);
      void setLightIntensity(float lightIntensity);
-
+     float getLightIntensity() const;
+     Color getLightColor() const;
 
     private:
      Color lightColor_;

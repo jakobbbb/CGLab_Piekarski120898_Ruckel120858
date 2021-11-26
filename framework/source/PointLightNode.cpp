@@ -13,3 +13,11 @@ void PointLightNode::setLightColor(Color const& lightColor) {
 void PointLightNode::setLightIntensity(float lightIntensity) {
     lightIntensity_ = lightIntensity;
 }
+
+float PointLightNode::getLightIntensity() const {
+    return lightIntensity_;
+}
+
+Color PointLightNode::getLightColor() const {
+    return lightColor_;
+}
