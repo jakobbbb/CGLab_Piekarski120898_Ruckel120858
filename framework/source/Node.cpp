@@ -1,9 +1,18 @@
 #include <Node.hpp>
 #include <iostream>
+#include <glm/gtx/color_space.hpp>
+
+#define RAND_FLOAT() ((float)std::rand() / (float)RAND_MAX)
 
 /* constructor for Node */
 Node::Node(std::shared_ptr<Node> parent, std::string const& name)
-    : parent_{parent}, name_{name}, depth_{0} {}
+    : parent_{parent}, name_{name}, depth_{0} {
+        float hue = 360 * RAND_FLOAT();
+        auto color = glm::rgbColor(glm::vec3{hue, 1, 1});
+        color_.r = color.x * 255.0f;
+        color_.g = color.y * 255.0f;
+        color_.b = color.z * 255.0f;
+    }
 
 /* return the name of a node */
 std::string Node::getName() const {
