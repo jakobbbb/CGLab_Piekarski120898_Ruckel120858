@@ -39,11 +39,17 @@ class ApplicationSolar : public Application {
     // draw a planet
     void renderObject(std::shared_ptr<GeometryNode> geom);
     void renderStars();
+    
+    
 
     // cpu representation of model
     model_object planet_object;
     model_object star_object;
     model_object orbit_object;
+
+    // Cel-shading
+    GLboolean bool_cel = GL_FALSE;
+    static GLuint loc_cel;
 };
 
 #endif

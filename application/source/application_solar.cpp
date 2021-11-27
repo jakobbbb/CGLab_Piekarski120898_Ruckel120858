@@ -115,6 +115,8 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
         auto l_color = light->getLightColor();
         glUniform3f(m_shaders.at(shader_name).u_locs.at("LightColor"),
                 l_color.r, l_color.g, l_color.b);
+        auto loc_cel = glGetUniformLocation(m_shaders.at(shader_name).handle, "Cel");
+        glUniform1i(loc_cel, bool_cel);
     }
 
     glUniformMatrix4fv(m_shaders.at(shader_name).u_locs.at("ModelMatrix"), 1,
@@ -401,6 +403,12 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
         cam->translate(glm::fvec3{0.1f, 0.0f, 0.0f});
         uploadView();
+    } else if (key == GLFW_KEY_1 &&
+               (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+        bool_cel = GL_TRUE;
+    } else if (key == GLFW_KEY_2 &&
+               (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+        bool_cel = GL_FALSE;
     }
 
 
