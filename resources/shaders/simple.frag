@@ -4,8 +4,8 @@
 
 
 const float ambient_intensity = 0.15;
-const float reflection_factor = 0.5;
-const int n = 25;
+const float reflection_factor = 0.4;
+const int n = 120;
 
 uniform  vec3 PlanetColor;
 uniform  vec3 AmbientColor;
