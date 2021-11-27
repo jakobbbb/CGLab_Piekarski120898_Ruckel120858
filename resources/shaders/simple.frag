@@ -3,12 +3,12 @@
 #define PI 3.1415926538
 
 
-const float ambient_intensity = 0.15;
 const float reflection_factor = 0.4;
 const int alpha = 30;
 
 uniform  vec3 PlanetColor;
 uniform  vec3 AmbientColor;
+uniform float AmbientIntensity;
 
 uniform vec3 LightPosition;
 uniform float LightIntensity;
@@ -23,7 +23,7 @@ void main() {
   vec3 light_direction = LightPosition - Position;
   float distance = length(light_direction);
   vec3 beta = (LightColor * LightIntensity) / (4 * PI * distance * distance);
-  vec3 ambient = ambient_intensity * AmbientColor;
+  vec3 ambient = AmbientIntensity * AmbientColor;
 
   float diffuse_strength = max(dot(normalize(light_direction), normalize(Normal)), 0.0);
   vec3 diffuse = PlanetColor * diffuse_strength;

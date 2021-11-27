@@ -101,6 +101,11 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
         glUniform3f(m_shaders.at(shader_name).u_locs.at("AmbientColor"),
                 color.r/COLORS, color.g/COLORS, color.b/COLORS);
 
+        float ambient_intensity =
+            (node->getName() == "Sun Geometry") ? 10.f : 0.15f;
+        glUniform1f(m_shaders.at(shader_name).u_locs.at("AmbientIntensity"),
+                ambient_intensity);
+
         auto light_pos = light->getWorldTransform() * glm::vec4{};
         glUniform3fv(m_shaders.at(shader_name).u_locs.at("LightPosition"), 1,
                 glm::value_ptr(light_pos));
@@ -193,6 +198,7 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
     m_shaders.at("planet").u_locs["PlanetColor"] = -1;
     m_shaders.at("planet").u_locs["AmbientColor"] = -1;
+    m_shaders.at("planet").u_locs["AmbientIntensity"] = -1;
     m_shaders.at("planet").u_locs["LightPosition"] = -1;
     m_shaders.at("planet").u_locs["LightIntensity"] = -1;
     m_shaders.at("planet").u_locs["LightColor"] = -1;
