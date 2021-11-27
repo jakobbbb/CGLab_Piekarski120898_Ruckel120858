@@ -94,6 +94,23 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
                 color.r/COLORS, color.g/COLORS, color.b/COLORS);
     }
 
+    // assign a different color for each planet using glUniform3f
+    if (shader_name == "planet") {
+        glUniform3f(m_shaders.at(shader_name).u_locs.at("PlanetColor"),
+                color.r/COLORS, color.g/COLORS, color.b/COLORS);
+        glUniform3f(m_shaders.at(shader_name).u_locs.at("AmbientColor"),
+                color.r/COLORS, color.g/COLORS, color.b/COLORS);
+
+        auto light_pos = light->getWorldTransform() * glm::vec4{};
+        glUniform3fv(m_shaders.at(shader_name).u_locs.at("LightPosition"), 1,
+                glm::value_ptr(light_pos));
+        glUniform1f(m_shaders.at(shader_name).u_locs.at("LightIntensity"),
+                light->getLightIntensity());
+        auto l_color = light->getLightColor();
+        glUniform3f(m_shaders.at(shader_name).u_locs.at("LightColor"),
+                l_color.r, l_color.g, l_color.b);
+    }
+
     glUniformMatrix4fv(m_shaders.at(shader_name).u_locs.at("ModelMatrix"), 1,
                        GL_FALSE, glm::value_ptr(model_matrix));
 
@@ -114,23 +131,6 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
     } else {
         glDrawArrays(geometry_object.draw_mode, 0,
                      geometry_object.num_elements);
-    }
-    
-    // assign a different color for each planet using glUniform3f
-    if (shader_name == "planet") {
-        glUniform3f(m_shaders.at(shader_name).u_locs.at("PlanetColor"),
-                color.r/COLORS, color.g/COLORS, color.b/COLORS);
-        glUniform3f(m_shaders.at(shader_name).u_locs.at("AmbientColor"),
-                color.r/COLORS, color.g/COLORS, color.b/COLORS);
-
-        auto light_pos = light->getWorldTransform() * glm::vec4{};
-        glUniform3fv(m_shaders.at(shader_name).u_locs.at("LightPosition"), 1,
-                glm::value_ptr(light_pos));
-        glUniform1f(m_shaders.at(shader_name).u_locs.at("LightIntensity"),
-                light->getLightIntensity());
-        auto l_color = light->getLightColor();
-        glUniform3f(m_shaders.at(shader_name).u_locs.at("LightColor"),
-                l_color.r, l_color.g, l_color.b);
     }
 }
 
