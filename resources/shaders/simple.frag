@@ -5,7 +5,7 @@
 
 const float ambient_intensity = 0.15;
 const float reflection_factor = 0.4;
-const int n = 120;
+const int alpha = 30;
 
 uniform  vec3 PlanetColor;
 uniform  vec3 AmbientColor;
@@ -30,7 +30,7 @@ void main() {
   
   vec3 view_direction = normalize(ViewDirection - Position);
   vec3 h = normalize(light_direction + view_direction);
-  float specular_strength = pow(max(dot(h, normalize(Normal)), 0.0), n);
+  float specular_strength = pow(max(dot(h, normalize(Normal)), 0.0), 4 * alpha);
   vec3 specular = reflection_factor * AmbientColor * specular_strength;
 
 
