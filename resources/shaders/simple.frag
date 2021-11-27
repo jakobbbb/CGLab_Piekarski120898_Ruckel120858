@@ -1,6 +1,7 @@
 #version 150
 
 #define PI 3.1415926538
+#define FACTOR 0.3
 
 
 const float reflection_factor = 0.4;
@@ -33,6 +34,17 @@ void main() {
   float specular_strength = pow(max(dot(h, normalize(Normal)), 0.0), 4 * alpha);
   vec3 specular = reflection_factor * AmbientColor * specular_strength;
 
-
-  out_Color = vec4(ambient + beta * diffuse + specular * LightColor, 1.0);
+  //if (Cel) {
+    // will be bound to keyboard input
+  //}
+  
+  float angle = dot(normalize(Normal), view_direction);
+  
+  if ((angle <= 0.3f) && (angle >= 0.0f)) {
+    out_Color = vec4(0.0f, 1.0f, 0.0f, 1.0f);
+  } else {
+    diffuse = ceil(diffuse * FACTOR) / FACTOR;
+    specular = ceil(specular * FACTOR) / FACTOR;
+    out_Color = vec4(ambient + beta * diffuse + specular * LightColor, 1.0);
+  }
 }
