@@ -6,15 +6,17 @@
 
 const float ambient_intensity = 0.15;
 const float reflection_factor = 0.4;
-const int alpha = 30;
+const int   alpha = 30;
 
-uniform  vec3 PlanetColor;
-uniform  vec3 AmbientColor;
-
-uniform vec3 LightPosition;
-uniform float LightIntensity;
-uniform vec3 ViewDirection;
+uniform vec3 PlanetColor;
+uniform vec3 AmbientColor;
 uniform vec3 LightColor;
+uniform vec3 LightPosition;
+uniform vec3 ViewDirection;
+
+uniform float LightIntensity;
+
+uniform bool Cel;
 
 in vec3 Position;
 in  vec3 Normal;
@@ -34,17 +36,17 @@ void main() {
   float specular_strength = pow(max(dot(h, normalize(Normal)), 0.0), 4 * alpha);
   vec3 specular = reflection_factor * AmbientColor * specular_strength;
 
-  //if (Cel) {
-    // will be bound to keyboard input
-  //}
-  
-  float angle = dot(normalize(Normal), view_direction);
-  
-  if ((angle <= 0.3f) && (angle >= 0.0f)) {
-    out_Color = vec4(0.0f, 1.0f, 0.0f, 1.0f);
+  if (Cel) { // keyboard input
+    float angle = dot(normalize(Normal), view_direction);
+    if ((angle <= 0.3f) && (angle >= 0.0f)) {
+      out_Color = vec4(0.0f, 1.0f, 0.0f, 1.0f);
+    } else {
+      diffuse = ceil(diffuse * FACTOR) / FACTOR;
+      specular = ceil(specular * FACTOR) / FACTOR;
+      out_Color = vec4(ambient + beta * diffuse + specular * LightColor, 1.0);
+    }
   } else {
-    diffuse = ceil(diffuse * FACTOR) / FACTOR;
-    specular = ceil(specular * FACTOR) / FACTOR;
     out_Color = vec4(ambient + beta * diffuse + specular * LightColor, 1.0);
   }
+
 }
