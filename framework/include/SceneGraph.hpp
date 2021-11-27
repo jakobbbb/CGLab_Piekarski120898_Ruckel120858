@@ -27,6 +27,7 @@ class SceneGraph {
     static SceneGraph& getInstance();
     static std::shared_ptr<CameraNode> getActiveCamera();
     static std::shared_ptr<PointLightNode> getLight();
+    static std::shared_ptr<Node> find(std::string const& name);
 
    private:
     std::string name_;

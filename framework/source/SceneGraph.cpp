@@ -72,6 +72,10 @@ std::shared_ptr<PointLightNode> SceneGraph::getLight() {
     return light;
 }
 
+std::shared_ptr<Node> SceneGraph::find(std::string const& name) {
+    return getInstance().getRoot()->getChildren(name);
+}
+
 /* destructor for SceneGraph */
 SceneGraph::~SceneGraph() {}
 

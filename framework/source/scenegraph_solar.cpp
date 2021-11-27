@@ -26,7 +26,7 @@ void make_solar_scene() {
     sun_color.r = 1;
     sun_color.g = 1;
     sun_color.b = 1;
-    float sun_brightness = 20000;
+    float sun_brightness = 6000;
     auto pointlight = std::make_shared<PointLightNode>(
             root, "PointLight", sun_color, sun_brightness
     );
@@ -72,4 +72,11 @@ void make_solar_scene() {
         std::make_shared<GeometryNode>(earth, "Moon Orbit", "orbit");
     earth->addChild(moon_orbit);
     moon_orbit->scale(moon_earth_distance * 0.5f);
+
+    auto camera2 = std::make_shared<CameraNode>(earth, "Camera 2");
+    camera2->setEnabled(false);
+    earth->addChild(camera2);
+    camera2->translate({-5, 1, 5});
+    camera2->rotate(-45.0f, SUN_AXIS);
+
 }

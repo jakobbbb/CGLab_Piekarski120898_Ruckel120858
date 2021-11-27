@@ -33,6 +33,7 @@ TEST_CASE("solar scenegraph") {
         "            Moon Holder\n"
         "                Moon Geometry\n"
         "            Moon Orbit\n"
+        "            Camera 2\n"
         "    Mars Orbit\n"
         "    Mars Holder\n"
         "        Mars Geometry\n"
@@ -54,4 +55,7 @@ TEST_CASE("solar scenegraph") {
     solar_print << SceneGraph::getInstance();
 
     REQUIRE(SCENEGRAPH_EXPECTED == solar_print.str());
+
+    REQUIRE(SceneGraph::find("Camera") != nullptr);
+    REQUIRE(SceneGraph::find("Neptune Geometry") != nullptr);
 }

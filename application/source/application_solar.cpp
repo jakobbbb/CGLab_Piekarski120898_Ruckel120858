@@ -77,6 +77,7 @@ void ApplicationSolar::render() {
         }
     };
     SceneGraph::getInstance().traverse(render);
+    uploadView();
 }
 
 void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
@@ -400,6 +401,18 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
         cam->translate(glm::fvec3{0.1f, 0.0f, 0.0f});
         uploadView();
+    }
+
+
+    if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
+        auto cam1 =
+            std::dynamic_pointer_cast<CameraNode>(SceneGraph::find("Camera"));
+        auto cam2 =
+            std::dynamic_pointer_cast<CameraNode>(SceneGraph::find("Camera 2"));
+        assert(cam1 != nullptr);
+        assert(cam2 != nullptr);
+        cam1->setEnabled(cam2->getEnabled());
+        cam2->setEnabled(!cam1->getEnabled());
     }
 }
 
