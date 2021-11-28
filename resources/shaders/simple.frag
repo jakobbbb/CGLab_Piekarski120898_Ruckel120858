@@ -29,7 +29,7 @@ void main() {
   // ambient
   float distance = length(light_direction);
   vec3 beta = (LightColor * LightIntensity) / (4 * PI * distance * distance);
-  vec3 ambient = ambient_intensity * AmbientColor;
+  vec3 ambient = AmbientIntensity * AmbientColor;
   
   // diffuse
   float diffuse_strength = max(dot(normalize(light_direction), normalize(Normal)), 0.0);
