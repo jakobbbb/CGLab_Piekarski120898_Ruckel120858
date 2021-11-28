@@ -23,21 +23,28 @@ in  vec3 Normal;
 out vec4 out_Color;
 
 void main() {
+
   vec3 light_direction = LightPosition - Position;
+
+  // ambient
   float distance = length(light_direction);
   vec3 beta = (LightColor * LightIntensity) / (4 * PI * distance * distance);
-  vec3 ambient = AmbientIntensity * AmbientColor;
-
+  vec3 ambient = ambient_intensity * AmbientColor;
+  
+  // diffuse
   float diffuse_strength = max(dot(normalize(light_direction), normalize(Normal)), 0.0);
   vec3 diffuse = PlanetColor * diffuse_strength;
   
+  // specular, Blinn-Phong local illumination
   vec3 view_direction = normalize(ViewDirection - Position);
   vec3 h = normalize(light_direction + view_direction);
   float specular_strength = pow(max(dot(h, normalize(Normal)), 0.0), 4 * alpha);
   vec3 specular = reflection_factor * AmbientColor * specular_strength;
 
-  if (Cel) { // keyboard input
-    float angle = dot(normalize(Normal), view_direction);
+
+  // Cel-shading effect is enabled
+  if (Cel) {
+    float angle = dot(normalize(Normal), normalize(view_direction));
     if ((angle <= 0.3f) && (angle >= 0.0f)) {
       out_Color = vec4(0.0f, 1.0f, 0.0f, 1.0f);
     } else {
@@ -45,7 +52,9 @@ void main() {
       specular = ceil(specular * FACTOR) / FACTOR;
       out_Color = vec4(ambient + beta * diffuse + specular * LightColor, 1.0);
     }
-  } else {
+  } 
+    // no Cel-shading (default)
+    else {
     out_Color = vec4(ambient + beta * diffuse + specular * LightColor, 1.0);
   }
 
