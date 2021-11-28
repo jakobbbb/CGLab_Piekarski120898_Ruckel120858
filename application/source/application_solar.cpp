@@ -29,7 +29,7 @@ using namespace gl;
 #include <iostream>
 #include <functional>
 
-#define ORBIT_NUM_LINE_SEGMENTS 64
+#define ORBIT_NUM_LINE_SEGMENTS 340
 #define STAR_NUM 5000
 #define COLORS 255.f
 
@@ -427,13 +427,13 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
 // handle delta mouse movement input
 void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
     auto cam = SceneGraph::getActiveCamera();
-    // mouse handling, x position movement
-    cam->rotate(glm::radians(float(pos_x / 50)),  // angle
-                glm::vec3{0.0f, -1.0f, 0.0f}      // axis
+    // rotate left and right
+    cam->rotate(glm::radians(float(pos_x * 0.01f)),  // angle
+                glm::vec3{0.0f, -1.0f, 0.0f}         // axis
     );
-    // mouse handling, y position movement
-    cam->rotate(glm::radians(float(pos_y / 50)),  // angle
-                glm::vec3{-1.0f, 0.0f, 0.0f}      // axis
+    // rotate up and down
+    cam->rotate(glm::radians(float(pos_y * 0.01f)),  // angle
+                glm::vec3{-1.0f, 0.0f, 0.0f}         // axis
     );
     uploadView();
 }
