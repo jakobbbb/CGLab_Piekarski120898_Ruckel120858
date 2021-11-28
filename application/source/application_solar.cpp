@@ -107,7 +107,7 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
         glUniform1f(m_shaders.at(shader_name).u_locs.at("AmbientIntensity"),
                 ambient_intensity);
 
-        auto light_pos = light->getWorldTransform() * glm::vec4{};
+        auto light_pos = light->getWorldTransform() * glm::vec4{0, 0, 0, 1};
         glUniform3fv(m_shaders.at(shader_name).u_locs.at("LightPosition"), 1,
                 glm::value_ptr(light_pos));
         glUniform1f(m_shaders.at(shader_name).u_locs.at("LightIntensity"),
@@ -117,6 +117,10 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
                 l_color.r, l_color.g, l_color.b);
         auto loc_cel = glGetUniformLocation(m_shaders.at(shader_name).handle, "Cel");
         glUniform1i(loc_cel, bool_cel);
+
+        auto cam_transform = SceneGraph::getActiveCamera()->getWorldTransform();
+        glUniform3fv(m_shaders.at(shader_name).u_locs.at("CameraPosition"), 1,
+                glm::value_ptr(cam_transform * glm::vec4{0, 0, 0, 1}));
     }
 
     glUniformMatrix4fv(m_shaders.at(shader_name).u_locs.at("ModelMatrix"), 1,
@@ -205,6 +209,7 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("planet").u_locs["LightPosition"] = -1;
     m_shaders.at("planet").u_locs["LightIntensity"] = -1;
     m_shaders.at("planet").u_locs["LightColor"] = -1;
+    m_shaders.at("planet").u_locs["CameraPosition"] = -1;
 
     m_shaders.emplace(
         "orbit",
