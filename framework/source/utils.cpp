@@ -154,4 +154,14 @@ glm::fmat4 calculate_projection_matrix(float aspect) {
     return glm::perspective(fov_y, aspect, 0.1f, 100.0f);
 }
 
+Color random_color() {
+    Color c;
+    float hue = 360 * RAND_FLOAT();
+    auto color = glm::rgbColor(glm::vec3{hue, 1, 1});
+    c.r = color.x * 255.0f;
+    c.g = color.y * 255.0f;
+    c.b = color.z * 255.0f;
+    return c;
+}
+
 }  // namespace utils

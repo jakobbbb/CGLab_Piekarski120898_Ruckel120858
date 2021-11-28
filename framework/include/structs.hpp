@@ -1,7 +1,10 @@
 #ifndef STRUCTS_HPP
 #define STRUCTS_HPP
 
+#define RAND_FLOAT() ((float)std::rand() / (float)RAND_MAX)
+
 #include <glbinding/gl/gl.h>
+#include <glm/gtx/color_space.hpp>
 #include <map>
 // use gl definitions from glbinding
 using namespace gl;

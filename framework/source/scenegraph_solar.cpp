@@ -8,8 +8,11 @@
 #include <PointLightNode.hpp>
 #include <scenegraph_solar.hpp>
 #include <structs.hpp>
+#include <utils.hpp>
 
 void make_solar_scene() {
+    std::srand(48879);
+
     SceneGraph s = SceneGraph::getInstance();
 
     auto root = s.getRoot();
@@ -53,6 +56,10 @@ void make_solar_scene() {
         holder->rotate(RAND_FLOAT(), SUN_AXIS);
         geom->translate({distance_to_sun, 0, 0});
         geom->scale(0.5f);
+
+        auto planet_color = utils::random_color();
+        orbit->setColor(planet_color);
+        geom->setColor(planet_color);
     }
 
     auto earth = root->getChildren("Earth Geometry");
@@ -72,6 +79,10 @@ void make_solar_scene() {
         std::make_shared<GeometryNode>(earth, "Moon Orbit", "orbit");
     earth->addChild(moon_orbit);
     moon_orbit->scale(moon_earth_distance * 0.5f);
+
+    auto moon_color = utils::random_color();
+    moon_orbit->setColor(moon_color);
+    moon_geom->setColor(moon_color);
 
     auto camera2 = std::make_shared<CameraNode>(earth, "Camera 2");
     camera2->setEnabled(false);

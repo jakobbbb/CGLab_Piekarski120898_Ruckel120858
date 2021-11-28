@@ -2,6 +2,7 @@
 #define UTILS_HPP
 
 #include <glbinding/gl/types.h>
+#include <structs.hpp>
 // use gl definitions from glbinding
 using namespace gl;
 
@@ -37,6 +38,9 @@ std::string read_resource_path(int argc, char* argv[]);
 
 // calculate Vert+ FOV projection matrix
 glm::fmat4 calculate_projection_matrix(float aspect);
+
+Color random_color();
+
 }  // namespace utils
 
 #endif
