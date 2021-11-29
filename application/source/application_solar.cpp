@@ -150,7 +150,7 @@ void ApplicationSolar::uploadView() {
     // vertices are transformed in camera space, so camera transform must be
     // inverted
     glm::fmat4 view_matrix =
-        glm::inverse(SceneGraph::getActiveCamera()->getWorldTransform());
+        glm::inverse(SceneGraph::getActiveCamera()->getRotatedWorldTransform());
     //
     // upload matrix to gpu
     glUseProgram(m_shaders.at("planet").handle);
@@ -394,27 +394,27 @@ void ApplicationSolar::initializeGeometry() {
 void ApplicationSolar::keyCallback(int key, int action, int mods) {
     if (key == GLFW_KEY_LEFT_SHIFT) {
         if (action == GLFW_PRESS) {
-            movement_speed = 10.0f;
+            movement_speed = 1.5f;
         } else if (action == GLFW_RELEASE) {
-            movement_speed = 1.0f;
+            movement_speed = 0.2f;
         }
     }
 
     auto cam = SceneGraph::getActiveCamera();
     if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        cam->translate(movement_speed * glm::fvec3{0.0f, 0.0f, -0.1f});
+        cam->translate(movement_speed * cam->forward());
         uploadView();
     } else if (key == GLFW_KEY_S &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        cam->translate(movement_speed * glm::fvec3{0.0f, 0.0f, 0.1f});
+        cam->translate(movement_speed * -cam->forward());
         uploadView();
     } else if (key == GLFW_KEY_A &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        cam->translate(movement_speed * glm::fvec3{-0.1f, 0.0f, 0.0f});
+        cam->translate(movement_speed * -cam->right());
         uploadView();
     } else if (key == GLFW_KEY_D &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        cam->translate(movement_speed * glm::fvec3{0.1f, 0.0f, 0.0f});
+        cam->translate(movement_speed * cam->right());
         uploadView();
     } else if (key == GLFW_KEY_1 &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
@@ -440,6 +440,10 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
 // handle delta mouse movement input
 void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
     auto cam = SceneGraph::getActiveCamera();
+
+    cam->rotateCamera(-(float)(pos_y*10e-4), -(float)(pos_x*10e-4));
+
+    /*
     // rotate left and right
     cam->rotate(glm::radians(float(pos_x * 0.01f)),  // angle
                 glm::vec3{0.0f, -1.0f, 0.0f}         // axis
@@ -448,6 +452,7 @@ void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
     cam->rotate(glm::radians(float(pos_y * 0.01f)),  // angle
                 glm::vec3{-1.0f, 0.0f, 0.0f}         // axis
     );
+    */
     uploadView();
 }
 
