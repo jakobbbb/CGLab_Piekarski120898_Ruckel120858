@@ -47,15 +47,12 @@ void main() {
     float angle = dot(normalize(Normal), normalize(view_direction));
     if ((angle <= 0.3f) && (angle >= 0.0f)) {
       out_Color = vec4(PlanetColor, 1.0f);
+      return;
     } else {
       diffuse = ceil(diffuse * FACTOR) / FACTOR;
       specular = ceil(specular * FACTOR) / FACTOR;
-      out_Color = vec4(ambient + beta * diffuse + specular * LightColor, 1.0);
     }
-  } 
-    // no Cel-shading (default)
-    else {
-    out_Color = vec4(ambient + beta * diffuse + specular * LightColor, 1.0);
   }
 
+  out_Color = vec4(ambient + beta * (diffuse + specular), 1.0);
 }
