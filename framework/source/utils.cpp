@@ -151,7 +151,7 @@ glm::fmat4 calculate_projection_matrix(float aspect) {
         fov_y = 2.0f * glm::atan(glm::tan(fov_y * 0.5f) * (1.0f / aspect));
     }
     // projection is hor+
-    return glm::perspective(fov_y, aspect, 0.1f, 100.0f);
+    return glm::perspective(fov_y, aspect, 0.1f, 180.0f);
 }
 
 Color random_color() {
