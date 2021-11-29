@@ -392,21 +392,29 @@ void ApplicationSolar::initializeGeometry() {
 // - press W / S == zoom in / out
 // - press A / D == move left / right
 void ApplicationSolar::keyCallback(int key, int action, int mods) {
+    if (key == GLFW_KEY_LEFT_SHIFT) {
+        if (action == GLFW_PRESS) {
+            movement_speed = 10.0f;
+        } else if (action == GLFW_RELEASE) {
+            movement_speed = 1.0f;
+        }
+    }
+
     auto cam = SceneGraph::getActiveCamera();
     if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        cam->translate(glm::fvec3{0.0f, 0.0f, -0.1f});
+        cam->translate(movement_speed * glm::fvec3{0.0f, 0.0f, -0.1f});
         uploadView();
     } else if (key == GLFW_KEY_S &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        cam->translate(glm::fvec3{0.0f, 0.0f, 0.1f});
+        cam->translate(movement_speed * glm::fvec3{0.0f, 0.0f, 0.1f});
         uploadView();
     } else if (key == GLFW_KEY_A &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        cam->translate(glm::fvec3{-0.1f, 0.0f, 0.0f});
+        cam->translate(movement_speed * glm::fvec3{-0.1f, 0.0f, 0.0f});
         uploadView();
     } else if (key == GLFW_KEY_D &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        cam->translate(glm::fvec3{0.1f, 0.0f, 0.0f});
+        cam->translate(movement_speed * glm::fvec3{0.1f, 0.0f, 0.0f});
         uploadView();
     } else if (key == GLFW_KEY_1 &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {

@@ -50,6 +50,8 @@ class ApplicationSolar : public Application {
     // Cel-shading
     GLboolean bool_cel = GL_FALSE;
     static GLuint loc_cel;
+
+    float movement_speed = 1.0f;
 };
 
 #endif
