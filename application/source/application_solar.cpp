@@ -307,15 +307,6 @@ void ApplicationSolar::initializeOrbitGeometry() {
     // first attribute is 3 floats with no offset & stride
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
-    // generate generic buffer
-    glGenBuffers(1, &orbit_object.element_BO);
-    // bind this as an vertex array buffer containing all attributes
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, orbit_object.element_BO);
-    // configure currently bound array buffer
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 GLsizei(sizeof(float) * points.size()), points.data(),
-                 GL_STATIC_DRAW);
-
     // store type of primitive to draw
     orbit_object.draw_mode = GL_LINE_LOOP;
     // transfer number of indices to model object
