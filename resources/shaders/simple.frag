@@ -4,7 +4,7 @@
 #define FACTOR 1.5
 
 
-const float reflection_factor = 0.4;
+const float reflection_factor = 1;
 const int   alpha = 30;
 
 uniform float AmbientIntensity;
@@ -37,7 +37,10 @@ void main() {
   
   // specular, Blinn-Phong local illumination
   vec3 view_direction = normalize(CameraPosition - Position);
-  vec3 h = normalize(light_direction + view_direction);
+
+  vec3 l = normalize(light_direction);
+  vec3 v = normalize(view_direction);
+  vec3 h = (l + v) / length(l + v);
   float specular_strength = pow(max(dot(h, normalize(Normal)), 0.0), 4 * alpha);
   vec3 specular = reflection_factor * AmbientColor * specular_strength;
 
