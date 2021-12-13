@@ -4,14 +4,14 @@
 #define FACTOR 1.5
 
 
-const float reflection_factor = 1;
+const float reflection_factor = 0.4;
 const int   alpha = 30;
 
 uniform float AmbientIntensity;
 
 uniform float LightIntensity;
 uniform vec3 CameraPosition;
-uniform vec3 PlanetColor;
+//uniform vec3 PlanetColor;
 uniform vec3 AmbientColor;
 uniform vec3 LightColor;
 uniform vec3 LightPosition;
@@ -27,15 +27,13 @@ out vec4 out_Color;
 
 void main() {
 
-  out_Color = texture(Texture, TexCoord);
-  return;
-
+  vec3 PlanetColor = vec3(texture(Texture, TexCoord));
   vec3 light_direction = LightPosition - Position;
 
   // ambient
   float distance = length(light_direction);
   vec3 beta = (LightColor * LightIntensity) / (4 * PI * distance * distance);
-  vec3 ambient = AmbientIntensity * AmbientColor;
+  vec3 ambient = AmbientIntensity * AmbientColor * PlanetColor;
   
   // diffuse
   float diffuse_strength = max(dot(normalize(light_direction), normalize(Normal)), 0.0);

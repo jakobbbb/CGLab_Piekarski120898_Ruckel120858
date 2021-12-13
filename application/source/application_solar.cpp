@@ -102,10 +102,10 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
 
     // assign a different color for each planet using glUniform3f
     if (shader_name == "planet") {
-        glUniform3f(m_shaders.at(shader_name).u_locs.at("PlanetColor"),
-                color.r/COLORS, color.g/COLORS, color.b/COLORS);
+        //glUniform3f(m_shaders.at(shader_name).u_locs.at("PlanetColor"),
+        //        color.r/COLORS, color.g/COLORS, color.b/COLORS);
         glUniform3f(m_shaders.at(shader_name).u_locs.at("AmbientColor"),
-                color.r/COLORS, color.g/COLORS, color.b/COLORS);
+                1.0f, 1.0f, 1.0f);
 
         float ambient_intensity =
             (node->getName() == "Sun Geometry") ? 10.f : 0.15f;
@@ -209,7 +209,7 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("planet").u_locs["ModelMatrix"] = -1;
     m_shaders.at("planet").u_locs["ViewMatrix"] = -1;
     m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
-    m_shaders.at("planet").u_locs["PlanetColor"] = -1;
+    //m_shaders.at("planet").u_locs["PlanetColor"] = -1;
     m_shaders.at("planet").u_locs["AmbientColor"] = -1;
     m_shaders.at("planet").u_locs["AmbientIntensity"] = -1;
     m_shaders.at("planet").u_locs["LightPosition"] = -1;
@@ -241,7 +241,8 @@ void ApplicationSolar::initializeShaderPrograms() {
 
 void ApplicationSolar::initializePlanetGeometry() {
     model planet_model =
-        model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
+        model_loader::obj(m_resource_path + "models/sphere.obj",
+                model::NORMAL | model::TEXCOORD);
 
     // generate vertex array object
     glGenVertexArrays(1, &planet_object.vertex_AO);
