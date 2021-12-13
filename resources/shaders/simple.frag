@@ -16,13 +16,19 @@ uniform vec3 AmbientColor;
 uniform vec3 LightColor;
 uniform vec3 LightPosition;
 
+uniform sampler2D TextureSampler;
+
 uniform bool Cel;
 
 in vec3 Position;
 in  vec3 Normal;
+in vec2 TexCoord;
 out vec4 out_Color;
 
 void main() {
+
+  out_Color = texture(TextureSampler, TexCoord);
+  return;
 
   vec3 light_direction = LightPosition - Position;
 

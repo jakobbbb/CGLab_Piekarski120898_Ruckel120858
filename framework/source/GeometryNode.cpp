@@ -19,3 +19,11 @@ void GeometryNode::setGeometry(model_object const& geometry) {
 std::string GeometryNode::getShaderName() const {
     return shader_name_;
 }
+
+unsigned int GeometryNode::getTextureHandle() const {
+    return texture_handle_;
+}
+
+void GeometryNode::setTextureHandle(unsigned int texture_handle) {
+    texture_handle_ = texture_handle;
+}

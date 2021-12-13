@@ -18,10 +18,13 @@ class GeometryNode : public Node {
     model_object getGeometry() const;
     void setGeometry(model_object const& geometry);
     std::string getShaderName() const;
+    unsigned int getTextureHandle() const;
+    void setTextureHandle(unsigned int texture_handle);
 
    private:
     model_object geometry_;
     std::string shader_name_;
+    unsigned int texture_handle_;
 };
 
 #endif  // GEOMETRY_NODE_HPP

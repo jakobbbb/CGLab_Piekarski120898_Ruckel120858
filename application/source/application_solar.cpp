@@ -3,6 +3,7 @@
 
 #include "model_loader.hpp"
 #include "shader_loader.hpp"
+#include "texture_loader.hpp"
 #include "utils.hpp"
 
 #include <GeometryNode.hpp>
@@ -11,6 +12,8 @@
 #include <scenegraph_solar.hpp>
 
 #include <cassert>
+#include <string>
+#include <regex>
 
 #include <glbinding/gl/gl.h>
 // use gl definitions from glbinding
@@ -50,6 +53,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
 
     initializeGeometry();
     initializeShaderPrograms();
+    initializeTextures();
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -86,6 +90,7 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
     auto geometry_object = node->getGeometry();
     auto color = node->getColor();
     auto light = SceneGraph::getLight();
+    auto texture = node->getTextureHandle();
 
     // bind shader to upload uniforms
     glUseProgram(m_shaders.at(shader_name).handle);
@@ -138,6 +143,7 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
 
     // draw bound vertex array using bound shader
     if (geometry_object.using_indices) {
+        glBindTexture(GL_TEXTURE_2D, texture);
         glDrawElements(geometry_object.draw_mode, geometry_object.num_elements,
                        model::INDEX.type, NULL);
     } else {
@@ -250,18 +256,26 @@ void ApplicationSolar::initializePlanetGeometry() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * planet_model.data.size(),
                  planet_model.data.data(), GL_STATIC_DRAW);
 
-    // activate first attribute on gpu
+    // First Attribute: Position
     glEnableVertexAttribArray(0);
     // first attribute is 3 floats with no offset & stride
     glVertexAttribPointer(0, model::POSITION.components, model::POSITION.type,
                           GL_FALSE, planet_model.vertex_bytes,
                           planet_model.offsets[model::POSITION]);
-    // activate second attribute on gpu
+
+    // Second Attribute: Position
     glEnableVertexAttribArray(1);
     // second attribute is 3 floats with no offset & stride
     glVertexAttribPointer(1, model::NORMAL.components, model::NORMAL.type,
                           GL_FALSE, planet_model.vertex_bytes,
                           planet_model.offsets[model::NORMAL]);
+
+    // Third Attribute: Texcoord
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, model::TEXCOORD.components, model::TEXCOORD.type,
+                          GL_FALSE, planet_model.vertex_bytes,
+                          planet_model.offsets[model::TEXCOORD]);
+
 
     // generate generic buffer
     glGenBuffers(1, &planet_object.element_BO);
@@ -376,6 +390,46 @@ void ApplicationSolar::initializeGeometry() {
         }
     };
     SceneGraph::getInstance().traverse(set_geometry);
+}
+
+void ApplicationSolar::initializeTextures() {
+    node_traverse_func load_textures = [&](std::shared_ptr<Node> node) {
+        auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
+        if (!geom_node || geom_node->getShaderName() != "planet") {
+            return;
+        }
+        auto planet_name = std::regex_replace(
+                geom_node->getName(), std::regex(" Geometry"), ""
+        );
+        auto texture_path = m_resource_path + "textures/test.png";
+        pixel_data texture = texture_loader::file(texture_path);
+        unsigned int texture_handle;
+        glGenTextures(1, &texture_handle);
+        glBindTexture(GL_TEXTURE_2D, texture_handle);
+
+        // parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                texture.channels,
+                texture.width,
+                texture.height,
+                0,
+                texture.channels,
+                texture.channel_type,
+                texture.ptr()
+        );
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        // store handle
+        geom_node->setTextureHandle(texture_handle);
+    };
+    SceneGraph::getInstance().traverse(load_textures);
 }
 
 ///////////////////////////// callback functions for window events ////////////
