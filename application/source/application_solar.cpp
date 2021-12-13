@@ -415,15 +415,15 @@ void ApplicationSolar::initializeTextures() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                texture.channels,
+                GL_TEXTURE_2D,         // target
+                0,                     // mipmap level
+                texture.channels,      // storage format (e.g. RGB)
                 texture.width,
                 texture.height,
-                0,
-                texture.channels,
-                texture.channel_type,
-                texture.ptr()
+                0,                     // legacy stuff
+                texture.channels,      // source format (e.g. RGB)
+                texture.channel_type,  // source type (e.g. bytes)
+                texture.ptr()          // image data
         );
         glGenerateMipmap(GL_TEXTURE_2D);
 
