@@ -16,7 +16,7 @@ uniform vec3 AmbientColor;
 uniform vec3 LightColor;
 uniform vec3 LightPosition;
 
-uniform sampler2D TextureSampler;
+uniform sampler2D Texture;
 
 uniform bool Cel;
 
@@ -27,7 +27,7 @@ out vec4 out_Color;
 
 void main() {
 
-  out_Color = texture(TextureSampler, TexCoord);
+  out_Color = texture(Texture, TexCoord);
   return;
 
   vec3 light_direction = LightPosition - Position;

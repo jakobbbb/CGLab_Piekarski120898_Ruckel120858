@@ -401,7 +401,7 @@ void ApplicationSolar::initializeTextures() {
         auto planet_name = std::regex_replace(
                 geom_node->getName(), std::regex(" Geometry"), ""
         );
-        auto texture_path = m_resource_path + "textures/test.png";
+        auto texture_path = m_resource_path + "textures/" + planet_name + ".png";
         pixel_data texture = texture_loader::file(texture_path);
         unsigned int texture_handle;
         glGenTextures(1, &texture_handle);
