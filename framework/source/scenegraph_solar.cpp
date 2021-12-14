@@ -84,9 +84,10 @@ void make_solar_scene() {
     moon_orbit->setColor(moon_color);
     moon_geom->setColor(moon_color);
 
-    auto camera2 = std::make_shared<CameraNode>(earth, "Camera 2");
+    auto camera2 = std::make_shared<CameraNode>(earth->getParent(), "Camera 2");
     camera2->setEnabled(false);
-    earth->addChild(camera2);
+    earth->getParent()->addChild(camera2);
+    camera2->setLocalTransform(earth->getLocalTransform());
     camera2->translate({-5, 1, 5});
     camera2->rotate(-45.0f, SUN_AXIS);
 

@@ -76,6 +76,9 @@ void ApplicationSolar::render() {
                 node->getParent()->rotate(
                     10e-4f / ORBIT_PERIODS[planet_idx],
                     SUN_AXIS);
+                node->rotate(
+                    5e-2f / DAY_LENGTHS[planet_idx],
+                    SUN_AXIS);
                 planet_idx++;
             }
         }

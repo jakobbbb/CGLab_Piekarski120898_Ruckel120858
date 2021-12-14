@@ -14,6 +14,12 @@ const float ORBIT_PERIODS[] = {
     .748f,  // Moon
     1.881f,   11.86f, 29.46f, 85.01f, 164.8f,
 };
+
+const float DAY_LENGTHS[] = {
+    1.408f, 5.832f, 24.f,
+    INFINITY,  // Moon
+    25.f, 10.f, 11.f, 17.f, 16.f,
+};
 const glm::vec3 SUN_AXIS{0, 1, 0};
 
 void make_solar_scene();
