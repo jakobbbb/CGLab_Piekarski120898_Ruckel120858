@@ -150,7 +150,7 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(texture_diffuse.target, texture_diffuse.handle);
         glUniform1i(
-                m_shaders.at(shader_name).u_locs.at("Texture0"), 0
+                m_shaders.at(shader_name).u_locs.at("Texture"), 0
         );
 
         if (node->getName() == "Earth Geometry") {
@@ -158,7 +158,7 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(texture_normal.target, texture_normal.handle);
             glUniform1i(
-                    m_shaders.at(shader_name).u_locs.at("Texture1"), 1
+                    m_shaders.at(shader_name).u_locs.at("NormalMap"), 1
             );
 
             glUniform1b(
@@ -245,8 +245,8 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("planet").u_locs["LightColor"] = -1;
     m_shaders.at("planet").u_locs["CameraPosition"] = -1;
     m_shaders.at("planet").u_locs["UseNormalMap"] = -1;
-    m_shaders.at("planet").u_locs["Texture0"] = -1;
-    m_shaders.at("planet").u_locs["Texture1"] = -1;
+    m_shaders.at("planet").u_locs["Texture"] = -1;
+    m_shaders.at("planet").u_locs["NormalMap"] = -1;
 
     m_shaders.emplace(
         "orbit",
@@ -444,7 +444,6 @@ void ApplicationSolar::initializeTextures() {
             pixel_data pixels_normal = texture_loader::file(texture_path);
             texture_object texture_normal = utils::create_texture_object(pixels_normal);
             geom_node->setNormalTexture(texture_normal);
-            geom_node->setDiffuseTexture(texture_normal);
         }
 
     };
