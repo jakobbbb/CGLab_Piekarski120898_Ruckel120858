@@ -33,7 +33,7 @@ TEST_CASE("solar scenegraph") {
         "            Moon Holder\n"
         "                Moon Geometry\n"
         "            Moon Orbit\n"
-        "            Camera 2\n"
+        "        Camera 2\n"
         "    Mars Orbit\n"
         "    Mars Holder\n"
         "        Mars Geometry\n"
