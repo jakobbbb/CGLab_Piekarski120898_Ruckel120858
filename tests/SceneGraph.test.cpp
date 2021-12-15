@@ -18,6 +18,7 @@ TEST_CASE("solar scenegraph") {
     const std::string SCENEGRAPH_EXPECTED =
         "root\n"
         "    Camera\n"
+       // "    Skybox\n"
         "    Stars\n"
         "    PointLight\n"
         "        Sun Geometry\n"
