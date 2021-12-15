@@ -19,6 +19,7 @@ TEST_CASE("solar scenegraph") {
         "root\n"
         "    Camera\n"
         "    Stars\n"
+        "    Skybox\n"
         "    PointLight\n"
         "        Sun Geometry\n"
         "    Mercury Orbit\n"
