@@ -103,14 +103,18 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
     }
 
     // assign a different color for each planet using glUniform3f
-    if (shader_name == "planet") {
+    if (shader_name == "planet" ) {
         //glUniform3f(m_shaders.at(shader_name).u_locs.at("PlanetColor"),
         //        color.r/COLORS, color.g/COLORS, color.b/COLORS);
         glUniform3f(m_shaders.at(shader_name).u_locs.at("AmbientColor"),
                 1.0f, 1.0f, 1.0f);
 
-        float ambient_intensity =
-            (node->getName() == "Sun Geometry") ? 10.f : 0.15f;
+        float ambient_intensity = 0.15f;
+        if (node->getName() == "Sun Geometry") {
+            ambient_intensity = 10.0f;
+        } else if (node->getName() == "Saturn Rings") {
+            ambient_intensity = 0.7f;
+        }
         glUniform1f(m_shaders.at(shader_name).u_locs.at("AmbientIntensity"),
                 ambient_intensity);
 
@@ -402,11 +406,68 @@ void ApplicationSolar::initializeStarGeometry() {
     star_object.num_elements = GLsizei(STAR_NUM);
 }
 
+void ApplicationSolar::initializeRingGeometry() {
+    model ring_model =
+        model_loader::obj(m_resource_path +  "models/rings.obj",
+                model::NORMAL | model::TEXCOORD);
+
+    // generate vertex array object
+    glGenVertexArrays(1, &ring_object.vertex_AO);
+    // bind the array for attaching buffers
+    glBindVertexArray(ring_object.vertex_AO);
+
+    // generate generic buffer
+    glGenBuffers(1, &ring_object.vertex_BO);
+    // bind this as an vertex array buffer containing all attributes
+    glBindBuffer(GL_ARRAY_BUFFER, ring_object.vertex_BO);
+    // configure currently bound array buffer
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ring_model.data.size(),
+                 ring_model.data.data(), GL_STATIC_DRAW);
+
+    // First Attribute: Position
+    glEnableVertexAttribArray(0);
+    // first attribute is 3 floats with no offset & stride
+    glVertexAttribPointer(0, model::POSITION.components, model::POSITION.type,
+                          GL_FALSE, ring_model.vertex_bytes,
+                          ring_model.offsets[model::POSITION]);
+
+    // Second Attribute: Position
+    glEnableVertexAttribArray(1);
+    // second attribute is 3 floats with no offset & stride
+    glVertexAttribPointer(1, model::NORMAL.components, model::NORMAL.type,
+                          GL_FALSE, ring_model.vertex_bytes,
+                          ring_model.offsets[model::NORMAL]);
+
+    // Third Attribute: Texcoord
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, model::TEXCOORD.components, model::TEXCOORD.type,
+                          GL_FALSE, ring_model.vertex_bytes,
+                          ring_model.offsets[model::TEXCOORD]);
+
+
+    // generate generic buffer
+    glGenBuffers(1, &ring_object.element_BO);
+    // bind this as an vertex array buffer containing all attributes
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ring_object.element_BO);
+    // configure currently bound array buffer
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 model::INDEX.size * ring_model.indices.size(),
+                 ring_model.indices.data(), GL_STATIC_DRAW);
+
+    // store type of primitive to draw
+    ring_object.draw_mode = GL_TRIANGLES;
+    // transfer number of indices to model object
+    ring_object.num_elements = GLsizei(ring_model.indices.size());
+
+    ring_object.using_indices = true;
+}
+
 // load models
 void ApplicationSolar::initializeGeometry() {
     initializePlanetGeometry();
     initializeOrbitGeometry();
     initializeStarGeometry();
+    initializeRingGeometry();
 
     node_traverse_func set_geometry = [&](std::shared_ptr<Node> node) {
         auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
@@ -421,8 +482,12 @@ void ApplicationSolar::initializeGeometry() {
             // node is star
             geom_node->setGeometry(star_object);
         } else {
-            // node is planet
-            geom_node->setGeometry(planet_object);
+            if (geom_node->getName() == "Saturn Rings") {
+                geom_node->setGeometry(ring_object);
+            } else {
+                // node is planet
+                geom_node->setGeometry(planet_object);
+            }
         }
     };
     SceneGraph::getInstance().traverse(set_geometry);
@@ -431,7 +496,7 @@ void ApplicationSolar::initializeGeometry() {
 void ApplicationSolar::initializeTextures() {
     node_traverse_func load_textures = [&](std::shared_ptr<Node> node) {
         auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
-        if (!geom_node || geom_node->getShaderName() != "planet") {
+        if (!geom_node || (geom_node->getShaderName() != "planet")) {
             return;
         }
         auto planet_name = std::regex_replace(

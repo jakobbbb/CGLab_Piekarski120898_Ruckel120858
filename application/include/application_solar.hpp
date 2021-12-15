@@ -29,6 +29,7 @@ class ApplicationSolar : public Application {
     void initializePlanetGeometry();
     void initializeOrbitGeometry();
     void initializeStarGeometry();
+    void initializeRingGeometry();
     void initializeGeometry();
     void initializeTextures();
     // update uniform values
@@ -47,6 +48,7 @@ class ApplicationSolar : public Application {
     model_object planet_object;
     model_object star_object;
     model_object orbit_object;
+    model_object ring_object;
 
     // Cel-shading
     GLboolean bool_cel = GL_FALSE;

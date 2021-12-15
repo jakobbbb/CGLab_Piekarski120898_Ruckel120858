@@ -60,6 +60,14 @@ void make_solar_scene() {
         auto planet_color = utils::random_color();
         orbit->setColor(planet_color);
         geom->setColor(planet_color);
+
+        if (planet_name == "Saturn") {
+            auto rings = std::make_shared<GeometryNode>(
+                    geom, "Saturn Rings", "planet"
+            );
+            rings->scale(2.0f);
+            geom->addChild(rings);
+        }
     }
 
     auto earth = root->getChildren("Earth Geometry");
