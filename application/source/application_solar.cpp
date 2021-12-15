@@ -147,7 +147,31 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
 
     // draw bound vertex array using bound shader
     if (geometry_object.using_indices) {
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(texture_diffuse.target, texture_diffuse.handle);
+        glUniform1i(
+                m_shaders.at(shader_name).u_locs.at("Texture0"), 0
+        );
+
+        if (node->getName() == "Earth Geometry") {
+            auto texture_normal = node->getNormalTexture();
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(texture_normal.target, texture_normal.handle);
+            glUniform1i(
+                    m_shaders.at(shader_name).u_locs.at("Texture1"), 1
+            );
+
+            glUniform1b(
+                    m_shaders.at(shader_name).u_locs.at("UseNormalMap"),
+                    GL_TRUE
+            );
+        } else {
+            glUniform1b(
+                    m_shaders.at(shader_name).u_locs.at("UseNormalMap"),
+                    GL_FALSE
+            );
+        }
+
         glDrawElements(geometry_object.draw_mode, geometry_object.num_elements,
                        model::INDEX.type, NULL);
     } else {
@@ -220,6 +244,9 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("planet").u_locs["LightIntensity"] = -1;
     m_shaders.at("planet").u_locs["LightColor"] = -1;
     m_shaders.at("planet").u_locs["CameraPosition"] = -1;
+    m_shaders.at("planet").u_locs["UseNormalMap"] = -1;
+    m_shaders.at("planet").u_locs["Texture0"] = -1;
+    m_shaders.at("planet").u_locs["Texture1"] = -1;
 
     m_shaders.emplace(
         "orbit",
@@ -412,10 +439,12 @@ void ApplicationSolar::initializeTextures() {
         geom_node->setDiffuseTexture(texture);
 
         if (planet_name == "Earth") {
+            std::cout << "???";
             auto texture_path = m_resource_path + "textures/" + planet_name + "Normal.png";
             pixel_data pixels_normal = texture_loader::file(texture_path);
-            texture_object texture_normal = utils::create_texture_object(pixels);
+            texture_object texture_normal = utils::create_texture_object(pixels_normal);
             geom_node->setNormalTexture(texture_normal);
+            geom_node->setDiffuseTexture(texture_normal);
         }
 
     };

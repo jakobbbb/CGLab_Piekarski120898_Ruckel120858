@@ -7,6 +7,7 @@
 const float reflection_factor = 0.4;
 const int   alpha = 30;
 
+uniform bool UseNormalMap;
 uniform float AmbientIntensity;
 
 uniform float LightIntensity;
@@ -17,6 +18,7 @@ uniform vec3 LightColor;
 uniform vec3 LightPosition;
 
 uniform sampler2D Texture;
+uniform sampler2D NormalMap;
 
 uniform bool Cel;
 
@@ -26,6 +28,12 @@ in vec2 TexCoord;
 out vec4 out_Color;
 
 void main() {
+
+    if (UseNormalMap) {
+        // TODO
+        out_Color = texture(NormalMap, TexCoord);
+        return;
+    }
 
   vec3 PlanetColor = vec3(texture(Texture, TexCoord));
   vec3 light_direction = LightPosition - Position;
