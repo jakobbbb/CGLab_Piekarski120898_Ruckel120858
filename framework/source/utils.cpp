@@ -16,10 +16,36 @@ using namespace gl;
 
 namespace utils {
 
-texture_object create_texture_object(pixel_data const& tex) {
+texture_object create_texture_object(pixel_data const& texture) {
     texture_object t_obj{};
 
-    throw std::logic_error("Texture Object creation not implemented yet");
+    t_obj.target = GL_TEXTURE_2D;
+
+
+    unsigned int texture_handle;
+    glGenTextures(1, &texture_handle);
+    glBindTexture(GL_TEXTURE_2D, texture_handle);
+
+    // parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(
+            GL_TEXTURE_2D,         // target
+            0,                     // mipmap level
+            texture.channels,      // storage format (e.g. RGB)
+            texture.width,
+            texture.height,
+            0,                     // legacy stuff
+            texture.channels,      // source format (e.g. RGB)
+            texture.channel_type,  // source type (e.g. bytes)
+            texture.ptr()          // image data
+    );
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    t_obj.handle = texture_handle;
 
     return t_obj;
 }

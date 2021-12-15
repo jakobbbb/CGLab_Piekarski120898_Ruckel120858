@@ -20,10 +20,10 @@ std::string GeometryNode::getShaderName() const {
     return shader_name_;
 }
 
-unsigned int GeometryNode::getTextureHandle() const {
-    return texture_handle_;
+texture_object GeometryNode::getDiffuseTexture() const {
+    return diffuse_texture_;
 }
 
-void GeometryNode::setTextureHandle(unsigned int texture_handle) {
-    texture_handle_ = texture_handle;
+void GeometryNode::setDiffuseTexture(texture_object texture) {
+    diffuse_texture_ = texture;
 }

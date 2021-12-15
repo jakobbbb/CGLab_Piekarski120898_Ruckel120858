@@ -93,7 +93,6 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
     auto geometry_object = node->getGeometry();
     auto color = node->getColor();
     auto light = SceneGraph::getLight();
-    auto texture = node->getTextureHandle();
 
     // bind shader to upload uniforms
     glUseProgram(m_shaders.at(shader_name).handle);
@@ -144,9 +143,11 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
     // bind the VAO to draw
     glBindVertexArray(geometry_object.vertex_AO);
 
+    auto texture_diffuse = node->getDiffuseTexture();
+
     // draw bound vertex array using bound shader
     if (geometry_object.using_indices) {
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindTexture(texture_diffuse.target, texture_diffuse.handle);
         glDrawElements(geometry_object.draw_mode, geometry_object.num_elements,
                        model::INDEX.type, NULL);
     } else {
@@ -406,32 +407,9 @@ void ApplicationSolar::initializeTextures() {
                 geom_node->getName(), std::regex(" Geometry"), ""
         );
         auto texture_path = m_resource_path + "textures/" + planet_name + ".png";
-        pixel_data texture = texture_loader::file(texture_path);
-        unsigned int texture_handle;
-        glGenTextures(1, &texture_handle);
-        glBindTexture(GL_TEXTURE_2D, texture_handle);
-
-        // parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        glTexImage2D(
-                GL_TEXTURE_2D,         // target
-                0,                     // mipmap level
-                texture.channels,      // storage format (e.g. RGB)
-                texture.width,
-                texture.height,
-                0,                     // legacy stuff
-                texture.channels,      // source format (e.g. RGB)
-                texture.channel_type,  // source type (e.g. bytes)
-                texture.ptr()          // image data
-        );
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        // store handle
-        geom_node->setTextureHandle(texture_handle);
+        pixel_data pixels = texture_loader::file(texture_path);
+        texture_object texture = utils::create_texture_object(pixels);
+        geom_node->setDiffuseTexture(texture);
     };
     SceneGraph::getInstance().traverse(load_textures);
 }
