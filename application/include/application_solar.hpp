@@ -48,7 +48,10 @@ class ApplicationSolar : public Application {
     model_object planet_object;
     model_object star_object;
     model_object orbit_object;
+    model_object skybox_object;
 
+    //texture_object skyboxTexture;
+    GLenum active_skyboxTexture;
     texture_object skyboxTexture;
 
     // Cel-shading
