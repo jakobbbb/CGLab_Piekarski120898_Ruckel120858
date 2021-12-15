@@ -496,10 +496,10 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
         uploadView();
     } else if (key == GLFW_KEY_1 &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        bool_cel = GL_TRUE;
+        bool_cel = !bool_cel;
     } else if (key == GLFW_KEY_2 &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        bool_cel = GL_FALSE;
+        uploadView();
     }
 
 
