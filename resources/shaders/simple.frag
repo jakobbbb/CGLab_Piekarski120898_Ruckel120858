@@ -30,17 +30,16 @@ out vec4 out_Color;
 
 #extension GL_OES_standard_derivatives : enable
 vec3 perturbNormal( vec3 vertex_pos, vec3 surf_norm, vec2 uv) {
-  vec3 q0 = dFdx( vertex_pos.xyz );
-  vec3 q1 = dFdy( vertex_pos.xyz );
-  vec2 st0 = dFdx( uv.st );
-  vec2 st1 = dFdy( uv.st );
-  vec3 S = normalize( q0 * st1.t - q1 * st0.t );
-  vec3 T = normalize( -q0 * st1.s + q1 * st0.s );
-  vec3 N = normalize( surf_norm );
-  vec3 mapN = texture2D( NormalMap, uv ).xyz * 2.0 - 1.0;
-  //mapN.xy = normalScale * mapN.xy;
-  mat3 tsn = mat3( S, T, N );
-  return normalize( tsn * mapN );
+  vec3 q0 = dFdx(vertex_pos.xyz);
+  vec3 q1 = dFdy(vertex_pos.xyz);
+  vec2 st0 = dFdx(uv.st);
+  vec2 st1 = dFdy(uv.st);
+  vec3 S = normalize(q0 * st1.t - q1 * st0.t);
+  vec3 T = normalize(-q0 * st1.s + q1 * st0.s);
+  vec3 N = normalize(surf_norm);
+  vec3 mapN = texture2D(NormalMap, uv).xyz * 2.0 - 1.0;
+  mat3 tsn = mat3(S, T, N);
+  return normalize(tsn * mapN);
 }
 
 
@@ -50,7 +49,6 @@ void main() {
     vec3 Normal = pass_Normal;
 
     if (UseNormalMap) {
-        // TODO
         Normal = perturbNormal(Position, pass_Normal, TexCoord);
     }
 
