@@ -190,4 +190,58 @@ Color random_color() {
     return c;
 }
 
+
+// generate box vertices with edge length f
+std::vector<float> BoxVertices(float f) {
+  return std::vector<float> {
+    -f,  f,  f,
+    -f, -f, -f,
+    -f, -f,  f,
+
+    -f,  f, -f,
+     f, -f, -f,
+    -f, -f, -f,
+
+     f,  f, -f,
+     f, -f,  f,
+     f, -f, -f,
+
+     f,  f, f,
+    -f, -f, f,
+     f, -f, f,
+
+     f, -f, -f,
+    -f, -f,  f,
+    -f, -f, -f,
+
+    -f, f, -f,
+     f, f,  f,
+     f, f, -f,
+
+    -f,  f,  f,
+    -f,  f, -f,
+    -f, -f, -f,
+
+    -f,  f, -f,
+     f,  f, -f,
+     f, -f, -f,
+
+     f,  f, -f,
+     f,  f,  f,
+     f, -f,  f,
+
+     f,  f,  f,
+    -f,  f,  f,
+    -f, -f,  f,
+
+     f, -f, -f,
+     f, -f,  f,
+    -f, -f,  f,
+
+    -f, f, -f,
+    -f, f,  f,
+     f, f,  f,
+  };
+}
+
 }  // namespace utils
