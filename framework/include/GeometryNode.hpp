@@ -20,11 +20,14 @@ class GeometryNode : public Node {
     std::string getShaderName() const;
     texture_object getDiffuseTexture() const;
     void setDiffuseTexture(texture_object texture);
+    texture_object getNormalTexture() const;
+    void setNormalTexture(texture_object texture);
 
    private:
     model_object geometry_;
     std::string shader_name_;
     texture_object diffuse_texture_;
+    texture_object normal_texture_;
 };
 
 #endif  // GEOMETRY_NODE_HPP

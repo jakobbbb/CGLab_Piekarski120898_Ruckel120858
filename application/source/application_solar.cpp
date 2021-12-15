@@ -410,6 +410,14 @@ void ApplicationSolar::initializeTextures() {
         pixel_data pixels = texture_loader::file(texture_path);
         texture_object texture = utils::create_texture_object(pixels);
         geom_node->setDiffuseTexture(texture);
+
+        if (planet_name == "Earth") {
+            auto texture_path = m_resource_path + "textures/" + planet_name + "Normal.png";
+            pixel_data pixels_normal = texture_loader::file(texture_path);
+            texture_object texture_normal = utils::create_texture_object(pixels);
+            geom_node->setNormalTexture(texture_normal);
+        }
+
     };
     SceneGraph::getInstance().traverse(load_textures);
 }

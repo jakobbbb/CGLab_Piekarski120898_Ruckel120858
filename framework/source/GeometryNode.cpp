@@ -27,3 +27,11 @@ texture_object GeometryNode::getDiffuseTexture() const {
 void GeometryNode::setDiffuseTexture(texture_object texture) {
     diffuse_texture_ = texture;
 }
+
+texture_object GeometryNode::getNormalTexture() const {
+    return normal_texture_;
+}
+
+void GeometryNode::setNormalTexture(texture_object texture) {
+    normal_texture_ = texture;
+}
