@@ -3,6 +3,8 @@
 #include "pixel_data.hpp"
 #include "structs.hpp"
 
+#include "texture_loader.hpp"
+
 #include <glbinding/gl/functions.h>
 // use gl definitions from glbinding
 using namespace gl;
@@ -242,6 +244,46 @@ std::vector<float> BoxVertices(float f) {
     -f, f,  f,
      f, f,  f,
   };
+  
 }
 
-}  // namespace utils
+texture_object loadSkyboxTexture() {
+    auto texture = texture_object{};
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);   
+
+    std::vector<std::string> parts {
+        "left",
+        "right",
+        "top",
+        "bottom",
+        "front",
+        "back"
+    };
+
+    for (unsigned int i = 0; i < parts.size(); ++i) {
+        auto pixelData = texture_loader::file("../resources/textures/sky_" + parts[i] + ".png");
+
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, 
+          pixelData.channels, 
+          pixelData.width,
+          pixelData.height, 
+          0,
+          pixelData.channels,
+          pixelData.channel_type,
+          pixelData.ptr());
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    
+    texture.handle = textureID;
+    texture.target = GL_TEXTURE_CUBE_MAP;
+
+    return texture;
+  }
+}

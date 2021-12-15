@@ -43,6 +43,8 @@ Color random_color();
 
 std::vector<float> BoxVertices(float f);
 
+texture_object loadSkyboxTexture();
+
 }  // namespace utils
 
 #endif

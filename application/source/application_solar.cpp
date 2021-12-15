@@ -36,6 +36,7 @@ using namespace gl;
 #define ORBIT_NUM_LINE_SEGMENTS 340
 #define STAR_NUM 5000
 #define COLORS 255.f
+#define BOX_LENGTH 50
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     : Application{resource_path}, planet_object{}, star_object{} {
@@ -51,6 +52,8 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     assert(cam != nullptr);
     cam->setLocalTransform(view_transform);
     cam->setProjectionMatrix(view_projection);
+
+    skyboxTexture = utils::loadSkyboxTexture();
 
     initializeGeometry();
     initializeShaderPrograms();
@@ -278,6 +281,17 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("stars").u_locs["ModelMatrix"] = -1;
     m_shaders.at("stars").u_locs["ViewMatrix"] = -1;
     m_shaders.at("stars").u_locs["ProjectionMatrix"] = -1;
+
+
+    m_shaders.emplace(
+        "skybox",
+        shader_program{
+            {{GL_VERTEX_SHADER, m_resource_path + "shaders/skybox.vert"},
+             {GL_FRAGMENT_SHADER, m_resource_path + "shaders/skybox.frag"}}});
+    m_shaders.at("skybox").u_locs["NormalMatrix"] = -1;
+    m_shaders.at("skybox").u_locs["ModelMatrix"] = -1;
+    m_shaders.at("skybox").u_locs["ViewMatrix"] = -1;
+    m_shaders.at("skybox").u_locs["ProjectionMatrix"] = -1;
 }
 
 void ApplicationSolar::initializePlanetGeometry() {
@@ -475,7 +489,39 @@ void ApplicationSolar::initializeTextures() {
     SceneGraph::getInstance().traverse(load_textures);
 }
 
+
+
+
 void ApplicationSolar::initializeSkybox() {
+    // model skybox_model;
+    // skybox_model.data = utils::BoxVertices(BOX_LENGTH);
+    // auto size = skybox_model.data.size();
+    // skybox_model.vertex_num = skybox_model.data.size();
+    // auto skybox_node = std::make_shared<GeometryNode>("skybox", skybox_model);
+
+    // // generate vertex array object
+    // glGenVertexArrays(1, &skybox_object.vertex_AO);
+    // // bind the array for attaching buffers
+    // glBindVertexArray(skybox_object.vertex_AO);
+    // // generate generic buffer
+    // glGenBuffers(1, &skybox_object.vertex_BO);
+    // // bind this as an vertex array buffer containing all attributes
+    // glBindBuffer(GL_ARRAY_BUFFER, skybox_object.vertex_BO);
+    // // configure currently bound array buffer
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(float) * size, utils::BoxVertices(BOX_LENGTH).data(), GL_STATIC_DRAW);
+    // // activate first attribute on gpu
+    // glEnableVertexAttribArray(0);
+    // // first attribute is 3 floats with no offset & stride
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(3 * sizeof(float)), 0);
+    // // store type of primitive to draw
+    // skybox_object.draw_mode = GL_TRIANGLES;
+    // // transfer number of indices to model object 
+    // skybox_object.num_elements = GLsizei(size);
+
+
+
+
+
     std::map<std::string, std::shared_ptr<model_object>> objects{};
     objects.emplace("skybox", std::make_shared<model_object>());
     std::vector<float> v = utils::BoxVertices(50);
