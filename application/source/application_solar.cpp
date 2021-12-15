@@ -53,7 +53,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     cam->setLocalTransform(view_transform);
     cam->setProjectionMatrix(view_projection);
 
-    skyboxTexture = utils::loadSkyboxTexture();
+    skyboxTexture = utils::loadSkyboxTexture(m_resource_path);
 
     initializeGeometry();
     initializeShaderPrograms();

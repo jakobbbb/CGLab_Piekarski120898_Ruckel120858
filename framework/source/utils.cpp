@@ -247,7 +247,7 @@ std::vector<float> BoxVertices(float f) {
   
 }
 
-texture_object loadSkyboxTexture() {
+texture_object loadSkyboxTexture(std::string const& resource_path) {
     auto texture = texture_object{};
     unsigned int textureID;
     glGenTextures(1, &textureID);
@@ -263,7 +263,7 @@ texture_object loadSkyboxTexture() {
     };
 
     for (unsigned int i = 0; i < parts.size(); ++i) {
-        auto pixelData = texture_loader::file("../resources/textures/sky_" + parts[i] + ".png");
+        auto pixelData = texture_loader::file(resource_path + "textures/space_" + parts[i] + ".png");
 
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, 
           pixelData.channels, 
