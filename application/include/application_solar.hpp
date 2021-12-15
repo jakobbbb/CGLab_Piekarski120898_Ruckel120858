@@ -26,9 +26,9 @@ class ApplicationSolar : public Application {
 
    protected:
     void initializeShaderPrograms();
-    void initializePlanetGeometry();
-    void initializeOrbitGeometry();
     void initializeStarGeometry();
+    void initializeOrbitGeometry();
+    model_object loadObject(std::string const& path);
     void initializeGeometry();
     void initializeTextures();
     void initializeSkyboxGeometry();
@@ -49,7 +49,7 @@ class ApplicationSolar : public Application {
     model_object star_object;
     model_object orbit_object;
     model_object skybox_object;
-    std::shared_ptr<GeometryNode> skybox;
+    model_object ring_object;
 
     // Skybox
     texture_object skybox_texture;

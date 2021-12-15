@@ -43,6 +43,7 @@ TEST_CASE("solar scenegraph") {
         "    Saturn Orbit\n"
         "    Saturn Holder\n"
         "        Saturn Geometry\n"
+        "            Saturn Rings\n"
         "    Uranus Orbit\n"
         "    Uranus Holder\n"
         "        Uranus Geometry\n"
