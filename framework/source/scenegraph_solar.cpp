@@ -25,8 +25,8 @@ void make_solar_scene() {
     root->addChild(stars);
     stars->scale(60.0f);  // spread out
 
-    //auto skybox = std::make_shared<GeometryNode>(root, "Skybox", "skybox");
-    //root->addChild(skybox);
+    auto skybox = std::make_shared<GeometryNode>(root, "Skybox", "skybox");
+    root->addChild(skybox);
 
     auto sun_color = Color{};
     sun_color.r = 1;

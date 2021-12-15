@@ -437,7 +437,7 @@ void ApplicationSolar::initializeGeometry() {
             geom_node->setGeometry(star_object);
         }   // node is skybox
           else if (geom_node->getShaderName() == "skybox") {
-            geom_node->setGeometry(skybox_object);           
+            geom_node->setGeometry(skybox_object);
         } else {
             // node is planet
             geom_node->setGeometry(planet_object);
@@ -488,30 +488,28 @@ void ApplicationSolar::initializeTextures() {
 }
 
 void ApplicationSolar::initializeSkyboxGeometry() {
-    std::map<std::string, std::shared_ptr<model_object>> objects{};
-    objects.emplace("skybox", std::make_shared<model_object>());
+
+    // instantiate empty container of floats
     std::vector<float> v = utils::BoxVertices(500);
 
     // generate vertex array object
-    glGenVertexArrays(1, &(objects.at("skybox")->vertex_AO));
+    glGenVertexArrays(1, &skybox_object.vertex_AO);
     // bind the array for attaching buffers
-    glBindVertexArray(objects.at("skybox")->vertex_AO);
+    glBindVertexArray(skybox_object.vertex_AO);
     // generate generic buffer
-    glGenBuffers(1, &(objects.at("skybox")->vertex_BO));
+    glGenBuffers(1, &skybox_object.vertex_BO);
     // bind this as an vertex array buffer containing all attributes
-    glBindBuffer(GL_ARRAY_BUFFER, objects.at("skybox")->vertex_BO);
+    glBindBuffer(GL_ARRAY_BUFFER, skybox_object.vertex_BO);
     // configure currently bound array buffer
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * v.size(), v.data(),
                  GL_STATIC_DRAW);
     // activate first attribute on gpu
     glEnableVertexAttribArray(0);
-    // first attribute is 3 floats with no offset & stride
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    // store type of primitive to draw
-    objects.at("skybox")->draw_mode = GL_TRIANGLES;
-    // transfer number of indices to model object
-    objects.at("skybox")->num_elements = GLsizei(v.size() / 3);
+    // position is the first attribute with 3 floats (XYZ)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+    // activate second attribute on gpu
+    skybox_object.draw_mode = GL_TRIANGLES;
+    skybox_object.num_elements = GLsizei(v.size());
 }
 
 ///////////////////////////// callback functions for window events ////////////

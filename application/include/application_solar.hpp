@@ -49,6 +49,7 @@ class ApplicationSolar : public Application {
     model_object star_object;
     model_object orbit_object;
     model_object skybox_object;
+    std::shared_ptr<GeometryNode> skybox;
 
     // Skybox
     texture_object skybox_texture;
