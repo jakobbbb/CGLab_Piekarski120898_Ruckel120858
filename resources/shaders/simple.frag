@@ -30,13 +30,21 @@ out vec4 out_Color;
 
 #extension GL_OES_standard_derivatives : enable
 vec3 perturbNormal(vec3 vertex_pos, vec3 surf_norm, vec2 uv) {
+
+  // two points on the triangle
   vec3 q0 = dFdx(vertex_pos.xyz);
   vec3 q1 = dFdy(vertex_pos.xyz);
+
+  // derivatives of uv coordinates
   vec2 st0 = dFdx(uv.st);
   vec2 st1 = dFdy(uv.st);
 
+  // solution of 2x2 equation system:
+  //   q0 = s0*S + t0*T
+  //   q1 = s1*S + t1*T
   vec3 S = normalize(q0 * st1.t - q1 * st0.t);
   vec3 T = normalize(-q0 * st1.s + q1 * st0.s);
+
   vec3 N = normalize(surf_norm);
 
   // S x T should be N, but may be flipped, in
@@ -46,8 +54,10 @@ vec3 perturbNormal(vec3 vertex_pos, vec3 surf_norm, vec2 uv) {
       T *= -1.0;
   }
 
+  // normal in tangent space...
   vec3 mapN = texture2D(NormalMap, uv).xyz * 2.0 - 1.0;
   mat3 tsn = mat3(S, T, N);
+  // ...transformed to world space
   return normalize(tsn * mapN);
 }
 
