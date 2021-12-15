@@ -41,6 +41,8 @@ glm::fmat4 calculate_projection_matrix(float aspect);
 
 Color random_color();
 
+std::vector<float> BoxVertices(float f);
+
 }  // namespace utils
 
 #endif
