@@ -14,6 +14,7 @@
 #include <cassert>
 #include <string>
 #include <regex>
+#include <vector>
 
 #include <glbinding/gl/gl.h>
 // use gl definitions from glbinding
@@ -475,8 +476,29 @@ void ApplicationSolar::initializeTextures() {
 }
 
 void ApplicationSolar::initializeSkybox() {
-
-
+    std::map<std::string, std::shared_ptr<model_object>> objects{};
+    objects.emplace("skybox", std::make_shared<model_object>());
+    std::vector<float> v = utils::BoxVertices(50);
+    
+    // generate vertex array object
+    glGenVertexArrays(1, &(objects.at("skybox")->vertex_AO));
+    // bind the array for attaching buffers
+    glBindVertexArray(objects.at("skybox")->vertex_AO);
+    // generate generic buffer
+    glGenBuffers(1, &(objects.at("skybox")->vertex_BO));
+    // bind this as an vertex array buffer containing all attributes
+    glBindBuffer(GL_ARRAY_BUFFER, objects.at("skybox")->vertex_BO);
+    // configure currently bound array buffer
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * v.size(), v.data(), GL_STATIC_DRAW);
+    // activate first attribute on gpu
+    glEnableVertexAttribArray(0);
+    // first attribute is 3 floats with no offset & stride
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  
+    // store type of primitive to draw
+    objects.at("skybox")->draw_mode = GL_TRIANGLES;
+    // transfer number of indices to model object 
+    objects.at("skybox")->num_elements = GLsizei(v.size() / 3);
 }
 
 
