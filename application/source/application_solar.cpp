@@ -271,8 +271,12 @@ void ApplicationSolar::initializeShaderPrograms() {
 }
 
 void ApplicationSolar::initializePlanetGeometry() {
+
     model planet_model =
-        model_loader::obj(m_resource_path + "models/sphere.obj",
+        model_loader::obj(m_resource_path + 
+                "models/" +
+                ((std::getenv("NORMAL_DEBUG") == nullptr) ? "sphere" : "cube")
+                + ".obj",
                 model::NORMAL | model::TEXCOORD);
 
     // generate vertex array object
@@ -439,11 +443,22 @@ void ApplicationSolar::initializeTextures() {
         geom_node->setDiffuseTexture(texture);
 
         if (planet_name == "Earth") {
-            std::cout << "???";
             auto texture_path = m_resource_path + "textures/" + planet_name + "Normal.png";
             pixel_data pixels_normal = texture_loader::file(texture_path);
             texture_object texture_normal = utils::create_texture_object(pixels_normal);
             geom_node->setNormalTexture(texture_normal);
+
+            if (std::getenv("NORMAL_DEBUG") != NULL) {
+                std::cout << "Using normal debug textures\n";
+                auto texture_path = m_resource_path + "textures/test.png";
+                pixel_data pixels = texture_loader::file(texture_path);
+                texture_object texture = utils::create_texture_object(pixels);
+                geom_node->setDiffuseTexture(texture);
+                auto texture_path_normal = m_resource_path + "textures/normal_test.png";
+                pixel_data pixels_normal = texture_loader::file(texture_path_normal);
+                texture_object texture_normal = utils::create_texture_object(pixels_normal);
+                geom_node->setNormalTexture(texture_normal);
+            }
         }
 
     };
