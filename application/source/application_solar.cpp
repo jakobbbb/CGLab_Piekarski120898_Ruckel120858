@@ -54,6 +54,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     initializeGeometry();
     initializeShaderPrograms();
     initializeTextures();
+    initializeSkybox();
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -198,6 +199,10 @@ void ApplicationSolar::uploadView() {
     glUseProgram(m_shaders.at("stars").handle);
     glUniformMatrix4fv(m_shaders.at("stars").u_locs.at("ViewMatrix"), 1,
                        GL_FALSE, glm::value_ptr(view_matrix));
+
+    glUseProgram(m_shaders.at("skybox").handle);
+    glUniformMatrix4fv(m_shaders.at("skybox").u_locs.at("ViewMatrix"), 1,
+                       GL_FALSE, glm::value_ptr(view_matrix));
 }
 
 void ApplicationSolar::uploadProjection() {
@@ -213,6 +218,10 @@ void ApplicationSolar::uploadProjection() {
     glUseProgram(m_shaders.at("stars").handle);
     glUniformMatrix4fv(
         m_shaders.at("stars").u_locs.at("ProjectionMatrix"), 1, GL_FALSE,
+        glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
+    glUseProgram(m_shaders.at("skybox").handle);
+    glUniformMatrix4fv(
+        m_shaders.at("skybox").u_locs.at("ProjectionMatrix"), 1, GL_FALSE,
         glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
 }
 
@@ -464,6 +473,13 @@ void ApplicationSolar::initializeTextures() {
     };
     SceneGraph::getInstance().traverse(load_textures);
 }
+
+void ApplicationSolar::initializeSkybox() {
+
+
+}
+
+
 
 ///////////////////////////// callback functions for window events ////////////
 // handle key input

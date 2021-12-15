@@ -31,6 +31,7 @@ class ApplicationSolar : public Application {
     void initializeStarGeometry();
     void initializeGeometry();
     void initializeTextures();
+    void initializeSkybox();
     // update uniform values
     void uploadUniforms();
     // upload projection matrix
@@ -47,6 +48,8 @@ class ApplicationSolar : public Application {
     model_object planet_object;
     model_object star_object;
     model_object orbit_object;
+
+    texture_object skyboxTexture;
 
     // Cel-shading
     GLboolean bool_cel = GL_FALSE;
