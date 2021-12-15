@@ -274,66 +274,6 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("stars").u_locs["ProjectionMatrix"] = -1;
 }
 
-void ApplicationSolar::initializePlanetGeometry() {
-
-    model planet_model =
-        model_loader::obj(m_resource_path + 
-                "models/" +
-                ((std::getenv("NORMAL_DEBUG") == nullptr) ? "sphere" : "cube")
-                + ".obj",
-                model::NORMAL | model::TEXCOORD);
-
-    // generate vertex array object
-    glGenVertexArrays(1, &planet_object.vertex_AO);
-    // bind the array for attaching buffers
-    glBindVertexArray(planet_object.vertex_AO);
-
-    // generate generic buffer
-    glGenBuffers(1, &planet_object.vertex_BO);
-    // bind this as an vertex array buffer containing all attributes
-    glBindBuffer(GL_ARRAY_BUFFER, planet_object.vertex_BO);
-    // configure currently bound array buffer
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * planet_model.data.size(),
-                 planet_model.data.data(), GL_STATIC_DRAW);
-
-    // First Attribute: Position
-    glEnableVertexAttribArray(0);
-    // first attribute is 3 floats with no offset & stride
-    glVertexAttribPointer(0, model::POSITION.components, model::POSITION.type,
-                          GL_FALSE, planet_model.vertex_bytes,
-                          planet_model.offsets[model::POSITION]);
-
-    // Second Attribute: Position
-    glEnableVertexAttribArray(1);
-    // second attribute is 3 floats with no offset & stride
-    glVertexAttribPointer(1, model::NORMAL.components, model::NORMAL.type,
-                          GL_FALSE, planet_model.vertex_bytes,
-                          planet_model.offsets[model::NORMAL]);
-
-    // Third Attribute: Texcoord
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, model::TEXCOORD.components, model::TEXCOORD.type,
-                          GL_FALSE, planet_model.vertex_bytes,
-                          planet_model.offsets[model::TEXCOORD]);
-
-
-    // generate generic buffer
-    glGenBuffers(1, &planet_object.element_BO);
-    // bind this as an vertex array buffer containing all attributes
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, planet_object.element_BO);
-    // configure currently bound array buffer
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 model::INDEX.size * planet_model.indices.size(),
-                 planet_model.indices.data(), GL_STATIC_DRAW);
-
-    // store type of primitive to draw
-    planet_object.draw_mode = GL_TRIANGLES;
-    // transfer number of indices to model object
-    planet_object.num_elements = GLsizei(planet_model.indices.size());
-
-    planet_object.using_indices = true;
-}
-
 void ApplicationSolar::initializeOrbitGeometry() {
     std::vector<float> points;
     for (int i = 0; i < ORBIT_NUM_LINE_SEGMENTS; ++i) {
@@ -406,68 +346,76 @@ void ApplicationSolar::initializeStarGeometry() {
     star_object.num_elements = GLsizei(STAR_NUM);
 }
 
-void ApplicationSolar::initializeRingGeometry() {
-    model ring_model =
-        model_loader::obj(m_resource_path +  "models/rings.obj",
+model_object ApplicationSolar::loadObject(std::string const& path) {
+    model_object model_obj;
+    model model =
+        model_loader::obj(m_resource_path + path,
                 model::NORMAL | model::TEXCOORD);
 
     // generate vertex array object
-    glGenVertexArrays(1, &ring_object.vertex_AO);
+    glGenVertexArrays(1, &model_obj.vertex_AO);
     // bind the array for attaching buffers
-    glBindVertexArray(ring_object.vertex_AO);
+    glBindVertexArray(model_obj.vertex_AO);
 
     // generate generic buffer
-    glGenBuffers(1, &ring_object.vertex_BO);
+    glGenBuffers(1, &model_obj.vertex_BO);
     // bind this as an vertex array buffer containing all attributes
-    glBindBuffer(GL_ARRAY_BUFFER, ring_object.vertex_BO);
+    glBindBuffer(GL_ARRAY_BUFFER, model_obj.vertex_BO);
     // configure currently bound array buffer
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ring_model.data.size(),
-                 ring_model.data.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * model.data.size(),
+                 model.data.data(), GL_STATIC_DRAW);
 
     // First Attribute: Position
     glEnableVertexAttribArray(0);
     // first attribute is 3 floats with no offset & stride
     glVertexAttribPointer(0, model::POSITION.components, model::POSITION.type,
-                          GL_FALSE, ring_model.vertex_bytes,
-                          ring_model.offsets[model::POSITION]);
+                          GL_FALSE, model.vertex_bytes,
+                          model.offsets[model::POSITION]);
 
     // Second Attribute: Position
     glEnableVertexAttribArray(1);
     // second attribute is 3 floats with no offset & stride
     glVertexAttribPointer(1, model::NORMAL.components, model::NORMAL.type,
-                          GL_FALSE, ring_model.vertex_bytes,
-                          ring_model.offsets[model::NORMAL]);
+                          GL_FALSE, model.vertex_bytes,
+                          model.offsets[model::NORMAL]);
 
     // Third Attribute: Texcoord
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, model::TEXCOORD.components, model::TEXCOORD.type,
-                          GL_FALSE, ring_model.vertex_bytes,
-                          ring_model.offsets[model::TEXCOORD]);
+                          GL_FALSE, model.vertex_bytes,
+                          model.offsets[model::TEXCOORD]);
 
 
     // generate generic buffer
-    glGenBuffers(1, &ring_object.element_BO);
+    glGenBuffers(1, &model_obj.element_BO);
     // bind this as an vertex array buffer containing all attributes
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ring_object.element_BO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model_obj.element_BO);
     // configure currently bound array buffer
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 model::INDEX.size * ring_model.indices.size(),
-                 ring_model.indices.data(), GL_STATIC_DRAW);
+                 model::INDEX.size * model.indices.size(),
+                 model.indices.data(), GL_STATIC_DRAW);
 
     // store type of primitive to draw
-    ring_object.draw_mode = GL_TRIANGLES;
+    model_obj.draw_mode = GL_TRIANGLES;
     // transfer number of indices to model object
-    ring_object.num_elements = GLsizei(ring_model.indices.size());
+    model_obj.num_elements = GLsizei(model.indices.size());
 
-    ring_object.using_indices = true;
+    model_obj.using_indices = true;
+
+    return model_obj;
 }
 
 // load models
 void ApplicationSolar::initializeGeometry() {
-    initializePlanetGeometry();
     initializeOrbitGeometry();
     initializeStarGeometry();
-    initializeRingGeometry();
+    ring_object = loadObject("models/rings.obj");
+    if (std::getenv("NORMAL_DEBUG") == nullptr) {
+        planet_object = loadObject("models/sphere.obj");
+    } else {
+        planet_object = loadObject("models/cube.obj");
+    }
+
 
     node_traverse_func set_geometry = [&](std::shared_ptr<Node> node) {
         auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);

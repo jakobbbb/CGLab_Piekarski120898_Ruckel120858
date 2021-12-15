@@ -26,10 +26,9 @@ class ApplicationSolar : public Application {
 
    protected:
     void initializeShaderPrograms();
-    void initializePlanetGeometry();
-    void initializeOrbitGeometry();
     void initializeStarGeometry();
-    void initializeRingGeometry();
+    void initializeOrbitGeometry();
+    model_object loadObject(std::string const& path);
     void initializeGeometry();
     void initializeTextures();
     // update uniform values
