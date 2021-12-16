@@ -38,8 +38,8 @@ texture_object create_texture_object(pixel_data const& texture) {
             GL_TEXTURE_2D,         // target
             0,                     // mipmap level
             texture.channels,      // storage format (e.g. RGB)
-            texture.width,
-            texture.height,
+            (GLsizei)texture.width,
+            (GLsizei)texture.height,
             0,                     // legacy stuff
             texture.channels,      // source format (e.g. RGB)
             texture.channel_type,  // source type (e.g. bytes)
@@ -251,24 +251,28 @@ texture_object loadSkyboxTexture(std::string const& resource_path) {
     auto texture = texture_object{};
     unsigned int textureID;
     glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);   
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+    
 
-    std::vector<std::string> parts {
-        "left",
+    std::vector<std::string> parts { 
         "right",
+        "left",  
+        "bot",
         "top",
-        "bottom",
         "front",
         "back"
     };
 
     for (unsigned int i = 0; i < parts.size(); ++i) {
-        auto pixelData = texture_loader::file(resource_path + "textures/space_" + parts[i] + ".png");
+        auto pixelData = texture_loader::file(resource_path + "textures/skybox/4/" + parts[i] + ".png");
+        GLsizei width = (GLsizei)pixelData.width;
+        GLsizei height = (GLsizei)pixelData.height;
 
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, 
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+          0, 
           pixelData.channels, 
-          pixelData.width,
-          pixelData.height, 
+          width,
+          height, 
           0,
           pixelData.channels,
           pixelData.channel_type,
