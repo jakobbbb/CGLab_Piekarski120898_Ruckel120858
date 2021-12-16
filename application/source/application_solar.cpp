@@ -470,14 +470,14 @@ void ApplicationSolar::initializeTextures() {
         auto planet_name = std::regex_replace(geom_node->getName(),
                                               std::regex(" Geometry"), "");
         auto texture_path =
-            m_resource_path + "textures/" + planet_name + ".png";
+            m_resource_path + "textures/planets/" + planet_name + ".png";
         pixel_data pixels = texture_loader::file(texture_path);
         texture_object texture = utils::create_texture_object(pixels);
         geom_node->setDiffuseTexture(texture);
 
         if (planet_name == "Earth") {
             auto texture_path =
-                m_resource_path + "textures/" + planet_name + "Normal.png";
+                m_resource_path + "textures/planets/" + planet_name + "Normal.png";
             pixel_data pixels_normal = texture_loader::file(texture_path);
             texture_object texture_normal =
                 utils::create_texture_object(pixels_normal);
@@ -485,12 +485,12 @@ void ApplicationSolar::initializeTextures() {
 
             if (std::getenv("NORMAL_DEBUG") != NULL) {
                 std::cout << "Using normal debug textures\n";
-                auto texture_path = m_resource_path + "textures/test.png";
+                auto texture_path = m_resource_path + "textures/tests/test.png";
                 pixel_data pixels = texture_loader::file(texture_path);
                 texture_object texture = utils::create_texture_object(pixels);
                 geom_node->setDiffuseTexture(texture);
                 auto texture_path_normal =
-                    m_resource_path + "textures/normal_test.png";
+                    m_resource_path + "textures/tests/normal_test.png";
                 pixel_data pixels_normal =
                     texture_loader::file(texture_path_normal);
                 texture_object texture_normal =
