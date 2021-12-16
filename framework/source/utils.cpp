@@ -265,8 +265,8 @@ texture_object loadSkyboxTexture(std::string const& resource_path) {
 
     for (unsigned int i = 0; i < parts.size(); ++i) {
         auto pixelData = texture_loader::file(resource_path + "textures/skybox/4/" + parts[i] + ".png");
-        GLsizei width = (GLsizei)pixelData.width;
-        GLsizei height = (GLsizei)pixelData.height;
+        auto width  = (GLsizei)pixelData.width;
+        auto height = (GLsizei)pixelData.height;
 
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
           0, 

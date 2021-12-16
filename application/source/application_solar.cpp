@@ -140,14 +140,14 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
     }
 
     glUniformMatrix4fv(m_shaders.at(shader_name).u_locs.at("ModelMatrix"), 1,
-                       GL_FALSE, glm::value_ptr(model_matrix));
+                       false, glm::value_ptr(model_matrix));
 
     // extra matrix for normal transformation to keep them orthogonal to surface
     glm::fmat4 normal_matrix = glm::inverseTranspose(
         glm::inverse(SceneGraph::getActiveCamera()->getWorldTransform()) *
         model_matrix);
-    glUniformMatrix4fv(m_shaders.at(shader_name).u_locs.at("NormalMatrix"), 1,
-                       GL_FALSE, glm::value_ptr(normal_matrix));
+    //glUniformMatrix4fv(m_shaders.at(shader_name).u_locs.at("NormalMatrix"), 1,
+                       //false, glm::value_ptr(normal_matrix));
 
     // bind the VAO to draw
     glBindVertexArray(geometry_object.vertex_AO);
@@ -167,10 +167,10 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
             glUniform1i(m_shaders.at(shader_name).u_locs.at("NormalMap"), 1);
 
             glUniform1b(m_shaders.at(shader_name).u_locs.at("UseNormalMap"),
-                        GL_TRUE);
+                        true);
         } else {
             glUniform1b(m_shaders.at(shader_name).u_locs.at("UseNormalMap"),
-                        GL_FALSE);
+                        false);
         }
 
         glDrawElements(geometry_object.draw_mode, geometry_object.num_elements,
@@ -190,38 +190,38 @@ void ApplicationSolar::uploadView() {
     // upload matrix to gpu
     glUseProgram(m_shaders.at("planet").handle);
     glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ViewMatrix"), 1,
-                       GL_FALSE, glm::value_ptr(view_matrix));
+                       false, glm::value_ptr(view_matrix));
 
     glUseProgram(m_shaders.at("orbit").handle);
     glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("ViewMatrix"), 1,
-                       GL_FALSE, glm::value_ptr(view_matrix));
+                       false, glm::value_ptr(view_matrix));
 
     glUseProgram(m_shaders.at("stars").handle);
     glUniformMatrix4fv(m_shaders.at("stars").u_locs.at("ViewMatrix"), 1,
-                       GL_FALSE, glm::value_ptr(view_matrix));
+                       false, glm::value_ptr(view_matrix));
 
     glUseProgram(m_shaders.at("skybox").handle);
     glUniformMatrix4fv(m_shaders.at("skybox").u_locs.at("ViewMatrix"), 1,
-                       GL_FALSE, glm::value_ptr(view_matrix));
+                       false, glm::value_ptr(view_matrix));
 }
 
 void ApplicationSolar::uploadProjection() {
     // upload matrix to gpu
     glUseProgram(m_shaders.at("planet").handle);
     glUniformMatrix4fv(
-        m_shaders.at("planet").u_locs.at("ProjectionMatrix"), 1, GL_FALSE,
+        m_shaders.at("planet").u_locs.at("ProjectionMatrix"), 1, false,
         glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
     glUseProgram(m_shaders.at("orbit").handle);
     glUniformMatrix4fv(
-        m_shaders.at("orbit").u_locs.at("ProjectionMatrix"), 1, GL_FALSE,
+        m_shaders.at("orbit").u_locs.at("ProjectionMatrix"), 1, false,
         glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
     glUseProgram(m_shaders.at("stars").handle);
     glUniformMatrix4fv(
-        m_shaders.at("stars").u_locs.at("ProjectionMatrix"), 1, GL_FALSE,
+        m_shaders.at("stars").u_locs.at("ProjectionMatrix"), 1, false,
         glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
     glUseProgram(m_shaders.at("skybox").handle);
     glUniformMatrix4fv(
-        m_shaders.at("skybox").u_locs.at("ProjectionMatrix"), 1, GL_FALSE,
+        m_shaders.at("skybox").u_locs.at("ProjectionMatrix"), 1, false,
         glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
 }
 
@@ -242,7 +242,7 @@ void ApplicationSolar::initializeShaderPrograms() {
             {{GL_VERTEX_SHADER, m_resource_path + "shaders/simple.vert"},
              {GL_FRAGMENT_SHADER, m_resource_path + "shaders/simple.frag"}}});
     // request uniform locations for shader program
-    m_shaders.at("planet").u_locs["NormalMatrix"] = -1;
+    //m_shaders.at("planet").u_locs["NormalMatrix"] = -1;
     m_shaders.at("planet").u_locs["ModelMatrix"] = -1;
     m_shaders.at("planet").u_locs["ViewMatrix"] = -1;
     m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
@@ -262,7 +262,7 @@ void ApplicationSolar::initializeShaderPrograms() {
         shader_program{
             {{GL_VERTEX_SHADER, m_resource_path + "shaders/orbit.vert"},
              {GL_FRAGMENT_SHADER, m_resource_path + "shaders/orbit.frag"}}});
-    m_shaders.at("orbit").u_locs["NormalMatrix"] = -1;
+    //m_shaders.at("orbit").u_locs["NormalMatrix"] = -1;
     m_shaders.at("orbit").u_locs["ModelMatrix"] = -1;
     m_shaders.at("orbit").u_locs["ViewMatrix"] = -1;
     m_shaders.at("orbit").u_locs["ProjectionMatrix"] = -1;
@@ -273,7 +273,7 @@ void ApplicationSolar::initializeShaderPrograms() {
         shader_program{
             {{GL_VERTEX_SHADER, m_resource_path + "shaders/vao.vert"},
              {GL_FRAGMENT_SHADER, m_resource_path + "shaders/vao.frag"}}});
-    m_shaders.at("stars").u_locs["NormalMatrix"] = -1;
+    //m_shaders.at("stars").u_locs["NormalMatrix"] = -1;
     m_shaders.at("stars").u_locs["ModelMatrix"] = -1;
     m_shaders.at("stars").u_locs["ViewMatrix"] = -1;
     m_shaders.at("stars").u_locs["ProjectionMatrix"] = -1;
@@ -283,7 +283,7 @@ void ApplicationSolar::initializeShaderPrograms() {
         shader_program{
             {{GL_VERTEX_SHADER, m_resource_path + "shaders/skybox.vert"},
              {GL_FRAGMENT_SHADER, m_resource_path + "shaders/skybox.frag"}}});
-    m_shaders.at("skybox").u_locs["NormalMatrix"] = -1;
+    //m_shaders.at("skybox").u_locs["NormalMatrix"] = -1;
     m_shaders.at("skybox").u_locs["ModelMatrix"] = -1;
     m_shaders.at("skybox").u_locs["ViewMatrix"] = -1;
     m_shaders.at("skybox").u_locs["ProjectionMatrix"] = -1;
@@ -315,7 +315,7 @@ void ApplicationSolar::initializeOrbitGeometry() {
     // activate first attribute on gpu
     glEnableVertexAttribArray(0);
     // first attribute is 3 floats with no offset & stride
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
 
     // store type of primitive to draw
     orbit_object.draw_mode = GL_LINE_LOOP;
@@ -351,11 +351,11 @@ void ApplicationSolar::initializeStarGeometry() {
     // activate first attribute on gpu
     glEnableVertexAttribArray(0);
     // position is the first attribute with 3 floats (XYZ)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(float) * 6, 0);
     // activate second attribute on gpu
     glEnableVertexAttribArray(1);
     // color is the second attribute with 3 floats (RGB)
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6,
+    glVertexAttribPointer(1, 3, GL_FLOAT, false, sizeof(float) * 6,
                           (void*)(sizeof(float) * 3));
     // set the draw_mode to GL_POINTS (each point represents a star)
     star_object.draw_mode = GL_POINTS;
@@ -385,20 +385,20 @@ model_object ApplicationSolar::loadObject(std::string const& path) {
     glEnableVertexAttribArray(0);
     // first attribute is 3 floats with no offset & stride
     glVertexAttribPointer(0, model::POSITION.components, model::POSITION.type,
-                          GL_FALSE, model.vertex_bytes,
+                          false, model.vertex_bytes,
                           model.offsets[model::POSITION]);
 
     // Second Attribute: Position
     glEnableVertexAttribArray(1);
     // second attribute is 3 floats with no offset & stride
     glVertexAttribPointer(1, model::NORMAL.components, model::NORMAL.type,
-                          GL_FALSE, model.vertex_bytes,
+                          false, model.vertex_bytes,
                           model.offsets[model::NORMAL]);
 
     // Third Attribute: Texcoord
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, model::TEXCOORD.components, model::TEXCOORD.type,
-                          GL_FALSE, model.vertex_bytes,
+                          false, model.vertex_bytes,
                           model.offsets[model::TEXCOORD]);
 
 
@@ -521,7 +521,7 @@ void ApplicationSolar::initializeSkyboxGeometry() {
     // activate first attribute on gpu
     glEnableVertexAttribArray(0);
     // position is the first attribute with 3 floats (XYZ)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
     // activate second attribute on gpu
     skybox_object.draw_mode = GL_TRIANGLES;
     skybox_object.num_elements = GLsizei(v.size());

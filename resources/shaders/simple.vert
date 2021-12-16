@@ -9,7 +9,7 @@ layout(location = 2) in vec2 in_TexCoord;
 uniform mat4 ModelMatrix;
 uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
-uniform mat4 NormalMatrix;
+//uniform mat4 NormalMatrix;
 
 out vec3 pass_Normal;
 out vec3 Position;

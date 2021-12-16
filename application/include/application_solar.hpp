@@ -55,7 +55,7 @@ class ApplicationSolar : public Application {
     texture_object skybox_texture;
 
     // Cel-shading
-    GLboolean bool_cel = GL_FALSE;
+    bool bool_cel = false;
     static GLuint loc_cel;
 
     float movement_speed = 1.0f;

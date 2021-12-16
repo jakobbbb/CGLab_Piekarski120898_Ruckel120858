@@ -7,7 +7,7 @@ layout(location = 0) in vec3 in_Position;
 uniform mat4 ModelMatrix;
 uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
-uniform mat4 NormalMatrix;
+//uniform mat4 NormalMatrix;
 
 void main(void)
 {
