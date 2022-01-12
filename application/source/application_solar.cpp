@@ -58,6 +58,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     initializeGeometry();
     initializeShaderPrograms();
     initializeTextures();
+    initializeFramebuffer();
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -71,6 +72,8 @@ ApplicationSolar::~ApplicationSolar() {
     glDeleteBuffers(1, &skybox_object.element_BO);
     glDeleteBuffers(1, &skybox_object.vertex_AO);
     glDeleteFramebuffers(1, &fbo);
+    glDeleteTextures(1, &texture);
+    glDeleteRenderbuffers(1, &rbo);
 }
 
 void ApplicationSolar::render() {
@@ -621,6 +624,7 @@ void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
     SceneGraph::getActiveCamera()->setProjectionMatrix(view_projection);
     // upload new projection matrix
     uploadProjection();
+    initializeFramebuffer();
 }
 
 // exe entry point
