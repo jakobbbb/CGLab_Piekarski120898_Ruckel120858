@@ -32,6 +32,7 @@ class ApplicationSolar : public Application {
     void initializeGeometry();
     void initializeTextures();
     void initializeSkyboxGeometry();
+    void initializeFramebuffer();
     // update uniform values
     void uploadUniforms();
     // upload projection matrix
@@ -59,6 +60,16 @@ class ApplicationSolar : public Application {
     static GLuint loc_cel;
 
     float movement_speed = 1.0f;
+
+    // framebuffer
+    unsigned int fbo;
+    // texture
+    unsigned int texture;
+    // render buffer
+    unsigned int rbo;
+    // screen size
+    unsigned int width = 800;
+    unsigned int height = 600;
 };
 
 #endif
