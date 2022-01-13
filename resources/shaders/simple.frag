@@ -12,7 +12,6 @@ uniform float AmbientIntensity;
 
 uniform float LightIntensity;
 uniform vec3 CameraPosition;
-//uniform vec3 PlanetColor;
 uniform vec3 AmbientColor;
 uniform vec3 LightColor;
 uniform vec3 LightPosition;
@@ -28,7 +27,6 @@ in vec2 TexCoord;
 out vec4 out_Color;
 
 
-#extension GL_OES_standard_derivatives : enable
 vec3 perturbNormal(vec3 vertex_pos, vec3 surf_norm, vec2 uv) {
 
   // two points on the triangle
