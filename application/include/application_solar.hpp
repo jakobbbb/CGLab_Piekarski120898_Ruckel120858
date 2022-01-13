@@ -33,6 +33,7 @@ class ApplicationSolar : public Application {
     void initializeTextures();
     void initializeSkyboxGeometry();
     void initializeFramebuffer();
+    void initializeQuad();
     // update uniform values
     void uploadUniforms();
     // upload projection matrix
@@ -51,13 +52,13 @@ class ApplicationSolar : public Application {
     model_object orbit_object;
     model_object skybox_object;
     model_object ring_object;
+    model_object quad_object;
 
     // Skybox
     texture_object skybox_texture;
 
     // Cel-shading
     bool bool_cel = false;
-    static GLuint loc_cel;
 
     float movement_speed = 1.0f;
 
@@ -70,6 +71,12 @@ class ApplicationSolar : public Application {
     // screen size
     unsigned int width = 800;
     unsigned int height = 600;
+
+    // post-processing effects
+    bool bool_horizontal_mirror = false;
+    bool bool_vertical_mirror = false;
+    bool bool_gray = false;
+    bool bool_blur = false;
 };
 
 #endif

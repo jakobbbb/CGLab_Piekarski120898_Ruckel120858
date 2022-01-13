@@ -59,6 +59,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     initializeShaderPrograms();
     initializeTextures();
     initializeFramebuffer();
+    initializeQuad();
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -137,10 +138,20 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
         auto loc_cel =
             glGetUniformLocation(m_shaders.at(shader_name).handle, "Cel");
         glUniform1i(loc_cel, bool_cel);
+        
 
         auto cam_transform = SceneGraph::getActiveCamera()->getWorldTransform();
         glUniform3fv(m_shaders.at(shader_name).u_locs.at("CameraPosition"), 1,
                      glm::value_ptr(cam_transform * glm::vec4{0, 0, 0, 1}));
+    }
+
+    if (shader_name == "quad") {
+        auto loc_gray =
+            glGetUniformLocation(m_shaders.at(shader_name).handle, "Grayscale");
+        glUniform1i(loc_gray, bool_gray);
+        auto loc_blur =
+            glGetUniformLocation(m_shaders.at(shader_name).handle, "Blur");
+        glUniform1i(loc_blur, bool_blur);
     }
 
     glUniformMatrix4fv(m_shaders.at(shader_name).u_locs.at("ModelMatrix"), 1,
@@ -190,23 +201,22 @@ void ApplicationSolar::uploadView() {
     // inverted
     glm::fmat4 view_matrix =
         glm::inverse(SceneGraph::getActiveCamera()->getRotatedWorldTransform());
-    //
     // upload matrix to gpu
     glUseProgram(m_shaders.at("planet").handle);
     glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ViewMatrix"), 1,
                        false, glm::value_ptr(view_matrix));
-
     glUseProgram(m_shaders.at("orbit").handle);
     glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("ViewMatrix"), 1,
                        false, glm::value_ptr(view_matrix));
-
     glUseProgram(m_shaders.at("stars").handle);
     glUniformMatrix4fv(m_shaders.at("stars").u_locs.at("ViewMatrix"), 1,
                        false, glm::value_ptr(view_matrix));
-
     glUseProgram(m_shaders.at("skybox").handle);
     glUniformMatrix4fv(m_shaders.at("skybox").u_locs.at("ViewMatrix"), 1,
-                       false, glm::value_ptr(view_matrix));
+                       false, glm::value_ptr(view_matrix));   
+    //glUseProgram(m_shaders.at("quad").handle);
+    //glUniformMatrix4fv(m_shaders.at("quad").u_locs.at("ViewMatrix"), 1,
+    //                   false, glm::value_ptr(view_matrix));
 }
 
 void ApplicationSolar::uploadProjection() {
@@ -227,6 +237,9 @@ void ApplicationSolar::uploadProjection() {
     glUniformMatrix4fv(
         m_shaders.at("skybox").u_locs.at("ProjectionMatrix"), 1, false,
         glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
+    //glUniformMatrix4fv(
+    //    m_shaders.at("quad").u_locs.at("ProjectionMatrix"), 1, false,
+    //    glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
 }
 
 // update uniform locations
@@ -292,6 +305,18 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("skybox").u_locs["ViewMatrix"] = -1;
     m_shaders.at("skybox").u_locs["ProjectionMatrix"] = -1;
     m_shaders.at("skybox").u_locs["Texture"] = -1;
+
+    m_shaders.emplace(
+        "quad",
+        shader_program{
+            {{GL_VERTEX_SHADER, m_resource_path + "shaders/quad.vert"},
+             {GL_FRAGMENT_SHADER, m_resource_path + "shaders/quad.frag"}}});
+    m_shaders.at("quad").u_locs["Screen"] = -1;
+    //m_shaders.at("quad").u_locs["HorizontalMirroring"] = -1;
+    //m_shaders.at("quad").u_locs["VerticalMirroring"] = -1;
+    m_shaders.at("quad").u_locs["Grayscale"] = -1;
+    m_shaders.at("quad").u_locs["Blur"] = -1;
+
 }
 
 void ApplicationSolar::initializeOrbitGeometry() {
@@ -560,6 +585,38 @@ void ApplicationSolar::initializeFramebuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void ApplicationSolar::initializeQuad() {
+
+    // from slides
+    std::vector<GLfloat> Quad = {
+        //v4, v1, v2, v4, v2, v3
+        -1.0f,  1.0f, 0.0f, 1.0f,
+        -1.0f, -1.0f, 0.0f, 0.0f,
+         1.0f, -1.0f, 1.0f, 0.0f,
+        -1.0f,  1.0f, 0.0f, 1.0f,
+         1.0f, -1.0f, 1.0f, 0.0f,
+         1.0f,  1.0f, 1.0f, 1.0f
+    };
+
+    glGenVertexArrays(1, &quad_object.vertex_AO);
+    glBindVertexArray(quad_object.vertex_AO);
+    // initialise Vertex Buffer and load data
+    glGenBuffers(1, &quad_object.vertex_BO);
+    glBindBuffer(GL_ARRAY_BUFFER, quad_object.vertex_BO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * Quad.size(), Quad.data(),
+                 GL_STATIC_DRAW);
+    // activate first attribute on gpu (position)
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, false, GLsizei(sizeof(float) * 4), 0);
+    // activate second attribute on gpu (color)
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, false, GLsizei(sizeof(float) * 4),
+                         (void*)(sizeof(float) * 2));
+    // set draw_mode of quad_object to GL_POINTS
+    quad_object.draw_mode = GL_TRIANGLE_STRIP;
+    quad_object.num_elements = GLsizei(Quad.size()/4);
+}
+
 
 
 ///////////////////////////// callback functions for window events ////////////
@@ -595,6 +652,12 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
     } else if (key == GLFW_KEY_2 &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
         uploadView();
+    } else if (key == GLFW_KEY_7 &&
+               (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+        bool_gray = !bool_gray;
+    } else if (key == GLFW_KEY_0 &&
+               (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+        bool_blur = !bool_blur;
     }
 
     if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
