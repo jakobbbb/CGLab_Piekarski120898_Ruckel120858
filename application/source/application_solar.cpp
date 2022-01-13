@@ -707,7 +707,10 @@ void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
 }
 
 // handle resizing
-void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
+void ApplicationSolar::resizeCallback(unsigned w, unsigned h) {
+    width = w;
+    height = h;
+
     // recalculate projection matrix for new aspect ration
     auto view_projection =
         utils::calculate_projection_matrix(float(width) / float(height));
