@@ -78,6 +78,12 @@ ApplicationSolar::~ApplicationSolar() {
 }
 
 void ApplicationSolar::render() {
+
+    // draw scene onto quad...
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     auto planet_idx = 0;
     node_traverse_func render = [&](std::shared_ptr<Node> node) {
         auto geom_node = std::dynamic_pointer_cast<GeometryNode>(node);
@@ -94,6 +100,20 @@ void ApplicationSolar::render() {
     };
     SceneGraph::getInstance().traverse(render);
     uploadView();
+
+    // ...draw quad onto default framebuffer
+    renderQuad();
+}
+
+void ApplicationSolar::renderQuad() {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDisable(GL_DEPTH_TEST);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(m_shaders.at("quad").handle);
+    glBindVertexArray(quad_object.vertex_AO);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {

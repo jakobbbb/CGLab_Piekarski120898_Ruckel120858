@@ -43,6 +43,7 @@ class ApplicationSolar : public Application {
     // draw a planet
     void renderObject(std::shared_ptr<GeometryNode> geom);
     void renderStars();
+    void renderQuad();
     
     
 
