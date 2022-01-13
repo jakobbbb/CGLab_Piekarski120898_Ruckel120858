@@ -577,6 +577,13 @@ void ApplicationSolar::initializeSkyboxGeometry() {
 }
 
 void ApplicationSolar::initializeFramebuffer() {  
+
+    if (glIsFramebuffer(fbo)) {
+        glDeleteFramebuffers(1, &fbo);
+        glDeleteTextures(1, &texture);
+        glDeleteRenderbuffers(1, &rbo);
+    }
+
     // generate and bind framebuffer object
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
