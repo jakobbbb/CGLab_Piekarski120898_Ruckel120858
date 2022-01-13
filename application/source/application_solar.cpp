@@ -82,7 +82,7 @@ void ApplicationSolar::render() {
     // draw scene onto quad...
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glEnable(GL_DEPTH_TEST);
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     auto planet_idx = 0;
     node_traverse_func render = [&](std::shared_ptr<Node> node) {
@@ -108,7 +108,7 @@ void ApplicationSolar::render() {
 void ApplicationSolar::renderQuad() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDisable(GL_DEPTH_TEST);
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(m_shaders.at("quad").handle);
     glBindVertexArray(quad_object.vertex_AO);
