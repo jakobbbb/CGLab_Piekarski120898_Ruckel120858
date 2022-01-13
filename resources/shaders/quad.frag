@@ -2,7 +2,7 @@
 
 #define PX 1.0/350
 
-in vec2 in_TexCoord;
+in vec2 pass_TexCoord;
 out vec4 out_Color;
 
 // Screen Texture
@@ -15,9 +15,12 @@ uniform bool Grayscale;
 uniform bool Blur;
 
 vec3 result = vec3(0.0, 0.0, 0.0);
-vec2 TexCoord = in_TexCoord;
+vec2 TexCoord = pass_TexCoord;
 
 void main() {
+
+    //out_Color = vec4(TexCoord.x, TexCoord.y, 0.0, 1.0);
+    //return;
 
     // invert texture coordinates horizontally
     if (HorizontalMirroring) {
