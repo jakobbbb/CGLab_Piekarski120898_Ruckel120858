@@ -158,6 +158,12 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
         auto loc_cel =
             glGetUniformLocation(m_shaders.at(shader_name).handle, "Cel");
         glUniform1i(loc_cel, bool_cel);
+        auto loc_horizontal_mirror =
+           glGetUniformLocation(m_shaders.at(shader_name).handle, "HorizontalMirroring");
+        glUniform1i(loc_horizontal_mirror, bool_horizontal_mirror);
+        auto loc_vertical_mirror =
+           glGetUniformLocation(m_shaders.at(shader_name).handle, "VerticalMirroring");
+        glUniform1i(loc_vertical_mirror, bool_vertical_mirror);
         
 
         auto cam_transform = SceneGraph::getActiveCamera()->getWorldTransform();
@@ -234,9 +240,6 @@ void ApplicationSolar::uploadView() {
     glUseProgram(m_shaders.at("skybox").handle);
     glUniformMatrix4fv(m_shaders.at("skybox").u_locs.at("ViewMatrix"), 1,
                        false, glm::value_ptr(view_matrix));   
-    //glUseProgram(m_shaders.at("quad").handle);
-    //glUniformMatrix4fv(m_shaders.at("quad").u_locs.at("ViewMatrix"), 1,
-    //                   false, glm::value_ptr(view_matrix));
 }
 
 void ApplicationSolar::uploadProjection() {
@@ -257,9 +260,6 @@ void ApplicationSolar::uploadProjection() {
     glUniformMatrix4fv(
         m_shaders.at("skybox").u_locs.at("ProjectionMatrix"), 1, false,
         glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
-    //glUniformMatrix4fv(
-    //    m_shaders.at("quad").u_locs.at("ProjectionMatrix"), 1, false,
-    //    glm::value_ptr(SceneGraph::getActiveCamera()->getProjectionMatrix()));
 }
 
 // update uniform locations
@@ -279,11 +279,9 @@ void ApplicationSolar::initializeShaderPrograms() {
             {{GL_VERTEX_SHADER, m_resource_path + "shaders/simple.vert"},
              {GL_FRAGMENT_SHADER, m_resource_path + "shaders/simple.frag"}}});
     // request uniform locations for shader program
-    //m_shaders.at("planet").u_locs["NormalMatrix"] = -1;
     m_shaders.at("planet").u_locs["ModelMatrix"] = -1;
     m_shaders.at("planet").u_locs["ViewMatrix"] = -1;
     m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
-    // m_shaders.at("planet").u_locs["PlanetColor"] = -1;
     m_shaders.at("planet").u_locs["AmbientColor"] = -1;
     m_shaders.at("planet").u_locs["AmbientIntensity"] = -1;
     m_shaders.at("planet").u_locs["LightPosition"] = -1;
@@ -332,8 +330,8 @@ void ApplicationSolar::initializeShaderPrograms() {
             {{GL_VERTEX_SHADER, m_resource_path + "shaders/quad.vert"},
              {GL_FRAGMENT_SHADER, m_resource_path + "shaders/quad.frag"}}});
     m_shaders.at("quad").u_locs["Screen"] = -1;
-    //m_shaders.at("quad").u_locs["HorizontalMirroring"] = -1;
-    //m_shaders.at("quad").u_locs["VerticalMirroring"] = -1;
+    m_shaders.at("quad").u_locs["HorizontalMirroring"] = -1;
+    m_shaders.at("quad").u_locs["VerticalMirroring"] = -1;
     m_shaders.at("quad").u_locs["Grayscale"] = -1;
     m_shaders.at("quad").u_locs["Blur"] = -1;
 
@@ -688,7 +686,15 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
     } else if (key == GLFW_KEY_0 &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
         bool_blur = !bool_blur;
+    } else if (key == GLFW_KEY_8 &&
+               (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+        bool_horizontal_mirror = !bool_horizontal_mirror;
+    } else if (key == GLFW_KEY_9 &&
+               (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+        bool_vertical_mirror = !bool_vertical_mirror;
     }
+
+    uploadView();
 
     if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
         auto cam1 =
