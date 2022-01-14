@@ -14,7 +14,6 @@ uniform bool VerticalMirroring;
 uniform bool Grayscale;
 uniform bool Blur;
 
-vec3 result = vec3(0.0, 0.0, 0.0);
 vec2 TexCoord = pass_TexCoord;
 
 void main() {
@@ -43,6 +42,9 @@ void main() {
     }
 
     if (Blur) {
+
+        vec3 result = vec3(0.0, 0.0, 0.0);
+
         // 3x3 gaussian kernel matrix (from slides)
         float gauss_kernel[9] = float[](
             1.0/16, 1.0/8, 1.0/16,
