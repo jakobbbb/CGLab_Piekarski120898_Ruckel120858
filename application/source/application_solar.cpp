@@ -158,14 +158,7 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
         auto loc_cel =
             glGetUniformLocation(m_shaders.at(shader_name).handle, "Cel");
         glUniform1i(loc_cel, bool_cel);
-        auto loc_horizontal_mirror =
-           glGetUniformLocation(m_shaders.at(shader_name).handle, "HorizontalMirroring");
-        glUniform1i(loc_horizontal_mirror, bool_horizontal_mirror);
-        auto loc_vertical_mirror =
-           glGetUniformLocation(m_shaders.at(shader_name).handle, "VerticalMirroring");
-        glUniform1i(loc_vertical_mirror, bool_vertical_mirror);
         
-
         auto cam_transform = SceneGraph::getActiveCamera()->getWorldTransform();
         glUniform3fv(m_shaders.at(shader_name).u_locs.at("CameraPosition"), 1,
                      glm::value_ptr(cam_transform * glm::vec4{0, 0, 0, 1}));
@@ -178,6 +171,12 @@ void ApplicationSolar::renderObject(std::shared_ptr<GeometryNode> node) {
         auto loc_blur =
             glGetUniformLocation(m_shaders.at(shader_name).handle, "Blur");
         glUniform1i(loc_blur, bool_blur);
+        auto loc_horizontal_mirror =
+           glGetUniformLocation(m_shaders.at(shader_name).handle, "HorizontalMirroring");
+        glUniform1i(loc_horizontal_mirror, bool_horizontal_mirror);
+        auto loc_vertical_mirror =
+           glGetUniformLocation(m_shaders.at(shader_name).handle, "VerticalMirroring");
+        glUniform1i(loc_vertical_mirror, bool_vertical_mirror);
     }
 
     glUniformMatrix4fv(m_shaders.at(shader_name).u_locs.at("ModelMatrix"), 1,
@@ -683,15 +682,27 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
     } else if (key == GLFW_KEY_7 &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
         bool_gray = !bool_gray;
+        glUseProgram(m_shaders.at("quad").handle);
+        auto loc = glGetUniformLocation(m_shaders.at("quad").handle, "Grayscale");
+        glUniform1i(loc, bool_gray);       
     } else if (key == GLFW_KEY_0 &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
         bool_blur = !bool_blur;
+        glUseProgram(m_shaders.at("quad").handle);
+        auto loc = glGetUniformLocation(m_shaders.at("quad").handle, "Blur");
+        glUniform1i(loc, bool_blur);
     } else if (key == GLFW_KEY_8 &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
         bool_horizontal_mirror = !bool_horizontal_mirror;
+        glUseProgram(m_shaders.at("quad").handle);
+        auto loc = glGetUniformLocation(m_shaders.at("quad").handle, "HorizontalMirroring");
+        glUniform1i(loc, bool_horizontal_mirror);
     } else if (key == GLFW_KEY_9 &&
                (action == GLFW_PRESS || action == GLFW_REPEAT)) {
         bool_vertical_mirror = !bool_vertical_mirror;
+        glUseProgram(m_shaders.at("quad").handle);
+        auto loc = glGetUniformLocation(m_shaders.at("quad").handle, "VerticalMirroring");
+        glUniform1i(loc, bool_vertical_mirror);
     }
 
     uploadView();
