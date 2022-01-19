@@ -33,14 +33,6 @@ void main() {
 
     out_Color = texture(Screen, TexCoord); 
 
-    // Luminance Preserving Grayscale (from slides)
-    if (Grayscale) {
-        float lumi = (0.2126 * out_Color.r + 
-                      0.7152 * out_Color.g + 
-                      0.0722 * out_Color.b);
-        out_Color = vec4(lumi, lumi, lumi, 1.0);
-    }
-
     if (Blur) {
 
         vec3 result = vec3(0.0, 0.0, 0.0);
@@ -67,4 +59,13 @@ void main() {
 
         out_Color = vec4(result, 1.0);
     }
+
+    // Luminance Preserving Grayscale (from slides)
+    if (Grayscale) {
+        float lumi = (0.2126 * out_Color.r + 
+                      0.7152 * out_Color.g + 
+                      0.0722 * out_Color.b);
+        out_Color = vec4(lumi, lumi, lumi, 1.0);
+    }
+
 }
